@@ -7,7 +7,10 @@ function App() {
 
   return (
     <>
-     <LoginPage />
+   <div className="h-full">
+    <LoginPage />
+    </div>
+    
     </>
   )
 }
