@@ -1,5 +1,7 @@
 import { useState } from 'react'
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import LoginPage from './components/login'
+import SignUpForm from './components/signup'
 import './App.css'
 
 function App() {
@@ -7,10 +9,14 @@ function App() {
 
   return (
     <>
-   <div className="h-full">
-    <LoginPage />
-    </div>
-    
+    <BrowserRouter>
+      <div>
+        <Routes>
+          <Route path="/" element={<LoginPage/>} />
+          <Route path="/signup" element={<SignUpForm />} />
+        </Routes>
+      </div>
+    </BrowserRouter>
     </>
   )
 }

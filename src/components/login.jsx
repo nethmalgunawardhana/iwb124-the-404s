@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { EyeOff, Eye } from 'lucide-react';
 
 const LoginPage = () => {
@@ -6,11 +7,17 @@ const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
+  const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
     // Handle login logic here
     console.log('Login submitted', { email, password, rememberMe });
+  };
+
+  const handleSignupClick = (e) => {
+    e.preventDefault();
+    navigate('/signup');
   };
 
   return (
@@ -125,7 +132,8 @@ const LoginPage = () => {
 
         <p className="mt-8 text-center text-sm text-gray-600">
           Don't have an account?{' '}
-          <a href="#" className="font-medium text-purple-600 hover:text-purple-500">
+          <a href="#" className="font-medium text-purple-600 hover:text-purple-500"
+          onClick={handleSignupClick}>
             Sign up
           </a>
         </p>
