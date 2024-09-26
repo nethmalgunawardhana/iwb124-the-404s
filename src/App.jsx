@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import LoginPage from './components/login'
+import SignUpForm from './components/signup'
 import './App.css'
 
 function App() {
@@ -8,7 +9,8 @@ function App() {
   return (
     <>
    <div className="h-full">
-    <LoginPage />
+
+     <SignUpForm  />
     </div>
     
     </>

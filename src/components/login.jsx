@@ -12,7 +12,6 @@ const LoginPage = () => {
     // Handle login logic here
     console.log('Login submitted', { email, password, rememberMe });
   };
-
   return (
     <div className="min-h-full bg-white-100 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
       <div className="w-full max-w-md bg-white rounded-lg shadow-md p-8">
