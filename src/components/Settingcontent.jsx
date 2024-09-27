@@ -2,7 +2,7 @@ import React from 'react';
 import { Camera } from 'lucide-react';
 
 const SettingsContent = () => (
-  <div className="p-8 bg-gray-100 flex-grow">
+  <div className="p-8 bg-gray-100 flex-grow text-black">
     <h1 className="text-2xl font-semibold mb-6">General Settings</h1>
     <p className="mb-6">Your current Primary email address is <span className="text-blue-500">dashprops@example.com</span></p>
 
