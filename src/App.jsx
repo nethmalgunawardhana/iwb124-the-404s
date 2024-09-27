@@ -4,8 +4,8 @@ import LoginPage from './components/login'
 import SignUpForm from './components/signup'
 import FogotPasswordForm from './components/fogotpassword'
 import SettingsPage from './pages/Settingspage'
-
 import './App.css'
+import Profile from './components/Profile';
 
 function App() {
   const [count, setCount] = useState(0)
@@ -19,6 +19,7 @@ function App() {
           <Route path="/signup" element={<SignUpForm />} />
           <Route path="/fogotpassword" element={<FogotPasswordForm />} />
           <Route path="/settings" element={<SettingsPage />} />
+          <Route path="/profile" element={<Profile />} />
 
         </Routes>
       </div>
