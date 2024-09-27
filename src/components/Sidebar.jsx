@@ -4,7 +4,7 @@ import Profile from './Profile';
 import SettingsContent from './Settingcontent';
 
 const Sidebar = () => {
-  const [activeComponent, setActiveComponent] = useState('settings');
+  const [activeComponent, setActiveComponent] = useState('profile');
 
   const renderComponent = () => {
     switch (activeComponent) {
