@@ -2,7 +2,9 @@ import { useState } from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import LoginPage from './components/login'
 import SignUpForm from './components/signup'
+import FogotPasswordForm from './components/fogotpassword'
 import SettingsPage from './pages/Settingspage'
+
 import './App.css'
 
 function App() {
@@ -15,7 +17,9 @@ function App() {
         <Routes>
           <Route path="/" element={<LoginPage/>} />
           <Route path="/signup" element={<SignUpForm />} />
+          <Route path="/fogotpassword" element={<FogotPasswordForm />} />
           <Route path="/settings" element={<SettingsPage />} />
+
         </Routes>
       </div>
     </BrowserRouter> 
