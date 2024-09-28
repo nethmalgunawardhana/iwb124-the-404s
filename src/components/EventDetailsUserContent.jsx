@@ -1,30 +1,23 @@
 import React from "react";
 
-const EventDetailsCreatorContent = () => (
+const EventDetailsUserContent = () => (
   <div className="event-details container flex-grow text-black">
     <header className="event-header">
-      <div class="fixed bottom-10 right-10">
-        <button class="bg-blue-500 text-white px-4 py-2 rounded-md">
-          Edit
-        </button>
-      </div>
-
-      <div className="event-image-wrapper">
-        <img
-          src="./src/assets/ms.jpg"
-          alt="Event Image"
-          className="object-cover w-full h-60"
-        />
-      </div>
-
       <h1 className="event-title">Amazing Music Festival</h1>
-
       <p className="event-meta">
         <span className="text-gray-500">August 10, 2024</span> |
         <span className="text-gray-500">7:00 PM - 11:00 PM</span> |
         <span className="text-green-500">Tickets Available</span>
       </p>
     </header>
+
+    <div className="event-image-wrapper">
+      <img
+        src="/images/festival.jpg"
+        alt="Event Image"
+        className="event-image"
+      />
+    </div>
 
     <div className="event-description">
       <h2 className="heading">About the Event</h2>
@@ -83,4 +76,4 @@ const EventDetailsCreatorContent = () => (
   </div>
 );
 
-export default EventDetailsCreatorContent;
+export default EventDetailsUserContent;
