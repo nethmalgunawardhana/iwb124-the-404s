@@ -9,7 +9,7 @@ const Profile = () => {
     fullName: "John Doe",
     email: "johndoe@example.com",
     phoneNumber: "+1234567890",
-    verified: false, // Change this to false to test unverified state
+    verified: true, // Change this to false to test unverified state
     profilePicture: "../user.png", // Default profile picture
   });
   
