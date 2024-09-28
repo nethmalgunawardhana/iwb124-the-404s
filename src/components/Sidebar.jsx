@@ -18,8 +18,8 @@ const Sidebar = () => {
   };
 
   return (
-    <div className="flex h-screen overflow-clip bg-gray-100">
-      <aside className="w-64 bg-white p-4 border-r shadow-lg flex-shrink">
+    <div className="flex h-full pt-16 overflow-hidden bg-gray-100">
+     <aside className="w-64 bg-white p-4 border-r shadow-lg flex-shrink-0 overflow-y-auto">
         <h2 className="text-xl font-semibold mb-6">Settings</h2>
         <nav>
           <ul className="space-y-2">
@@ -60,7 +60,7 @@ const Sidebar = () => {
         </button>
       </aside>
       <main className="flex-grow  overflow-y-auto bg-gray-50">
-        <div className="p-8 w-full h-full">
+        <div className="p-8 ">
           {renderComponent()}
         </div>
       </main>
