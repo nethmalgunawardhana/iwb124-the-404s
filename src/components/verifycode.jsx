@@ -16,15 +16,15 @@ const verifycode = () => {
   return (
     <div className="min-h-full bg-white-100 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
       <div className="w-full max-w-md bg-white rounded-lg shadow-md p-8">
-      <a
-              href="#"
-              className="mt-8 text-center text-sm text-gray-600"
-            > &lt;
-            </a>
-            <span className="mt-8 text-center text-sm text-gray-600">&nbsp;&nbsp;Back to login
+        <a
+          href="#"
+          className="mt-8 text-center text-sm text-gray-600"
+        > &lt;<span className="mt-8 text-center text-sm text-gray-600">&nbsp;Back to login
 
-            </span>
-            <br/><br/>
+        </span>
+        </a>
+        
+        <br /><br />
 
 
         <h2 className="text-2xl font-semibold text-purple-800 mb-4">Verify code</h2>
@@ -58,7 +58,7 @@ const verifycode = () => {
           </div>
           <div className="flex   items-center">
             <label htmlFor="resend" className="text-sm text-gray-600">
-              Didn’t receive a code?  <span className="text-red-500"><a  href="#">Resend</a></span>
+              Didn’t receive a code?  <span className="text-red-500"><a href="#">Resend</a></span>
             </label>
 
           </div>
