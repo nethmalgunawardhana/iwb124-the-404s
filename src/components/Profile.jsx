@@ -7,7 +7,7 @@ const Profile = () => {
       <div className="flex items-center space-x-6 mb-6">
         <img
           className="h-32 w-32 rounded-full object-cover"
-          src="https://via.placeholder.com/150"
+          src="../user.png"
           alt="User Profile"
         />
         <div>
