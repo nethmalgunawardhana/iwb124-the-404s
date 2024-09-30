@@ -4,7 +4,7 @@ import LoginPage from './components/login'
 import SignUpForm from './components/signup'
 import FogotPasswordForm from './components/fogotpassword'
 import SettingsPage from './pages/Settingspage'
-
+import Verifycode from './components/verifycode'
 import './App.css'
 
 function App() {
@@ -19,7 +19,7 @@ function App() {
           <Route path="/signup" element={<SignUpForm />} />
           <Route path="/fogotpassword" element={<FogotPasswordForm />} />
           <Route path="/settings" element={<SettingsPage />} />
-
+          <Route path="/verifycode" element={<Verifycode />} />
         </Routes>
       </div>
     </BrowserRouter> 

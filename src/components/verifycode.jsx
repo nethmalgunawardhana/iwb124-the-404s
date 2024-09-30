@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { EyeOff, Eye } from 'lucide-react';
 
-const verifycode = () => {
+const Verifycode = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [password, setPassword] = useState('');
   const handleSubmit = (e) => {
@@ -75,4 +75,4 @@ const verifycode = () => {
   )
 }
 
-export default verifycode;
+export default Verifycode;
