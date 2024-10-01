@@ -1,14 +1,8 @@
 import React from "react";
 
-const EventDetailsCreatorContent = () => (
+const EventDetailsUserContent = () => (
   <div className="event-details container flex-grow text-black">
     <header className="event-header">
-      <div class="fixed bottom-10 right-10">
-        <button class="bg-purple-600 text-white px-4 py-2 rounded-md">
-          Edit
-        </button>
-      </div>
-
       <div className="event-image-wrapper">
         <img
           src="./src/assets/ms.jpg"
@@ -116,4 +110,4 @@ const EventDetailsCreatorContent = () => (
   </div>
 );
 
-export default EventDetailsCreatorContent;
+export default EventDetailsUserContent;
