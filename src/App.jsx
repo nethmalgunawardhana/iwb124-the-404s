@@ -5,7 +5,6 @@ import SignUpForm from './components/signup';
 import FogotPasswordForm from './components/fogotpassword';
 import SettingsPage from './pages/Settingspage';
 import Verifycode from './components/verifycode';
-import EventCreator from './pages/EventCreator';
 import HomePage from './pages/HomePage'; // Import HomePage component
 import Profile from './components/Profile';
 
@@ -25,8 +24,7 @@ function App() {
           <Route path="/settings" element={<SettingsPage />} />
           <Route path="/verifycode" element={<Verifycode />} />
           <Route path="/profile" element={<Profile />} />
-          <Route path="/eventcreator" element={<EventCreator />} />
-        </Routes>
+       </Routes>
       </div>
     </BrowserRouter>
   );
