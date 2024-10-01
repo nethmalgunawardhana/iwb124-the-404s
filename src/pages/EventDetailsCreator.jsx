@@ -5,9 +5,9 @@ import EventDetailsCreatorContent from '../components/EventDetailsCreatorContent
 
 const EventDetailsCreator = () => (
   <div className="flex flex-col min-h-screen">
-    <Navbar />
+  
     <div className="flex flex-grow">
-      <Sidebar />
+      
       <EventDetailsCreatorContent/>
     </div>
   </div>
