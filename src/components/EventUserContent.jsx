@@ -1,6 +1,6 @@
 import React from "react";
 
-const EventDetailsUserContent = () => (
+const EventUserContent = () => (
   <div className="event-details container flex-grow text-black">
     <header className="event-header">
       <div className="event-image-wrapper">
@@ -78,7 +78,7 @@ const EventDetailsUserContent = () => (
       </a>
     </div>
     <br></br>
-    <div className="Tags">
+    <div className="Tags p-2.5">
       <h2 className="heading text-2xl">Tags</h2>
       <div className="flex flex-wrap gap-2 p-2.5">
         <div className="bg-purple-400 text-white px-4 py-2 rounded-md">
@@ -110,4 +110,4 @@ const EventDetailsUserContent = () => (
   </div>
 );
 
-export default EventDetailsUserContent;
+export default EventUserContent;

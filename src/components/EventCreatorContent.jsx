@@ -2,19 +2,18 @@ import React from "react";
 
 const EventCreatorContent = () => (
   <div className="event-details container flex-grow text-black">
+    <div className="event-image-wrapper relative">
+      <img
+        src="./src/assets/fall.jpg"
+        alt="Event Image"
+        className="object-cover w-full h-60 rounded-lg"
+      />
+    </div>
     <header className="event-header">
       <div className="fixed bottom-10 right-10">
         <button className="bg-purple-600 text-white px-4 py-2 rounded-md">
           Edit
         </button>
-      </div>
-
-      <div className="event-image-wrapper">
-        <img
-          src="./src/assets/ms.jpg"
-          alt="Event Image"
-          className="object-cover w-full h-60 rounded-lg"
-        />
       </div>
 
       <h1 className="event-title text-4xl md:text-4xl font-semibold p-2.5">
@@ -53,7 +52,7 @@ const EventCreatorContent = () => (
       <ul className="speaker-list flex gap-4 py-3">
         <li className="speaker-item">
           <img
-            src="./src/assets/ms.jpg"
+            src="./src/assets/fall.jpg"
             alt="Speaker 1"
             className="speaker-avatar h-48 w-40 object-cover rounded-lg"
           />
@@ -64,7 +63,7 @@ const EventCreatorContent = () => (
         </li>
         <li className="speaker-item">
           <img
-            src="./src/assets/ms.jpg"
+            src="./src/assets/fall.jpg"
             alt="Speaker 2"
             className="speaker-avatar h-48 w-40 object-cover rounded-lg"
           />
