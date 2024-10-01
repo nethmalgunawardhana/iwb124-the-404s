@@ -72,7 +72,7 @@ const LoginPage = () => {
                 Remember me
               </label>
             </div>
-            <a href="./fogotpassword" className="text-sm text-purple-600 hover:text-purple-500">
+            <a href="#" className="text-sm text-purple-600 hover:text-purple-500">
               Forgot Password?
             </a>
           </div>
