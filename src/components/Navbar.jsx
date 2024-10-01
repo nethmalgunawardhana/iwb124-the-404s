@@ -2,7 +2,7 @@ import React from 'react';
 import { MessageSquare } from 'lucide-react';
 
 const Navbar = () => (
-  <nav className="flex justify-between items-center p-4 bg-white border-b fixed top-0 left-0 right-0 z-10">
+  <nav className="flex justify-between items-center p-4 bg-white border-b">
     <div className="flex space-x-4">
       <a href="#" className="text-gray-700">Home</a>
       <a href="#" className="text-gray-700">About</a>

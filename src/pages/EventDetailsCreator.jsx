@@ -1,16 +1,16 @@
 import React from 'react';
 import Navbar from '../components/Navbar';
 import Sidebar from '../components/Sidebar';
-import SettingsContent from '../components/Settingcontent';
+import EventDetailsCreatorContent from '../components/EventDetailsCreatorContent';
 
-const SettingsPage = () => (
+const EventDetailsCreator = () => (
   <div className="flex flex-col min-h-screen">
     <Navbar />
     <div className="flex flex-grow">
       <Sidebar />
-      <SettingsContent />
+      <EventDetailsCreatorContent/>
     </div>
   </div>
 );
 
-export default SettingsPage;
+export default EventDetailsCreator;
