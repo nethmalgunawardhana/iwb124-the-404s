@@ -6,6 +6,7 @@ import FogotPasswordForm from "./components/fogotpassword";
 import SettingsPage from "./pages/Settingspage";
 import Verifycode from "./components/verifycode";
 import EventCreator from "./pages/EventCreator";
+import EventEdit from "./components/EventEdit";
 
 import "./App.css";
 import Profile from "./components/Profile";
@@ -25,6 +26,7 @@ function App() {
             <Route path="/verifycode" element={<Verifycode />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/eventcreator" element={<EventCreator />} />
+            <Route path="/evenedit" element={<EventEdit />} />
           </Routes>
         </div>
       </BrowserRouter>
