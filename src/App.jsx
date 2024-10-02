@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import LoginPage from './components/login';
@@ -9,12 +8,14 @@ import Verifycode from './components/verifycode';
 import HomePage from './pages/HomePage'; // Import HomePage component
 import Profile from './components/Profile';
 import EventCreator from "./pages/EventCreator";
+import EventEdit from "./components/EventEdit";
 import "./App.css";
 
 function App() {
   const [count, setCount] = useState(0);
 
   return (
+
     <BrowserRouter>
       <div>
         <Routes>
@@ -26,6 +27,7 @@ function App() {
           <Route path="/verifycode" element={<Verifycode />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/eventcreator" element={<EventCreator />} />
+          <Route path="/evenedit" element={<EventEdit />} />
         </Routes>
       </div>
     </BrowserRouter>
