@@ -26,6 +26,8 @@ const LoginPage = () => {
         <h2 className="text-3xl font-bold text-black text-center mb-2">Hi, Welcome Name</h2>
         <p className="text-center text-gray-600 mb-8">Enter your credentials to continue</p>
         
+        {error && <p className="text-red-500 text-center mb-4">{error}</p>}
+        
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="space-y-4">
             <input
