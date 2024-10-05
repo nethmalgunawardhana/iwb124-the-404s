@@ -10,6 +10,7 @@ import Profile from "./components/Profile";
 import EventCreator from "./pages/EventCreator";
 import EventEdit from "./components/EventEdit";
 import AccountVerification from "./pages/Verification";
+import EventDashboard from './pages/eventdashboard';
 import "./App.css";
 
 function App() {
@@ -30,6 +31,7 @@ function App() {
           <Route path="/eventcreator" element={<EventCreator />} />
           <Route path="/evenedit" element={<EventEdit />} />
           <Route path="/verify" element={<AccountVerification />} />
+          <Route path="/eventdashboard" element={<EventDashboard />} />
         </Routes>
       </div>
     </BrowserRouter>
