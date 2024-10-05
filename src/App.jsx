@@ -9,7 +9,7 @@ import Verifycode from './components/verifycode';
 import HomePage from './pages/Homepage'; 
 import Profile from './components/Profile';
 import EventCreator from "./pages/EventCreator";
-import BrowseEventsPage from './pages/BrowseEventsPage'; // Import BrowseEventsPage
+import BrowseEventsPage from './pages/BrowseEventsPage';
 import "./App.css";
 
 function App() {

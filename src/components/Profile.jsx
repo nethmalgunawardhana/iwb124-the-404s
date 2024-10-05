@@ -1,32 +1,28 @@
 import React, { useState } from 'react';
 
-// Regex for validation
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const phoneRegex = /^\+?[1-9]\d{1,14}$/; // International phone number format
+const phoneRegex = /^\+?[1-9]\d{1,14}$/;
 
 const Profile = () => {
   const [userInfo, setUserInfo] = useState({
     fullName: "John Doe",
     email: "johndoe@example.com",
     phoneNumber: "+1234567890",
-    verified: true, // Change this to false to test unverified state
-    profilePicture: "../user.png", // Default profile picture
+    verified: true, 
+    profilePicture: "../user.png", 
   });
   
-  // State to manage edit mode and picture change
   const [isEditing, setIsEditing] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
   const [newPicture, setNewPicture] = useState(null);
   const [changesMade, setChangesMade] = useState(false);
 
-  // State to manage form validation errors
   const [errors, setErrors] = useState({
     fullName: '',
     email: '',
     phoneNumber: ''
   });
 
-  // Function to validate the form
   const validateForm = () => {
     let valid = true;
     let newErrors = { fullName: '', email: '', phoneNumber: '' };
@@ -56,7 +52,6 @@ const Profile = () => {
     return valid;
   };
 
-  // Handle input change
   const handleChange = (e) => {
     const { name, value } = e.target;
     setUserInfo({
@@ -65,20 +60,17 @@ const Profile = () => {
     });
   };
 
-  // Handle edit mode toggle
   const handleEdit = () => {
     setIsEditing(true);
   };
 
-  // Handle form submission and validation
   const handleSubmit = () => {
     if (validateForm()) {
       alert('Changes saved successfully!');
-      setIsEditing(false); // Exit edit mode
+      setIsEditing(false); 
     }
   };
 
-  // Handle profile picture change
   const handlePictureClick = () => {
     if (isEditing) {
       setShowPopup(true);
@@ -110,7 +102,7 @@ const Profile = () => {
     } else {
       setUserInfo({
         ...userInfo,
-        profilePicture: "../user.png", // Reset to default
+        profilePicture: "../user.png", 
       });
     }
     setShowPopup(false);
@@ -205,7 +197,7 @@ const Profile = () => {
           <button
             onClick={handleSubmit}
             className="mt-6 w-full px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-800"
-            disabled={Object.values(errors).some(error => error)} // Disable if any error exists
+            disabled={Object.values(errors).some(error => error)}
           >
             Save Changes
           </button>

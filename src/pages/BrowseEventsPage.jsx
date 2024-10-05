@@ -1,4 +1,3 @@
-// BrowseEventsPage.js
 import React, { useState } from 'react';
 
 const BrowseEventsPage = () => {
