@@ -10,7 +10,10 @@ import Profile from "./components/Profile";
 import EventCreator from "./pages/EventCreator";
 import EventEdit from "./components/EventEdit";
 import AccountVerification from "./pages/Verification";
-import EventDashboard from './pages/eventdashboard';
+import EventDashboard from "./pages/eventdashboard";
+import OrganizationVerification from "./pages/org-verify";
+import PVerification from "./pages/person-verify";
+import AdminDashboard from "./pages/Admin/admindashboard";
 import "./App.css";
 
 function App() {
@@ -32,6 +35,12 @@ function App() {
           <Route path="/evenedit" element={<EventEdit />} />
           <Route path="/verify" element={<AccountVerification />} />
           <Route path="/eventdashboard" element={<EventDashboard />} />
+          <Route
+            path="/organization-verification"
+            element={<OrganizationVerification />}
+          />
+          <Route path="/personal-verification" element={<PVerification />} />
+          <Route path="/admin" element={<AdminDashboard />} />
         </Routes>
       </div>
     </BrowserRouter>
