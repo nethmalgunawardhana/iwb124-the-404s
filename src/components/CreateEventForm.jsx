@@ -34,9 +34,32 @@ const CreateEventForm = ({ onSubmit }) => {
     }));
   };
 
+<<<<<<< Updated upstream
   const handleSubmit = (e) => {
     e.preventDefault();
     onSubmit(eventData);
+=======
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await fetch('http://localhost:8080/events', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(eventData),
+      });
+      if (response.ok) {
+        // Handle successful creation
+        window.alert("successfully created");
+      } else {
+        // Handle error
+        window.alert("fail to create");
+      }
+    } catch (error) {
+      console.error('Error creating event:', error);
+    }
+>>>>>>> Stashed changes
   };
 
   return (
