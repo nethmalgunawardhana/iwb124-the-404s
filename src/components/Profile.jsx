@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const phoneRegex = /^\+?[1-9]\d{1,14}$/;
@@ -11,21 +11,23 @@ const Profile = () => {
     verified: true, 
     profilePicture: "../user.png", 
   });
-  
+
+  // State to manage edit mode and picture change
+
   const [isEditing, setIsEditing] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
   const [newPicture, setNewPicture] = useState(null);
   const [changesMade, setChangesMade] = useState(false);
 
   const [errors, setErrors] = useState({
-    fullName: '',
-    email: '',
-    phoneNumber: ''
+    fullName: "",
+    email: "",
+    phoneNumber: "",
   });
 
   const validateForm = () => {
     let valid = true;
-    let newErrors = { fullName: '', email: '', phoneNumber: '' };
+    let newErrors = { fullName: "", email: "", phoneNumber: "" };
 
     if (!userInfo.fullName) {
       newErrors.fullName = "Full name cannot be empty.";
@@ -68,6 +70,7 @@ const Profile = () => {
     if (validateForm()) {
       alert('Changes saved successfully!');
       setIsEditing(false); 
+
     }
   };
 
@@ -112,11 +115,15 @@ const Profile = () => {
   return (
     <div className="min-h-screen bg-white">
       <div className="max-w-4xl mx-auto p-6 bg-white rounded-lg shadow-md">
-        <h2 className="text-2xl font-bold mb-6 text-center text-purple-600">User Profile</h2>
+        <h2 className="text-2xl font-bold mb-6 text-center text-purple-600">
+          User Profile
+        </h2>
         <div className="flex items-center space-x-6 mb-6">
           <div className={`relative`}>
             <img
-              className={`h-32 w-32 rounded-full object-cover border-4 ${userInfo.verified ? 'border-yellow-500' : 'border-purple-500'}`}
+              className={`h-32 w-32 rounded-full object-cover border-4 ${
+                userInfo.verified ? "border-yellow-500" : "border-purple-500"
+              }`}
               src={newPicture || userInfo.profilePicture}
               alt="User Profile"
               onClick={handlePictureClick}
@@ -134,7 +141,7 @@ const Profile = () => {
               )}
             </h3>
             <p className="text-gray-600">{userInfo.email}</p>
-            <button 
+            <button
               onClick={handleEdit}
               className="mt-4 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-800"
             >
@@ -145,50 +152,62 @@ const Profile = () => {
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
           {/* Full Name */}
           <div>
-            <label className="block text-sm font-medium text-gray-700">Full Name</label>
+            <label className="block text-sm font-medium text-gray-700">
+              Full Name
+            </label>
             <input
               type="text"
               name="fullName"
               className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 bg-white text-purple-600 ${
-                isEditing ? 'cursor-text' : 'cursor-not-allowed'
+                isEditing ? "cursor-text" : "cursor-not-allowed"
               }`}
               value={userInfo.fullName}
               onChange={handleChange}
               disabled={!isEditing}
             />
-            {errors.fullName && <p className="text-red-500 text-sm">{errors.fullName}</p>}
+            {errors.fullName && (
+              <p className="text-red-500 text-sm">{errors.fullName}</p>
+            )}
           </div>
 
           {/* Email */}
           <div>
-            <label className="block text-sm font-medium text-gray-700">Email</label>
+            <label className="block text-sm font-medium text-gray-700">
+              Email
+            </label>
             <input
               type="email"
               name="email"
               className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 bg-white text-purple-600 ${
-                isEditing ? 'cursor-text' : 'cursor-not-allowed'
+                isEditing ? "cursor-text" : "cursor-not-allowed"
               }`}
               value={userInfo.email}
               onChange={handleChange}
               disabled={!isEditing}
             />
-            {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
+            {errors.email && (
+              <p className="text-red-500 text-sm">{errors.email}</p>
+            )}
           </div>
 
           {/* Phone Number */}
           <div>
-            <label className="block text-sm font-medium text-gray-700">Phone Number</label>
+            <label className="block text-sm font-medium text-gray-700">
+              Phone Number
+            </label>
             <input
               type="tel"
               name="phoneNumber"
               className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 bg-white text-purple-600 ${
-                isEditing ? 'cursor-text' : 'cursor-not-allowed'
+                isEditing ? "cursor-text" : "cursor-not-allowed"
               }`}
               value={userInfo.phoneNumber}
               onChange={handleChange}
               disabled={!isEditing}
             />
-            {errors.phoneNumber && <p className="text-red-500 text-sm">{errors.phoneNumber}</p>}
+            {errors.phoneNumber && (
+              <p className="text-red-500 text-sm">{errors.phoneNumber}</p>
+            )}
           </div>
         </div>
 
@@ -197,7 +216,9 @@ const Profile = () => {
           <button
             onClick={handleSubmit}
             className="mt-6 w-full px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-800"
+
             disabled={Object.values(errors).some(error => error)}
+
           >
             Save Changes
           </button>
@@ -209,16 +230,29 @@ const Profile = () => {
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white rounded-lg p-6 w-1/3">
             <h3 className="text-lg font-bold mb-4">Change Profile Picture</h3>
-            <button onClick={handleRemovePicture} className="text-red-500 hover:underline">Remove Picture</button>
+            <button
+              onClick={handleRemovePicture}
+              className="text-red-500 hover:underline"
+            >
+              Remove Picture
+            </button>
             <div className="my-4">
               <input type="file" accept="image/*" onChange={handleFileChange} />
             </div>
             {changesMade && (
-              <button onClick={handleSavePicture} className="mt-4 w-full px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-800">
+              <button
+                onClick={handleSavePicture}
+                className="mt-4 w-full px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-800"
+              >
                 Save Changes
               </button>
             )}
-            <button onClick={() => setShowPopup(false)} className="mt-2 text-gray-600 hover:underline">Cancel</button>
+            <button
+              onClick={() => setShowPopup(false)}
+              className="mt-2 text-gray-600 hover:underline"
+            >
+              Cancel
+            </button>
           </div>
         </div>
       )}
