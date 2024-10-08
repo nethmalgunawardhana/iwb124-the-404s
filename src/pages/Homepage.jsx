@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { User, Settings, Info, HelpCircle, ChevronDown } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const HomePage = () => {
   const [browseOption, setBrowseOption] = useState(null);
@@ -56,7 +57,7 @@ const HomePage = () => {
           <h1 className="text-5xl font-bold">Discover Amazing Events</h1>
           <p className="mt-4 text-lg">Your one-stop solution for all your event needs!</p>
           <button className="mt-6 px-8 py-3 bg-white text-purple-600 rounded-lg hover:bg-gray-200 transition-colors animate-pulse">
-            Explore Events
+           <Link to="/browse-events">Browse Events</Link>
           </button>
         </div>
       </header>
