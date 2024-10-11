@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { User, Settings, Info, HelpCircle, ChevronDown } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import Navbar from "../components/NavbarforHomepage"
 
 const HomePage = () => {
   const [browseOption, setBrowseOption] = useState(null);
@@ -43,7 +44,11 @@ const HomePage = () => {
   };
 
   return (
+    
     <div className="min-h-screen bg-gray-50 relative">
+      {/*added nav bar*/}
+      < Navbar />
+<br /><br /><br />
       {/* Hero Section */}
       <header className="bg-purple-600 text-white py-20 relative overflow-hidden">
         <div className="absolute inset-0 z-0">
@@ -57,7 +62,7 @@ const HomePage = () => {
           <h1 className="text-5xl font-bold">Discover Amazing Events</h1>
           <p className="mt-4 text-lg">Your one-stop solution for all your event needs!</p>
           <button className="mt-6 px-8 py-3 bg-white text-purple-600 rounded-lg hover:bg-gray-200 transition-colors animate-pulse">
-           <Link to="/browse-events">Browse Events</Link>
+           <Link to="/browse-events">Explore Events</Link>
           </button>
         </div>
       </header>
