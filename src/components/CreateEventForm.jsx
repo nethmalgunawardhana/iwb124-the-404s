@@ -34,11 +34,7 @@ const CreateEventForm = ({ onSubmit }) => {
     }));
   };
 
-<<<<<<< Updated upstream
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    onSubmit(eventData);
-=======
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -59,7 +55,7 @@ const CreateEventForm = ({ onSubmit }) => {
     } catch (error) {
       console.error('Error creating event:', error);
     }
->>>>>>> Stashed changes
+
   };
 
   return (
