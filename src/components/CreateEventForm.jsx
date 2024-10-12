@@ -27,6 +27,16 @@ const CreateEventForm = () => {
     }));
   };
 
+
+  const handleImageUpload = (e) => {
+    setEventData(prevData => ({
+      ...prevData,
+      image: e.target.files[0]
+    }));
+  };
+
+
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -65,6 +75,7 @@ const CreateEventForm = () => {
       console.error('Error creating event:', error);
       window.alert("Error creating event");
     }
+
   };
 
   return (
