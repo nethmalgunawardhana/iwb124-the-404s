@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Calendar, Clock, MapPin, Users, Tag, Image, Link, FileText, Mic, DollarSign } from 'lucide-react';
 
-const CreateEventForm = ({ onSubmit }) => {
+const CreateEventForm = () => {
   const [eventData, setEventData] = useState({
     name: '',
     description: '',
@@ -11,7 +11,7 @@ const CreateEventForm = ({ onSubmit }) => {
     institute: '',
     organizingCommittee: '',
     tags: '',
-    image: null,
+    image: '',
     registrationLink: '',
     resources: '',
     speakers: [],
@@ -27,6 +27,7 @@ const CreateEventForm = ({ onSubmit }) => {
     }));
   };
 
+
   const handleImageUpload = (e) => {
     setEventData(prevData => ({
       ...prevData,
@@ -35,32 +36,51 @@ const CreateEventForm = ({ onSubmit }) => {
   };
 
 
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('http://localhost:8080/events', {
+      const response = await fetch('http://localhost:9091/events', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(eventData),
+        body: JSON.stringify({
+          ...eventData,
+          speakers: eventData.speakers.filter(speaker => speaker.trim() !== '')
+        }),
       });
       if (response.ok) {
-        // Handle successful creation
-        window.alert("successfully created");
+        window.alert("Event successfully created");
+        setEventData({
+          name: '',
+          description: '',
+          date: '',
+          time: '',
+          locationLink: '',
+          institute: '',
+          organizingCommittee: '',
+          tags: '',
+          image: '',
+          registrationLink: '',
+          resources: '',
+          speakers: [],
+          isFree: true,
+          ticketDescription: ''
+        });
       } else {
-        // Handle error
-        window.alert("fail to create");
+        window.alert("Failed to create event");
       }
     } catch (error) {
       console.error('Error creating event:', error);
+      window.alert("Error creating event");
     }
 
   };
 
   return (
     <form onSubmit={handleSubmit} className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-      <h2 className="text-2xl font-bold  text-black mb-6">Create a New Event</h2>
+      <h2 className="text-2xl font-bold text-black mb-6">Create a New Event</h2>
       
       <div className="mb-4">
         <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="name">
@@ -74,6 +94,7 @@ const CreateEventForm = ({ onSubmit }) => {
           value={eventData.name}
           onChange={handleInputChange}
           placeholder="Event Name"
+          required
         />
       </div>
 
@@ -89,6 +110,7 @@ const CreateEventForm = ({ onSubmit }) => {
           onChange={handleInputChange}
           placeholder="Event Description"
           rows="3"
+          required
         />
       </div>
 
@@ -104,6 +126,7 @@ const CreateEventForm = ({ onSubmit }) => {
             name="date"
             value={eventData.date}
             onChange={handleInputChange}
+            required
           />
         </div>
         <div className="w-1/2">
@@ -117,6 +140,7 @@ const CreateEventForm = ({ onSubmit }) => {
             name="time"
             value={eventData.time}
             onChange={handleInputChange}
+            required
           />
         </div>
       </div>
@@ -133,6 +157,7 @@ const CreateEventForm = ({ onSubmit }) => {
           value={eventData.locationLink}
           onChange={handleInputChange}
           placeholder="https://..."
+          required
         />
       </div>
 
@@ -148,6 +173,7 @@ const CreateEventForm = ({ onSubmit }) => {
           value={eventData.institute}
           onChange={handleInputChange}
           placeholder="Organizing Institute"
+          required
         />
       </div>
 
@@ -163,6 +189,7 @@ const CreateEventForm = ({ onSubmit }) => {
           value={eventData.organizingCommittee}
           onChange={handleInputChange}
           placeholder="Organizing Committee"
+          required
         />
       </div>
 
@@ -178,19 +205,22 @@ const CreateEventForm = ({ onSubmit }) => {
           value={eventData.tags}
           onChange={handleInputChange}
           placeholder="Comma-separated tags"
+          required
         />
       </div>
 
       <div className="mb-4">
         <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="image">
-          <Image className="inline mr-2" size={16} /> Event Image
+          <Image className="inline mr-2" size={16} /> Event Image URL
         </label>
         <input
           className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
           id="image"
-          type="file"
-          onChange={handleImageUpload}
-          accept="image/*"
+          type="url"
+          name="image"
+          value={eventData.image}
+          onChange={handleInputChange}
+          placeholder="https://..."
         />
       </div>
 
@@ -206,12 +236,13 @@ const CreateEventForm = ({ onSubmit }) => {
           value={eventData.registrationLink}
           onChange={handleInputChange}
           placeholder="https://..."
+          required
         />
       </div>
 
       <div className="mb-4">
         <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="resources">
-          <FileText className="inline mr-2" size={16} /> Resources (Optional)
+          <FileText className="inline mr-2" size={16} /> Resources
         </label>
         <textarea
           className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
@@ -226,7 +257,7 @@ const CreateEventForm = ({ onSubmit }) => {
 
       <div className="mb-4">
         <label className="block text-gray-700 text-sm font-bold mb-2">
-          <Mic className="inline mr-2" size={16} /> Speakers (Optional)
+          <Mic className="inline mr-2" size={16} /> Speakers
         </label>
         <input
           className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
@@ -235,6 +266,7 @@ const CreateEventForm = ({ onSubmit }) => {
           value={eventData.speakers.join(', ')}
           onChange={(e) => setEventData(prev => ({ ...prev, speakers: e.target.value.split(',').map(s => s.trim()) }))}
           placeholder="Speaker names (comma-separated)"
+          required
         />
       </div>
 
