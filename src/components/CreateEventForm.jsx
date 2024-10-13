@@ -36,10 +36,8 @@ const CreateEventForm = () => {
   };
 
 
-<<<<<<< HEAD
-=======
 
->>>>>>> 59f0d7558179bb280edd7e293fa691072da7380f
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
