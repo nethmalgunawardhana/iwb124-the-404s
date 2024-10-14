@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Calendar, Clock, MapPin, Users, Tag, Image, Link, FileText, Mic, DollarSign } from 'lucide-react';
 
-const UpdateEventForm = ({ onSubmit, initialData }) => {
+const UpdateEventForm = () => {
+  const [events, setEvents] = useState([]);
+  const [selectedEvent, setSelectedEvent] = useState(null);
   const [eventData, setEventData] = useState({
+    id: '',
     name: '',
     description: '',
     date: '',
@@ -11,7 +14,7 @@ const UpdateEventForm = ({ onSubmit, initialData }) => {
     institute: '',
     organizingCommittee: '',
     tags: '',
-    image: null,
+    image: '',
     registrationLink: '',
     resources: '',
     speakers: [],
@@ -20,10 +23,30 @@ const UpdateEventForm = ({ onSubmit, initialData }) => {
   });
 
   useEffect(() => {
-    if (initialData) {
-      setEventData(initialData);
+    fetchEvents();
+  }, []);
+
+  const fetchEvents = async () => {
+    try {
+      const response = await fetch('http://localhost:9091/events');
+      if (response.ok) {
+        const data = await response.json();
+        setEvents(data);
+      } else {
+        console.error('Failed to fetch events');
+      }
+    } catch (error) {
+      console.error('Error fetching events:', error);
     }
-  }, [initialData]);
+  };
+
+  const handleEventSelect = (event) => {
+    setSelectedEvent(event);
+    setEventData({
+      ...event,
+      speakers: event.speakers.join(', ')
+    });
+  };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -33,19 +56,62 @@ const UpdateEventForm = ({ onSubmit, initialData }) => {
     }));
   };
 
-  const handleImageUpload = (e) => {
-    setEventData(prevData => ({
-      ...prevData,
-      image: e.target.files[0]
-    }));
-  };
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    onSubmit(eventData);
+    try {
+      const response = await fetch(`http://localhost:9091/events/${eventData.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          ...eventData,
+          speakers: eventData.speakers.split(',').map(s => s.trim())
+        }),
+      });
+      if (response.ok) {
+        window.alert("Event successfully updated");
+        fetchEvents(); // Refresh the event list
+      } else {
+        window.alert("Failed to update event");
+      }
+    } catch (error) {
+      console.error('Error updating event:', error);
+      window.alert("Error updating event");
+    }
   };
 
   return (
+    <div>
+    <h2 className="text-2xl font-bold text-black mb-6">Update Event</h2>
+    
+    <table className="w-full mb-6">
+      <thead>
+        <tr>
+          <th>Event Name</th>
+          <th>Description</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {events.map(event => (
+          <tr key={event.id}>
+            <td>{event.name}</td>
+            <td>{event.description.substring(0, 50)}...</td>
+            <td>
+              <button 
+                onClick={() => handleEventSelect(event)}
+                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded"
+              >
+                Select
+              </button>
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+
+    {selectedEvent && (
     <form onSubmit={handleSubmit} className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
       <h2 className="text-2xl font-bold text-black mb-6">Update Event</h2>
       
@@ -167,19 +233,20 @@ const UpdateEventForm = ({ onSubmit, initialData }) => {
           placeholder="Comma-separated tags"
         />
       </div>
-
       <div className="mb-4">
-        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="image">
-          <Image className="inline mr-2" size={16} /> Event Image
-        </label>
-        <input
-          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-          id="image"
-          type="file"
-          onChange={handleImageUpload}
-          accept="image/*"
-        />
-      </div>
+            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="image">
+              <Image className="inline mr-2" size={16} /> Event Image URL
+            </label>
+            <input
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              id="image"
+              type="url"
+              name="image"
+              value={eventData.image}
+              onChange={handleInputChange}
+              placeholder="https://..."
+            />
+          </div>
 
       <div className="mb-4">
         <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="registrationLink">
@@ -263,6 +330,8 @@ const UpdateEventForm = ({ onSubmit, initialData }) => {
         </button>
       </div>
     </form>
+    )}
+  </div>
   );
 };
 
