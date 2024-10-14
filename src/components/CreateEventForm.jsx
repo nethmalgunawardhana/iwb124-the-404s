@@ -24,6 +24,8 @@ const CreateEventForm = () => {
     }));
   };
 
+
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
