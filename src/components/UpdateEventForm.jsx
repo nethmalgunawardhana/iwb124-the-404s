@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Calendar, Clock, MapPin, Users, Tag, Image, Link, FileText, Mic, DollarSign } from 'lucide-react';
+import { Calendar, Clock, MapPin, Users, Tag, Image, Link, FileText } from 'lucide-react';
 
-const UpdateEventForm = ({ onSubmit, initialData }) => {
+const UpdateEventForm = () => {
+  const [events, setEvents] = useState([]);
+  const [selectedEvent, setSelectedEvent] = useState(null);
   const [eventData, setEventData] = useState({
+    
     name: '',
     description: '',
     date: '',
@@ -11,19 +14,35 @@ const UpdateEventForm = ({ onSubmit, initialData }) => {
     institute: '',
     organizingCommittee: '',
     tags: '',
-    image: null,
+    image: '',
     registrationLink: '',
     resources: '',
-    speakers: [],
-    isFree: true,
-    ticketDescription: ''
   });
 
   useEffect(() => {
-    if (initialData) {
-      setEventData(initialData);
+    fetchEvents();
+  }, []);
+
+  const fetchEvents = async () => {
+    try {
+      const response = await fetch('http://localhost:9091/events');
+      if (response.ok) {
+        const data = await response.json();
+        setEvents(data);
+      } else {
+        console.error('Failed to fetch events');
+      }
+    } catch (error) {
+      console.error('Error fetching events:', error);
     }
-  }, [initialData]);
+  };
+
+  const handleEventSelect = (event) => {
+    setSelectedEvent(event);
+    setEventData({
+      ...event,
+    });
+  };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -33,236 +52,279 @@ const UpdateEventForm = ({ onSubmit, initialData }) => {
     }));
   };
 
-  const handleImageUpload = (e) => {
-    setEventData(prevData => ({
-      ...prevData,
-      image: e.target.files[0]
-    }));
-  };
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    onSubmit(eventData);
+    try {
+      const formattedEventData = {
+        ...eventData,
+      };
+
+      const response = await fetch(`http://localhost:9091/events/${eventData.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formattedEventData),
+      });
+
+      if (response.ok) {
+        const updatedEvent = await response.json();
+        window.alert(`Event successfully updated: ${updatedEvent.name}`);
+        fetchEvents(); // Refresh the event list
+        setSelectedEvent(null);
+        setEventData({
+          
+          name: '',
+          description: '',
+          date: '',
+          time: '',
+          locationLink: '',
+          institute: '',
+          organizingCommittee: '',
+          tags: '',
+          image: '',
+          registrationLink: '',
+          resources: '',
+        });
+      } else {
+        const errorData = await response.json();
+        window.alert(`Failed to update event: ${errorData.message}`);
+      }
+    } catch (error) {
+      console.error('Error updating event:', error);
+      window.alert("Error updating event");
+    }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+    <div>
       <h2 className="text-2xl font-bold text-black mb-6">Update Event</h2>
       
-      <div className="mb-4">
-        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="name">
-          <Calendar className="inline mr-2" size={16} /> Event Name
-        </label>
-        <input
-          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-          id="name"
-          type="text"
-          name="name"
-          value={eventData.name}
-          onChange={handleInputChange}
-          placeholder="Event Name"
-        />
-      </div>
+      <table className="w-full mb-6 border-collapse border border-gray-300 rounded-lg shadow-lg">
+        <thead>
+          <tr className="bg-gray-100">
+            <th className="border border-gray-300 px-4 py-2 text-left text-gray-700">Event Name</th>
+            <th className="border border-gray-300 px-4 py-2 text-left text-gray-700">Description</th>
+            <th className="border border-gray-300 px-4 py-2 text-left text-gray-700">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {events.map(event => (
+            <tr key={event.id} className="hover:bg-purple-800 text-black">
+              <td className="border border-gray-300 px-4 py-2">{event.name}</td>
+              <td className="border border-gray-300 px-4 py-2">{event.description.substring(0, 50)}...</td>
+              <td className="border border-gray-300 px-4 py-2">
+                <button 
+                  onClick={() => handleEventSelect(event)}
+                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded"
+                >
+                  Select
+                </button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
 
-      <div className="mb-4">
-        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="description">
-          <FileText className="inline mr-2" size={16} /> Description
-        </label>
-        <textarea
-          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-          id="description"
-          name="description"
-          value={eventData.description}
-          onChange={handleInputChange}
-          placeholder="Event Description"
-          rows="3"
-        />
-      </div>
+      {selectedEvent && (
+        <form onSubmit={handleSubmit} className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+          <h2 className="text-2xl font-bold text-black mb-6">Update Event</h2>
+          
+          {/* Name Input */}
+          <div className="mb-4">
+            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="name">
+              <Calendar className="inline mr-2" size={16} /> Event Name
+            </label>
+            <input
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 bg-gray-300 leading-tight focus:outline-none focus:shadow-outline"
+              id="name"
+              type="text"
+              name="name"
+              value={eventData.name}
+              onChange={handleInputChange}
+              placeholder="Event Name"
+              required
+            />
+          </div>
 
-      <div className="mb-4 flex space-x-4">
-        <div className="w-1/2">
-          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="date">
-            <Calendar className="inline mr-2" size={16} /> Date
-          </label>
-          <input
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            id="date"
-            type="date"
-            name="date"
-            value={eventData.date}
-            onChange={handleInputChange}
-          />
-        </div>
-        <div className="w-1/2">
-          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="time">
-            <Clock className="inline mr-2" size={16} /> Time
-          </label>
-          <input
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            id="time"
-            type="time"
-            name="time"
-            value={eventData.time}
-            onChange={handleInputChange}
-          />
-        </div>
-      </div>
+          {/* Description Input */}
+          <div className="mb-4">
+            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="description">
+              <FileText className="inline mr-2" size={16} /> Description
+            </label>
+            <textarea
+              className="shadow appearance-none border rounded w-full py-2 px-3 bg-gray-300 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              id="description"
+              name="description"
+              value={eventData.description}
+              onChange={handleInputChange}
+              placeholder="Event Description"
+              rows="3"
+              required
+            />
+          </div>
 
-      <div className="mb-4">
-        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="locationLink">
-          <MapPin className="inline mr-2" size={16} /> Location Link
-        </label>
-        <input
-          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-          id="locationLink"
-          type="url"
-          name="locationLink"
-          value={eventData.locationLink}
-          onChange={handleInputChange}
-          placeholder="https://..."
-        />
-      </div>
+          {/* Date and Time Inputs */}
+          <div className="mb-4 flex space-x-4">
+            <div className="w-1/2">
+              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="date">
+                <Calendar className="inline mr-2" size={16} /> Date
+              </label>
+              <input
+                className="shadow appearance-none border rounded w-full py-2 px-3 bg-gray-300 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                id="date"
+                type="date"
+                name="date"
+                value={eventData.date}
+                onChange={handleInputChange}
+                required
+              />
+            </div>
+            <div className="w-1/2">
+              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="time">
+                <Clock className="inline mr-2" size={16} /> Time
+              </label>
+              <input
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 bg-gray-300 leading-tight focus:outline-none focus:shadow-outline"
+                id="time"
+                type="time"
+                name="time"
+                value={eventData.time}
+                onChange={handleInputChange}
+                required
+              />
+            </div>
+          </div>
 
-      <div className="mb-4">
-        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="institute">
-          <Users className="inline mr-2" size={16} /> Institute
-        </label>
-        <input
-          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-          id="institute"
-          type="text"
-          name="institute"
-          value={eventData.institute}
-          onChange={handleInputChange}
-          placeholder="Organizing Institute"
-        />
-      </div>
+          {/* Location Link Input */}
+          <div className="mb-4">
+            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="locationLink">
+              <MapPin className="inline mr-2" size={16} /> Location Link
+            </label>
+            <input
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 bg-gray-300 leading-tight focus:outline-none focus:shadow-outline"
+              id="locationLink"
+              type="url"
+              name="locationLink"
+              value={eventData.locationLink}
+              onChange={handleInputChange}
+              placeholder="https://..."
+              required
+            />
+          </div>
 
-      <div className="mb-4">
-        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="organizingCommittee">
-          <Users className="inline mr-2" size={16} /> Organizing Committee
-        </label>
-        <input
-          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-          id="organizingCommittee"
-          type="text"
-          name="organizingCommittee"
-          value={eventData.organizingCommittee}
-          onChange={handleInputChange}
-          placeholder="Organizing Committee"
-        />
-      </div>
+          {/* Institute Input */}
+          <div className="mb-4">
+            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="institute">
+              <Users className="inline mr-2" size={16} /> Institute
+            </label>
+            <input
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 bg-gray-300 leading-tight focus:outline-none focus:shadow-outline"
+              id="institute"
+              type="text"
+              name="institute"
+              value={eventData.institute}
+              onChange={handleInputChange}
+              placeholder="Organizing Institute"
+              required
+            />
+          </div>
 
-      <div className="mb-4">
-        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="tags">
-          <Tag className="inline mr-2" size={16} /> Tags
-        </label>
-        <input
-          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-          id="tags"
-          type="text"
-          name="tags"
-          value={eventData.tags}
-          onChange={handleInputChange}
-          placeholder="Comma-separated tags"
-        />
-      </div>
+          {/* Organizing Committee Input */}
+          <div className="mb-4">
+            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="organizingCommittee">
+              <Users className="inline mr-2" size={16} /> Organizing Committee
+            </label>
+            <input
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 bg-gray-300 leading-tight focus:outline-none focus:shadow-outline"
+              id="organizingCommittee"
+              type="text"
+              name="organizingCommittee"
+              value={eventData.organizingCommittee}
+              onChange={handleInputChange}
+              placeholder="Organizing Committee"
+              required
+            />
+          </div>
 
-      <div className="mb-4">
-        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="image">
-          <Image className="inline mr-2" size={16} /> Event Image
-        </label>
-        <input
-          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-          id="image"
-          type="file"
-          onChange={handleImageUpload}
-          accept="image/*"
-        />
-      </div>
+          {/* Tags Input */}
+          <div className="mb-4">
+            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="tags">
+              <Tag className="inline mr-2" size={16} /> Tags
+            </label>
+            <input
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 bg-gray-300 leading-tight focus:outline-none focus:shadow-outline"
+              id="tags"
+              type="text"
+              name="tags"
+              value={eventData.tags}
+              onChange={handleInputChange}
+              placeholder="Comma-separated tags"
+              required
+            />
+          </div>
 
-      <div className="mb-4">
-        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="registrationLink">
-          <Link className="inline mr-2" size={16} /> Registration Link
-        </label>
-        <input
-          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-          id="registrationLink"
-          type="url"
-          name="registrationLink"
-          value={eventData.registrationLink}
-          onChange={handleInputChange}
-          placeholder="https://..."
-        />
-      </div>
+          {/* Image URL Input */}
+          <div className="mb-4">
+            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="image">
+              <Image className="inline mr-2" size={16} /> Event Image URL
+            </label>
+            <input
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 bg-gray-300 leading-tight focus:outline-none focus:shadow-outline"
+              id="image"
+              type="url"
+              name="image"
+              value={eventData.image}
+              onChange={handleInputChange}
+              placeholder="https://..."
+            />
+          </div>
 
-      <div className="mb-4">
-        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="resources">
-          <FileText className="inline mr-2" size={16} /> Resources (Optional)
-        </label>
-        <textarea
-          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-          id="resources"
-          name="resources"
-          value={eventData.resources}
-          onChange={handleInputChange}
-          placeholder="Additional resources"
-          rows="3"
-        />
-      </div>
+          {/* Registration Link Input */}
+          <div className="mb-4">
+            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="registrationLink">
+              <Link className="inline mr-2" size={16} /> Registration Link
+            </label>
+            <input
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 bg-gray-300 leading-tight focus:outline-none focus:shadow-outline"
+              id="registrationLink"
+              type="url"
+              name="registrationLink"
+              value={eventData.registrationLink}
+              onChange={handleInputChange}
+              placeholder="https://..."
+              required
+            />
+          </div>
 
-      <div className="mb-4">
-        <label className="block text-gray-700 text-sm font-bold mb-2">
-          <Mic className="inline mr-2" size={16} /> Speakers (Optional)
-        </label>
-        <input
-          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-          type="text"
-          name="speakers"
-          value={eventData.speakers.join(', ')}
-          onChange={(e) => setEventData(prev => ({ ...prev, speakers: e.target.value.split(',').map(s => s.trim()) }))}
-          placeholder="Speaker names (comma-separated)"
-        />
-      </div>
+          {/* Resources Input */}
+          <div className="mb-4">
+            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="resources">
+              <FileText className="inline mr-2" size={16} /> Resources
+            </label>
+            <textarea
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 bg-gray-300 leading-tight focus:outline-none focus:shadow-outline"
+              id="resources"
+              name="resources"
+              value={eventData.resources}
+              onChange={handleInputChange}
+              placeholder="Additional resources"
+              rows="3"
+            />
+          </div>
 
-      <div className="mb-4">
-        <label className="flex items-center">
-          <input
-            type="checkbox"
-            className="form-checkbox"
-            checked={eventData.isFree}
-            onChange={() => setEventData(prev => ({ ...prev, isFree: !prev.isFree }))}
-          />
-          <span className="ml-2 text-gray-700"><DollarSign className="inline mr-2" size={16} /> Free Event</span>
-        </label>
-      </div>
-
-      {!eventData.isFree && (
-        <div className="mb-4">
-          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="ticketDescription">
-            Ticket Description
-          </label>
-          <textarea
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            id="ticketDescription"
-            name="ticketDescription"
-            value={eventData.ticketDescription}
-            onChange={handleInputChange}
-            placeholder="Ticket details and pricing"
-            rows="3"
-          />
-        </div>
+          {/* Submit Button */}
+          <div className="flex items-center justify-between">
+            <button
+              className="bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+              type="submit"
+            >
+              Update Event
+            </button>
+          </div>
+        </form>
       )}
-
-      <div className="flex items-center justify-between">
-        <button
-          className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-          type="submit"
-        >
-          Update Event
-        </button>
-      </div>
-    </form>
+    </div>
   );
 };
 
