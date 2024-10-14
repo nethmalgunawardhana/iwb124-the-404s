@@ -1,8 +1,7 @@
-
 import { useState } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import LoginPage from "./components/login";
-import SignUpForm from "./components/signup";
+
+import SignUpPage from "./pages/Signup"; // Updated to import SignupPage
 import FogotPasswordForm from "./components/fogotpassword";
 import SettingsPage from "./pages/Settingspage";
 import Verifycode from "./components/verifycode";
@@ -16,6 +15,7 @@ import OrganizationVerification from "./pages/org-verify";
 import PVerification from "./pages/person-verify";
 import AdminDashboard from "./pages/Admin/admindashboard";
 import BrowseEventsPage from './pages/BrowseEventsPage';
+import Login from './pages/Login'; // Import the new Login component
 import "./App.css";
 
 function App() {
@@ -25,10 +25,9 @@ function App() {
     <BrowserRouter>
       <div>
         <Routes>
-
           <Route path="/" element={<HomePage />} /> {/* HomePage is the landing route */}
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/signup" element={<SignUpForm />} />
+          <Route path="/login" element={<Login />} /> {/* Updated to use Login */}
+          <Route path="/signup" element={<SignUpPage />} /> {/* Updated to use SignupPage */}
           <Route path="/fogotpassword" element={<FogotPasswordForm />} />
           <Route path="/settings" element={<SettingsPage />} />
           <Route path="/verifycode" element={<Verifycode />} />
@@ -38,10 +37,7 @@ function App() {
           <Route path="/evenedit" element={<EventEdit />} />
           <Route path="/verify" element={<AccountVerification />} />
           <Route path="/eventdashboard" element={<EventDashboard />} />
-          <Route
-            path="/organization-verification"
-            element={<OrganizationVerification />}
-          />
+          <Route path="/organization-verification" element={<OrganizationVerification />} />
           <Route path="/personal-verification" element={<PVerification />} />
           <Route path="/admin" element={<AdminDashboard />} />
         </Routes>
