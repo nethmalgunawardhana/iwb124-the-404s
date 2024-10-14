@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Calendar, Clock, MapPin, Users, Tag, Image, Link, FileText, Mic, DollarSign } from 'lucide-react';
+import { Calendar, Clock, MapPin, Users, Tag, Image, Link, FileText } from 'lucide-react';
 
 const CreateEventForm = () => {
   const [eventData, setEventData] = useState({
@@ -14,9 +14,6 @@ const CreateEventForm = () => {
     image: '',
     registrationLink: '',
     resources: '',
-    speakers: [],
-    // isFree: true,
-    // ticketDescription: ''
   });
 
   const handleInputChange = (e) => {
@@ -27,31 +24,25 @@ const CreateEventForm = () => {
     }));
   };
 
-
-  const handleImageUpload = (e) => {
-    setEventData(prevData => ({
-      ...prevData,
-      image: e.target.files[0]
-    }));
-  };
-
-
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      const formattedEventData = {
+        ...eventData,
+       
+      };
+
       const response = await fetch('http://localhost:9091/events', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          ...eventData,
-          speakers: eventData.speakers.filter(speaker => speaker.trim() !== '')
-        }),
+        body: JSON.stringify(formattedEventData),
       });
+
       if (response.ok) {
-        window.alert("Event successfully created");
+        const createdEvent = await response.json();
+        window.alert(`Event successfully created with ID: ${createdEvent.id}`);
         setEventData({
           name: '',
           description: '',
@@ -64,24 +55,22 @@ const CreateEventForm = () => {
           image: '',
           registrationLink: '',
           resources: '',
-          speakers: [],
-          // isFree: true,
-          // ticketDescription: ''
         });
       } else {
-        window.alert("Failed to create event");
+        const errorData = await response.json();
+        window.alert(`Failed to create event: ${errorData.message}`);
       }
     } catch (error) {
       console.error('Error creating event:', error);
       window.alert("Error creating event");
     }
-
   };
 
   return (
     <form onSubmit={handleSubmit} className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
       <h2 className="text-2xl font-bold text-black mb-6">Create a New Event</h2>
       
+      {/* Name Input */}
       <div className="mb-4">
         <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="name">
           <Calendar className="inline mr-2" size={16} /> Event Name
@@ -98,6 +87,7 @@ const CreateEventForm = () => {
         />
       </div>
 
+      {/* Description Input */}
       <div className="mb-4">
         <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="description">
           <FileText className="inline mr-2" size={16} /> Description
@@ -114,6 +104,7 @@ const CreateEventForm = () => {
         />
       </div>
 
+      {/* Date and Time Inputs */}
       <div className="mb-4 flex space-x-4">
         <div className="w-1/2">
           <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="date">
@@ -145,6 +136,7 @@ const CreateEventForm = () => {
         </div>
       </div>
 
+      {/* Location Link Input */}
       <div className="mb-4">
         <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="locationLink">
           <MapPin className="inline mr-2" size={16} /> Location Link
@@ -161,6 +153,7 @@ const CreateEventForm = () => {
         />
       </div>
 
+      {/* Institute Input */}
       <div className="mb-4">
         <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="institute">
           <Users className="inline mr-2" size={16} /> Institute
@@ -177,6 +170,7 @@ const CreateEventForm = () => {
         />
       </div>
 
+      {/* Organizing Committee Input */}
       <div className="mb-4">
         <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="organizingCommittee">
           <Users className="inline mr-2" size={16} /> Organizing Committee
@@ -193,6 +187,7 @@ const CreateEventForm = () => {
         />
       </div>
 
+      {/* Tags Input */}
       <div className="mb-4">
         <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="tags">
           <Tag className="inline mr-2" size={16} /> Tags
@@ -209,6 +204,7 @@ const CreateEventForm = () => {
         />
       </div>
 
+      {/* Image URL Input */}
       <div className="mb-4">
         <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="image">
           <Image className="inline mr-2" size={16} /> Event Image URL
@@ -224,6 +220,7 @@ const CreateEventForm = () => {
         />
       </div>
 
+      {/* Registration Link Input */}
       <div className="mb-4">
         <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="registrationLink">
           <Link className="inline mr-2" size={16} /> Registration Link
@@ -240,6 +237,7 @@ const CreateEventForm = () => {
         />
       </div>
 
+      {/* Resources Input */}
       <div className="mb-4">
         <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="resources">
           <FileText className="inline mr-2" size={16} /> Resources
@@ -255,50 +253,7 @@ const CreateEventForm = () => {
         />
       </div>
 
-      <div className="mb-4">
-        <label className="block text-gray-700 text-sm font-bold mb-2">
-          <Mic className="inline mr-2" size={16} /> Speakers
-        </label>
-        <input
-          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-          type="text"
-          name="speakers"
-          value={eventData.speakers.join(', ')}
-          onChange={(e) => setEventData(prev => ({ ...prev, speakers: e.target.value.split(',').map(s => s.trim()) }))}
-          placeholder="Speaker names (comma-separated)"
-          required
-        />
-      </div>
-
-      {/* <div className="mb-4">
-        <label className="flex items-center">
-          <input
-            type="checkbox"
-            className="form-checkbox"
-            checked={eventData.isFree}
-            onChange={() => setEventData(prev => ({ ...prev, isFree: !prev.isFree }))}
-          />
-          <span className="ml-2 text-gray-700"><DollarSign className="inline mr-2" size={16} /> Free Event</span>
-        </label>
-      </div>
-
-      {!eventData.isFree && (
-        <div className="mb-4">
-          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="ticketDescription">
-            Ticket Description
-          </label>
-          <textarea
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            id="ticketDescription"
-            name="ticketDescription"
-            value={eventData.ticketDescription}
-            onChange={handleInputChange}
-            placeholder="Ticket details and pricing"
-            rows="3"
-          />
-        </div>
-      )} */}
-
+      {/* Submit Button */}
       <div className="flex items-center justify-between">
         <button
           className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
