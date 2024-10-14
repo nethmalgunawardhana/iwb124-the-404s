@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import CreateEventForm from "../components/CreateEventForm";
 import UpdateEventForm from "../components/UpdateEventForm";
+import DeleteEventPage from "../components/DeleteEvent";
 
 export default function EventDashboard() {
   const [activeForm, setActiveForm] = useState('create');
@@ -38,17 +39,23 @@ export default function EventDashboard() {
                 Update Event
               </button>
             </li>
+            <li>
+              <button
+                onClick={() => setActiveForm('delete')}
+                className={`w-full text-left py-2 px-4 hover:bg-gray-700 rounded ${activeForm === 'delete' ? 'bg-gray-700' : ''}`}
+              >
+                Delete Event
+              </button>
+            </li>
           </ul>
         </nav>
       </div>
 
       {/* Main content */}
       <div className="flex-1 p-10 ml-64">
-        {activeForm === 'create' ? (
-          <CreateEventForm onSubmit={handleCreateSubmit} />
-        ) : (
-          <UpdateEventForm onSubmit={handleUpdateSubmit} initialData={null} />
-        )}
+        {activeForm === 'create' && <CreateEventForm onSubmit={handleCreateSubmit} />}
+        {activeForm === 'update' && <UpdateEventForm onSubmit={handleUpdateSubmit} initialData={null} />}
+        {activeForm === 'delete' && <DeleteEventPage />}
       </div>
     </div>
   );

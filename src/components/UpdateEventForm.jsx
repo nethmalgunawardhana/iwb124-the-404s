@@ -5,7 +5,7 @@ const UpdateEventForm = () => {
   const [events, setEvents] = useState([]);
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [eventData, setEventData] = useState({
-    id: '',
+    
     name: '',
     description: '',
     date: '',
@@ -73,7 +73,7 @@ const UpdateEventForm = () => {
         fetchEvents(); // Refresh the event list
         setSelectedEvent(null);
         setEventData({
-          id: '',
+          
           name: '',
           description: '',
           date: '',
