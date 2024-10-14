@@ -15,8 +15,8 @@ const CreateEventForm = () => {
     registrationLink: '',
     resources: '',
     speakers: [],
-    isFree: true,
-    ticketDescription: ''
+    // isFree: true,
+    // ticketDescription: ''
   });
 
   const handleInputChange = (e) => {
@@ -65,8 +65,8 @@ const CreateEventForm = () => {
           registrationLink: '',
           resources: '',
           speakers: [],
-          isFree: true,
-          ticketDescription: ''
+          // isFree: true,
+          // ticketDescription: ''
         });
       } else {
         window.alert("Failed to create event");
@@ -270,7 +270,7 @@ const CreateEventForm = () => {
         />
       </div>
 
-      <div className="mb-4">
+      {/* <div className="mb-4">
         <label className="flex items-center">
           <input
             type="checkbox"
@@ -297,7 +297,7 @@ const CreateEventForm = () => {
             rows="3"
           />
         </div>
-      )}
+      )} */}
 
       <div className="flex items-center justify-between">
         <button

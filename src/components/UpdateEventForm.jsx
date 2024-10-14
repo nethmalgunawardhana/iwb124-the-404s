@@ -18,8 +18,8 @@ const UpdateEventForm = () => {
     registrationLink: '',
     resources: '',
     speakers: [],
-    isFree: true,
-    ticketDescription: ''
+    // isFree: true,
+    // ticketDescription: ''
   });
 
   useEffect(() => {
@@ -292,7 +292,7 @@ const UpdateEventForm = () => {
         />
       </div>
 
-      <div className="mb-4">
+      {/* <div className="mb-4">
         <label className="flex items-center">
           <input
             type="checkbox"
@@ -319,7 +319,7 @@ const UpdateEventForm = () => {
             rows="3"
           />
         </div>
-      )}
+      )} */}
 
       <div className="flex items-center justify-between">
         <button
