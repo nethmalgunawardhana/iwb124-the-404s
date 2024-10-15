@@ -24,6 +24,7 @@
     "react-router-dom": "^6.26.2",
     "react-slick": "^0.30.2",
     "slick-carousel": "^1.8.1",
+    "styled-components": "^6.1.13",
     "tween.js": "^16.6.0"
   },
   "devDependencies": {
