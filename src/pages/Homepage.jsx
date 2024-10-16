@@ -3,7 +3,7 @@ import { User, Settings, Info, HelpCircle, ChevronDown } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import Carousel from 'react-elastic-carousel';
 import Insti from '../components/Institutes'
-
+import Footer from '../components/Footer'
 import Navbar from "../components/NavbarforHomepage"
 
 
@@ -73,11 +73,13 @@ const HomePage = () => {
         <div className="absolute inset-0 z-0">
           <div className="video-wrapper absolute inset-0 z-0">
             <video autoPlay loop muted className="w-full h-full object-cover">
-              <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4" />
+              <source src="https://videos.pexels.com/video-files/4099065/4099065-hd_1920_1080_30fps.mp4" type="video/mp4" />
+            
             </video>
           </div>
         </div>
-        <div className="relative z-10 max-w-4xl mx-auto text-center">
+        <br /><br /><br /><br /><br /><br /><br />
+        <div className="relative z-10  max-w-4xl mx-auto text-center">
           <h1 className="text-5xl font-bold">Discover Amazing Events</h1>
           <p className="mt-4 text-lg">Your one-stop solution for all your event needs!</p>
           <button className="mt-6 px-8 py-3 bg-white text-purple-600 rounded-lg hover:bg-gray-200 transition-colors animate-pulse">
@@ -88,7 +90,7 @@ const HomePage = () => {
 
       {/* Browse Events Section */}
       <div className="max-w-4xl mx-auto p-6">
-        <h2 className="text-3xl font-semibold text-center mb-6">Browse Events</h2>
+        <h2 className="text-3xl font-semibold text-purple-600 text-center mb-6">Browse Events</h2>
         <div className="relative inline-block">
           <button
             onClick={() => setBrowseOption(browseOption ? null : 'browse')}
@@ -200,7 +202,7 @@ const HomePage = () => {
       </div>
       <Insti/>
       {/* Footer */}
-      <footer className="bg-white mt-8 p-4 shadow">
+      {/* <footer className="bg-white mt-8 p-4 shadow">
         <div className="max-w-4xl mx-auto text-center">
           <p className="text-gray-600">2024 Your Company. All rights reserved.</p>
           <ul className="flex justify-center mt-4">
@@ -221,7 +223,9 @@ const HomePage = () => {
             </li>
           </ul>
         </div>
-      </footer>
+      </footer> */}
+
+      <Footer/>
     </div>
   );
 };
