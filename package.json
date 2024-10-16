@@ -18,6 +18,7 @@
     "react-dom": "^18.3.1",
     "react-elastic-carousel": "^0.11.5",
     "react-feather": "^2.0.10",
+    "react-horizontal-scrolling-menu": "^7.1.1",
     "react-icons": "^5.3.0",
     "react-image-slideshow": "^1.5.4",
     "react-portal": "^4.2.2",

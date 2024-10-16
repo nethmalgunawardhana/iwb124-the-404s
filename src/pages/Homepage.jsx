@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { User, Settings, Info, HelpCircle, ChevronDown } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import Carousel from 'react-elastic-carousel';
+import Insti from '../components/Institutes'
 
 import Navbar from "../components/NavbarforHomepage"
 
@@ -155,7 +156,7 @@ const HomePage = () => {
         {filteredEvents.length > 0 && (
           <div className="mt-12">
             <h2 className="text-2xl font-semibold mb-6 text-purple-500">Filtered Events</h2>
-           <Carousel breakPoints={breakPoints}>
+            <Carousel breakPoints={breakPoints}>
               {filteredEvents.map((event, index) => (
                 <div key={index} className="bg-white p-4 rounded-lg shadow hover:shadow-lg transition-shadow duration-300">
                   <img src={event.image} alt={event.title} className="w-full h-48 object-cover rounded-t-lg" />
@@ -163,8 +164,8 @@ const HomePage = () => {
                   <p className="text-gray-600">{event.date}</p>
                 </div>
               ))}
-              </Carousel>
-            
+            </Carousel>
+
           </div>
         )}
 
@@ -172,7 +173,7 @@ const HomePage = () => {
         <section className="mt-12 text-center">
           <h2 className="text-3xl font-semibold mb-4 text-purple-500">Available Events</h2>
           <Carousel breakPoints={breakPoints}>
-           
+
             {randomEvents.map((event, index) => (
               <div key={index} className="bg-white p-4 rounded-lg shadow hover:shadow-lg transition-shadow duration-300">
                 <img src={event.image} alt={event.title} className="w-full h-48 object-cover rounded-t-lg" />
@@ -184,7 +185,7 @@ const HomePage = () => {
           </Carousel>
         </section>
 
-
+        
         {/* Sign In and Sign Up Section (moved to bottom) */}
         {/* <section className="mt-12 text-center">
           <div className="flex justify-center space-x-4">
@@ -197,7 +198,7 @@ const HomePage = () => {
           </div>
         </section> */}
       </div>
-
+      <Insti/>
       {/* Footer */}
       <footer className="bg-white mt-8 p-4 shadow">
         <div className="max-w-4xl mx-auto text-center">
