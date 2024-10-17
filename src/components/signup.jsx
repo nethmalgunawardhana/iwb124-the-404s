@@ -1,10 +1,15 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { EyeOff, Eye } from 'lucide-react';
-import { getAuth, createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { useAuth } from '../context/authContext';
+import { doCreateUserWithEmailAndPassword, doSendEmailVerification } from '../firebase/auth';
+import { auth } from '../firebase/firebase';
+import { updateProfile } from 'firebase/auth';
 
 const SignUpForm = () => {
   const navigate = useNavigate();
+  const { setCurrentUser } = useAuth();
+  
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -17,6 +22,7 @@ const SignUpForm = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [agree, setAgree] = useState(false);
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -24,26 +30,48 @@ const SignUpForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
     if (formData.password !== formData.confirmPassword) {
       setError("Passwords don't match");
       return;
     }
-    const auth = getAuth();
+
     try {
-      const userCredential = await createUserWithEmailAndPassword(auth, formData.email, formData.password);
-      const user = userCredential.user;
+      setError('');
+      setLoading(true);
       
-      // Update user profile with additional information
-      await updateProfile(user, {
+      // Create user with Firebase auth
+      const userCredential = await doCreateUserWithEmailAndPassword(
+        formData.email,
+        formData.password
+      );
+
+      // Update user profile
+      await updateProfile(auth.currentUser, {
         displayName: `${formData.firstName} ${formData.lastName}`,
         phoneNumber: formData.phoneNumber
       });
 
-      // Navigate to login page after successful signup
+      // Send email verification
+      await doSendEmailVerification();
+
+      // Update context
+      setCurrentUser({
+        ...userCredential.user,
+        displayName: `${formData.firstName} ${formData.lastName}`,
+        phoneNumber: formData.phoneNumber
+      });
+
       navigate('/login');
     } catch (error) {
-      console.error("Error signing up with Firebase:", error);
-      setError(error.message);
+      console.error("Error in signup:", error);
+      setError(
+        error.code === 'auth/email-already-in-use'
+          ? 'Email already in use'
+          : 'Failed to create an account'
+      );
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -153,9 +181,12 @@ const SignUpForm = () => {
           </div>
           <button
             type="submit"
-            className="w-full bg-purple-700 text-white py-2 rounded-md hover:bg-purple-800 transition duration-300"
+            disabled={loading}
+            className={`w-full bg-purple-700 text-white py-2 rounded-md transition duration-300 ${
+              loading ? 'opacity-70 cursor-not-allowed' : 'hover:bg-purple-800'
+            }`}
           >
-            Create account
+            {loading ? 'Creating account...' : 'Create account'}
           </button>
         </form>
 
