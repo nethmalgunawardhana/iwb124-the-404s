@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { EyeOff, Eye } from 'lucide-react';
 import { useAuth } from '../context/authContext';
 import { doCreateUserWithEmailAndPassword, doSendEmailVerification } from '../firebase/auth';
@@ -196,6 +195,10 @@ const SignUpForm = () => {
       </div>
     </div>
   );
+
+
+
 };
 
 export default SignUpForm;
+
