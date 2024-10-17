@@ -1,18 +1,20 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useAuth } from "../context/authContext";
+import { auth } from "../firebase/firebase";
+import { updateProfile } from "firebase/auth";
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const phoneRegex = /^\+?[1-9]\d{1,14}$/;
 
 const Profile = () => {
+  const { currentUser, setCurrentUser } = useAuth();
   const [userInfo, setUserInfo] = useState({
-    fullName: "John Doe",
-    email: "johndoe@example.com",
-    phoneNumber: "+1234567890",
-    verified: true, 
-    profilePicture: "../user.png", 
+    fullName: "",
+    email: "",
+    phoneNumber: "",
+    verified: false,
+    profilePicture: "../user.png",
   });
-
-  // State to manage edit mode and picture change
 
   const [isEditing, setIsEditing] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
@@ -24,6 +26,19 @@ const Profile = () => {
     email: "",
     phoneNumber: "",
   });
+
+  // Load user data when component mounts
+  useEffect(() => {
+    if (currentUser) {
+      setUserInfo({
+        fullName: currentUser.displayName || "",
+        email: currentUser.email || "",
+        phoneNumber: currentUser.phoneNumber || "",
+        verified: currentUser.emailVerified || false,
+        profilePicture: currentUser.photoURL || "../user.png",
+      });
+    }
+  }, [currentUser]);
 
   const validateForm = () => {
     let valid = true;
@@ -66,11 +81,34 @@ const Profile = () => {
     setIsEditing(true);
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (validateForm()) {
-      alert('Changes saved successfully!');
-      setIsEditing(false); 
+      try {
+        // Update profile in Firebase
+        await updateProfile(auth.currentUser, {
+          displayName: userInfo.fullName,
+          photoURL: userInfo.profilePicture,
+        });
 
+        // Update context
+        setCurrentUser({
+          ...currentUser,
+          displayName: userInfo.fullName,
+          photoURL: userInfo.profilePicture,
+        });
+
+        // Save to localStorage for persistence
+        const userData = JSON.parse(localStorage.getItem('authUser') || '{}');
+        userData.displayName = userInfo.fullName;
+        userData.photoURL = userInfo.profilePicture;
+        localStorage.setItem('authUser', JSON.stringify(userData));
+
+        alert('Changes saved successfully!');
+        setIsEditing(false);
+      } catch (error) {
+        console.error("Error updating profile:", error);
+        alert('Failed to save changes. Please try again.');
+      }
     }
   };
 
@@ -96,20 +134,38 @@ const Profile = () => {
     setChangesMade(true);
   };
 
-  const handleSavePicture = () => {
-    if (newPicture) {
+  const handleSavePicture = async () => {
+    try {
+      const newPhotoURL = newPicture || "../user.png";
+      
+      // Update profile in Firebase
+      await updateProfile(auth.currentUser, {
+        photoURL: newPhotoURL,
+      });
+
+      // Update local state
       setUserInfo({
         ...userInfo,
-        profilePicture: newPicture,
+        profilePicture: newPhotoURL,
       });
-    } else {
-      setUserInfo({
-        ...userInfo,
-        profilePicture: "../user.png", 
+
+      // Update context
+      setCurrentUser({
+        ...currentUser,
+        photoURL: newPhotoURL,
       });
+
+      // Update localStorage
+      const userData = JSON.parse(localStorage.getItem('authUser') || '{}');
+      userData.photoURL = newPhotoURL;
+      localStorage.setItem('authUser', JSON.stringify(userData));
+
+      setShowPopup(false);
+      setChangesMade(false);
+    } catch (error) {
+      console.error("Error updating profile picture:", error);
+      alert('Failed to update profile picture. Please try again.');
     }
-    setShowPopup(false);
-    setChangesMade(false);
   };
 
   return (
@@ -119,11 +175,11 @@ const Profile = () => {
           User Profile
         </h2>
         <div className="flex items-center space-x-6 mb-6">
-          <div className={`relative`}>
+          <div className="relative">
             <img
               className={`h-32 w-32 rounded-full object-cover border-4 ${
                 userInfo.verified ? "border-yellow-500" : "border-purple-500"
-              }`}
+              } cursor-pointer hover:opacity-80`}
               src={newPicture || userInfo.profilePicture}
               alt="User Profile"
               onClick={handlePictureClick}
@@ -178,37 +234,16 @@ const Profile = () => {
             <input
               type="email"
               name="email"
-              className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 bg-white text-purple-600 ${
-                isEditing ? "cursor-text" : "cursor-not-allowed"
-              }`}
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 bg-white text-purple-600 cursor-not-allowed"
               value={userInfo.email}
-              onChange={handleChange}
-              disabled={!isEditing}
+              disabled={true}
             />
             {errors.email && (
               <p className="text-red-500 text-sm">{errors.email}</p>
             )}
           </div>
 
-          {/* Phone Number */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Phone Number
-            </label>
-            <input
-              type="tel"
-              name="phoneNumber"
-              className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 bg-white text-purple-600 ${
-                isEditing ? "cursor-text" : "cursor-not-allowed"
-              }`}
-              value={userInfo.phoneNumber}
-              onChange={handleChange}
-              disabled={!isEditing}
-            />
-            {errors.phoneNumber && (
-              <p className="text-red-500 text-sm">{errors.phoneNumber}</p>
-            )}
-          </div>
+         
         </div>
 
         {/* Save Changes Button */}
@@ -216,9 +251,7 @@ const Profile = () => {
           <button
             onClick={handleSubmit}
             className="mt-6 w-full px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-800"
-
             disabled={Object.values(errors).some(error => error)}
-
           >
             Save Changes
           </button>
