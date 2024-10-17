@@ -17,30 +17,73 @@ const NavbarforHomepage = () => {
 
   useEffect(() => {
     setCurrentUser(globalUser);
-    if (globalUser && !showWelcome) {
-      setShowWelcome(true);
-      // Add welcome notification
-      const welcomeNotif = {
-        id: Date.now(),
-        message: "Welcome to Eventvibe!",
-        timestamp: new Date(),
-        read: false
-      };
-      setNotifications([welcomeNotif]);
-      setUnreadCount(1);
+    if (globalUser) {
+      // Check if welcome notification has been shown before for this session
+      const hasShownWelcome = sessionStorage.getItem(`welcomeShown_${globalUser.uid}`);
       
-      setTimeout(() => {
-        setShowWelcome(false);
-      }, 3000);
+      if (!hasShownWelcome) {
+        setShowWelcome(true);
+        // Add welcome notification
+        const welcomeNotif = {
+          id: Date.now(),
+          message: "Welcome to Eventvibe!",
+          timestamp: new Date(),
+          read: false
+        };
+        setNotifications(prev => {
+          // Check if welcome notification already exists
+          const welcomeExists = prev.some(notif => notif.message === "Welcome to Eventvibe!");
+          if (!welcomeExists) {
+            return [...prev, welcomeNotif];
+          }
+          return prev;
+        });
+        setUnreadCount(prev => prev + 1);
+        
+        // Store in sessionStorage that welcome has been shown for this session
+        sessionStorage.setItem(`welcomeShown_${globalUser.uid}`, 'true');
+        
+        // Hide welcome message after 3 seconds
+        setTimeout(() => {
+          setShowWelcome(false);
+        }, 3000);
+      }
     }
   }, [globalUser]);
 
+  // Load notifications from localStorage on component mount
+  useEffect(() => {
+    if (globalUser) {
+      const savedNotifications = localStorage.getItem(`notifications_${globalUser.uid}`);
+      if (savedNotifications) {
+        const parsedNotifications = JSON.parse(savedNotifications);
+        setNotifications(parsedNotifications);
+        setUnreadCount(parsedNotifications.filter(n => !n.read).length);
+      }
+    }
+  }, [globalUser]);
+
+  // Save notifications to localStorage whenever they change
+  useEffect(() => {
+    if (globalUser && notifications.length > 0) {
+      localStorage.setItem(`notifications_${globalUser.uid}`, JSON.stringify(notifications));
+    }
+  }, [notifications, globalUser]);
+
   const handleLogout = async () => {
     try {
+      if (currentUser) {
+        // Clear welcome status from sessionStorage
+        sessionStorage.removeItem(`welcomeShown_${currentUser.uid}`);
+        // Clear notifications from localStorage
+        localStorage.removeItem(`notifications_${currentUser.uid}`);
+      }
       await auth.signOut();
       setCurrentUser(null);
       setNotifications([]);
       setUnreadCount(0);
+      setShowNotifications(false);
+      setShowSettingsDropdown(false);
       navigate('/');
     } catch (error) {
       console.error("Error signing out:", error);
@@ -63,6 +106,23 @@ const NavbarforHomepage = () => {
   const toggleSettingsDropdown = () => {
     setShowSettingsDropdown(!showSettingsDropdown);
   };
+
+  // Close dropdowns when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (showNotifications || showSettingsDropdown) {
+        if (!event.target.closest('.notification-panel') && !event.target.closest('.settings-panel')) {
+          setShowNotifications(false);
+          setShowSettingsDropdown(false);
+        }
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showNotifications, showSettingsDropdown]);
 
   return (
     <nav className="flex justify-between items-center p-2 bg-white border-b fixed top-0 left-0 right-0 z-10">
@@ -91,7 +151,7 @@ const NavbarforHomepage = () => {
 
         {currentUser ? (
           <div className="flex items-center space-x-2">
-            <div className="relative">
+            <div className="relative notification-panel">
               <Bell 
                 className="text-gray-700 hover:text-orange-600 cursor-pointer" 
                 onClick={toggleNotifications}
@@ -106,15 +166,19 @@ const NavbarforHomepage = () => {
               {currentUser.displayName ? currentUser.displayName.charAt(0) : currentUser.email.charAt(0)}
             </div>
             <span className="text-black">{currentUser.displayName || currentUser.email}</span>
-            <div className="relative">
+            <div className="relative settings-panel">
               <Settings
                 className="text-gray-700 hover:text-orange-600 cursor-pointer"
                 onClick={toggleSettingsDropdown}
               />
               {showSettingsDropdown && (
                 <div className="absolute right-0 mt-2 w-48 bg-white border rounded-md shadow-lg z-20">
-                  <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Profile</a>
-                  <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Settings</a>
+                  <button
+                    onClick={() => navigate('/settings')}
+                    className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                  >
+                    Profile
+                  </button>
                   <button
                     onClick={handleLogout}
                     className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
@@ -148,7 +212,7 @@ const NavbarforHomepage = () => {
       )}
 
       {showNotifications && notifications.length > 0 && (
-        <div className="fixed top-16 right-4 bg-white border shadow-lg rounded p-2 min-w-[250px]">
+        <div className="fixed top-16 right-4 bg-white border shadow-lg rounded p-2 min-w-[250px] notification-panel">
           {notifications.map(notif => (
             <div key={notif.id} className="p-3 bg-gray-300 hover:bg-gray-400 text-black border-b last:border-b-0">
               <div className="font-medium">{notif.message}</div>
