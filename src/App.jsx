@@ -16,7 +16,7 @@ import AdminDashboard from "./pages/Admin/admindashboard";
 import BrowseEventsPage from './pages/BrowseEventsPage';
 import { PrivateRoute } from './components/Privateroute';
 import Login from './pages/Login'; 
-import SignUpPage from './pages/Signup'
+import SignUpPage from './pages/Signup';
 import EventPage from './pages/EventPage'; // Import the new EventPage component
 
 import "./App.css";
@@ -35,7 +35,6 @@ function App() {
           <Route path="/profile" element={<Profile />} />
           <Route path="/eventcreator" element={<EventCreator />} />
           <Route path="/browse-events" element={<BrowseEventsPage />} />
-
           <Route path="/evenedit" element={<EventEdit />} />
           <Route path="/verify" element={<AccountVerification />} />
           <Route path="/eventdashboard" element={
