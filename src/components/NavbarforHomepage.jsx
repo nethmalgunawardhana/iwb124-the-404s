@@ -20,7 +20,7 @@ const NavbarforHomepage = () => {
       setShowWelcome(true);
       setTimeout(() => {
         setShowWelcome(false);
-      }, 5000);
+      }, 3000);
     } // Sync with global auth user when component loads
   }, [globalUser]);
 
@@ -121,7 +121,7 @@ const NavbarforHomepage = () => {
           </svg>
           <div>
             <div className="font-bold">Notification</div>
-            <div>Welcome to LinkR - RotaractMora</div>
+            <div>Welcome to Eventvibe!</div>
           </div>
         </div>
       )}
