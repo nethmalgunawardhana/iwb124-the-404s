@@ -5,6 +5,7 @@ import { useAuth } from '../context/authContext';
 import { doSignInWithEmailAndPassword, doSignInWithGoogle } from '../firebase/auth';
 
 const LoginPage = () => {
+
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -197,6 +198,7 @@ const LoginPage = () => {
       </div>
     </div>
   );
+
 };
 
 export default LoginPage;
