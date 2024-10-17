@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { User, Settings, Info, HelpCircle, ChevronDown } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import Slider from "react-slick";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
+import Carousel from 'react-elastic-carousel';
+import Insti from '../components/Institutes'
+import Footer from '../components/Footer'
 import Navbar from "../components/NavbarforHomepage"
 
 
@@ -56,79 +56,12 @@ const HomePage = () => {
       />
     );
   }
-  var settings = {
-    dots: true,
-    infinite: true,
-    speed: 500,
-    slidesToShow: 3,
-    slidesToScroll: 2,
-    initialSlide: 0,
-    nextArrow: <Arrow />,
-    prevArrow: <Arrow />,
-    responsive: [
-      {
-        breakpoint: 1024,
-        settings: {
-          slidesToShow: 2,
-          slidesToScroll: 2,
-          infinite: true,
-          dots: true
-        }
-      },
-      {
-        breakpoint: 768,
-        settings: {
-          slidesToShow: 1,
-          slidesToScroll: 1,
-          initialSlide: 2
-        }
-      },
-      {
-        breakpoint: 480,
-        settings: {
-          slidesToShow: 1,
-          slidesToScroll: 1
-        }
-      }
-    ]
-  }
-  var settings2 = {
-    dots: true,
-    infinite: false,
-    speed: 500,
-    slidesToShow: 3,
-    slidesToScroll: 3,
-    initialSlide: 0,
-    nextArrow: <Arrow />,
-    prevArrow: <Arrow />,
-    responsive: [
-      {
-        breakpoint: 1024,
-        settings: {
-          slidesToShow: 2,
-          slidesToScroll: 1,
-          infinite: false,
-          dots: true
-        }
-      },
-      {
-        breakpoint: 768,
-        settings: {
-          slidesToShow: 1,
-          slidesToScroll: 1,
-          initialSlide: 2
-        }
-      },
-      {
-        breakpoint: 480,
-        settings: {
-          slidesToShow: 1,
-          slidesToScroll: 1
-        }
-      }
-    ]
-  }
 
+  const breakPoints = [
+    { width: 100, itemsToShow: 1 },
+    { width: 400, itemsToShow: 2 },
+    { width: 650, itemsToShow: 3 }
+  ];
   return (
 
     <div className="min-h-screen bg-gray-50 relative">
@@ -140,11 +73,13 @@ const HomePage = () => {
         <div className="absolute inset-0 z-0">
           <div className="video-wrapper absolute inset-0 z-0">
             <video autoPlay loop muted className="w-full h-full object-cover">
-              <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4" />
+              <source src="https://videos.pexels.com/video-files/4099065/4099065-hd_1920_1080_30fps.mp4" type="video/mp4" />
+            
             </video>
           </div>
         </div>
-        <div className="relative z-10 max-w-4xl mx-auto text-center">
+        <br /><br /><br /><br /><br /><br /><br />
+        <div className="relative z-10  max-w-4xl mx-auto text-center">
           <h1 className="text-5xl font-bold">Discover Amazing Events</h1>
           <p className="mt-4 text-lg">Your one-stop solution for all your event needs!</p>
           <button className="mt-6 px-8 py-3 bg-white text-purple-600 rounded-lg hover:bg-gray-200 transition-colors animate-pulse">
@@ -155,7 +90,7 @@ const HomePage = () => {
 
       {/* Browse Events Section */}
       <div className="max-w-4xl mx-auto p-6">
-        <h2 className="text-3xl font-semibold text-center mb-6">Browse Events</h2>
+        <h2 className="text-3xl font-semibold text-purple-600 text-center mb-6">Browse Events</h2>
         <div className="relative inline-block">
           <button
             onClick={() => setBrowseOption(browseOption ? null : 'browse')}
@@ -223,8 +158,7 @@ const HomePage = () => {
         {filteredEvents.length > 0 && (
           <div className="mt-12">
             <h2 className="text-2xl font-semibold mb-6 text-purple-500">Filtered Events</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-1 gap-1">
-            <Slider {...settings2}>
+            <Carousel breakPoints={breakPoints}>
               {filteredEvents.map((event, index) => (
                 <div key={index} className="bg-white p-4 rounded-lg shadow hover:shadow-lg transition-shadow duration-300">
                   <img src={event.image} alt={event.title} className="w-full h-48 object-cover rounded-t-lg" />
@@ -232,28 +166,28 @@ const HomePage = () => {
                   <p className="text-gray-600">{event.date}</p>
                 </div>
               ))}
-              </Slider>
-            </div>
+            </Carousel>
+
           </div>
         )}
 
         {/* Random Events Section */}
         <section className="mt-12 text-center">
           <h2 className="text-3xl font-semibold mb-4 text-purple-500">Available Events</h2>
+          <Carousel breakPoints={breakPoints}>
 
-          <div className="grid grid-cols-2 sm:grid-cols-1 lg:grid-cols-auto gap-6">
-            <div className="slider-container"> <Slider {...settings}>
-              {randomEvents.map((event, index) => (
-                <div key={index} className="bg-white p-4 rounded-lg shadow hover:shadow-lg transition-shadow duration-300">
-                  <img src={event.image} alt={event.title} className="w-full h-48 object-cover rounded-t-lg" />
-                  <h3 className="text-lg font-semibold mt-2">{event.title}</h3>
-                  <p className="text-gray-600">{event.date}</p>
-                </div>
+            {randomEvents.map((event, index) => (
+              <div key={index} className="bg-white p-4 rounded-lg shadow hover:shadow-lg transition-shadow duration-300">
+                <img src={event.image} alt={event.title} className="w-full h-48 object-cover rounded-t-lg" />
+                <h3 className="text-lg font-semibold mt-2">{event.title}</h3>
+                <p className="text-gray-600">{event.date}</p>
+              </div>
 
-              ))}
-            </Slider> </div>
-          </div>
+            ))}
+          </Carousel>
         </section>
+
+        
         {/* Sign In and Sign Up Section (moved to bottom) */}
         {/* <section className="mt-12 text-center">
           <div className="flex justify-center space-x-4">
@@ -266,9 +200,9 @@ const HomePage = () => {
           </div>
         </section> */}
       </div>
-
+      <Insti/>
       {/* Footer */}
-      <footer className="bg-white mt-8 p-4 shadow">
+      {/* <footer className="bg-white mt-8 p-4 shadow">
         <div className="max-w-4xl mx-auto text-center">
           <p className="text-gray-600">2024 Your Company. All rights reserved.</p>
           <ul className="flex justify-center mt-4">
@@ -289,7 +223,9 @@ const HomePage = () => {
             </li>
           </ul>
         </div>
-      </footer>
+      </footer> */}
+
+      <Footer/>
     </div>
   );
 };

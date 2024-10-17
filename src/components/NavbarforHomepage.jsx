@@ -7,15 +7,15 @@ const NavbarforHomepage = () => (
         <div className="flex space-x-4">
             <div className="flex justify-between items-center">
                 <div className="flex space-x-4">
-                    <div className="text-2xl font-semibold text-orange-600 mb-=">eventbrite &emsp; 
+                    <div className="text-2xl font-semibold text-purple-600 mb-="><a href="#">eventbrite &emsp; </a> 
                     </div>
                 </div>
 
                 <div className="flex items-center space-x-4">
                     <form className="w-[400px] relative">
-                        <div className="relative">
+                        <div className="relative text-black">
                           <input type="Search" placeholder="Search Event" className="w-full p-4 rounded-full bg-white border-2 border-slate-150" />
-                            <button className="absolute right-1 top-1/2 -translate-y-1/2 p-4 bg-orange-600 rounded-full "> <IoIosSearch /> </button>
+                            <button className="absolute right-1 top-1/2 -translate-y-1/2 p-4 bg-purple-600 rounded-full "> <IoIosSearch /> </button>
                         </div>
                     </form>
                 </div>
