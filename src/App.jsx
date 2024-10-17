@@ -16,12 +16,15 @@ import OrganizationVerification from "./pages/org-verify";
 import PVerification from "./pages/person-verify";
 import AdminDashboard from "./pages/Admin/admindashboard";
 import BrowseEventsPage from './pages/BrowseEventsPage';
+import { AuthProvider } from './context/authContext';
+import { PrivateRoute } from './components/Privateroute';
 import "./App.css";
 
 function App() {
   const [count, setCount] = useState(0);
 
   return (
+    <AuthProvider>
     <BrowserRouter>
       <div>
         <Routes>
@@ -37,7 +40,10 @@ function App() {
           <Route path="/browse-events" element={<BrowseEventsPage />} /> {/* Add Browse Events Page route */}
           <Route path="/evenedit" element={<EventEdit />} />
           <Route path="/verify" element={<AccountVerification />} />
-          <Route path="/eventdashboard" element={<EventDashboard />} />
+          <Route path="/eventdashboard" element={ <PrivateRoute>
+            <EventDashboard />
+            </PrivateRoute>
+          } />
           <Route
             path="/organization-verification"
             element={<OrganizationVerification />}
@@ -47,6 +53,7 @@ function App() {
         </Routes>
       </div>
     </BrowserRouter>
+    </AuthProvider>
   );
 }
 
