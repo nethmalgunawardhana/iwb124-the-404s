@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { User, Settings, Info, HelpCircle, ChevronDown } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import Carousel from 'react-elastic-carousel';
 import Insti from '../components/Institutes'
 import Footer from '../components/Footer'
 import Navbar from "../components/NavbarforHomepage"
@@ -46,22 +45,7 @@ const HomePage = () => {
     );
     setFilteredEvents(filtered);
   };
-  function Arrow(props) {
-    const { className, style, onClick } = props;
-    return (
-      <div
-        className={className}
-        style={{ ...style, display: "block", background: "black", color: "black" }}
-        onClick={onClick}
-      />
-    );
-  }
 
-  const breakPoints = [
-    { width: 100, itemsToShow: 1 },
-    { width: 400, itemsToShow: 2 },
-    { width: 650, itemsToShow: 3 }
-  ];
   return (
 
     <div className="min-h-screen bg-gray-50 relative">
@@ -74,7 +58,7 @@ const HomePage = () => {
           <div className="video-wrapper absolute inset-0 z-0">
             <video autoPlay loop muted className="w-full h-full object-cover">
               <source src="https://videos.pexels.com/video-files/4099065/4099065-hd_1920_1080_30fps.mp4" type="video/mp4" />
-            
+
             </video>
           </div>
         </div>
@@ -158,15 +142,14 @@ const HomePage = () => {
         {filteredEvents.length > 0 && (
           <div className="mt-12">
             <h2 className="text-2xl font-semibold mb-6 text-purple-500">Filtered Events</h2>
-            <Carousel breakPoints={breakPoints}>
-              {filteredEvents.map((event, index) => (
-                <div key={index} className="bg-white p-4 rounded-lg shadow hover:shadow-lg transition-shadow duration-300">
-                  <img src={event.image} alt={event.title} className="w-full h-48 object-cover rounded-t-lg" />
-                  <h3 className="text-lg font-semibold mt-2">{event.title}</h3>
-                  <p className="text-gray-600">{event.date}</p>
-                </div>
-              ))}
-            </Carousel>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">{filteredEvents.map((event, index) => (
+              <div key={index} className="bg-white p-4 rounded-lg shadow hover:shadow-lg transition-shadow duration-300">
+                <img src={event.image} alt={event.title} className="w-full h-48 object-cover rounded-t-lg" />
+                <h3 className="text-lg font-semibold mt-2">{event.title}</h3>
+                <p className="text-gray-600">{event.date}</p>
+              </div>
+            ))}</div>
+
 
           </div>
         )}
@@ -174,20 +157,20 @@ const HomePage = () => {
         {/* Random Events Section */}
         <section className="mt-12 text-center">
           <h2 className="text-3xl font-semibold mb-4 text-purple-500">Available Events</h2>
-          <Carousel breakPoints={breakPoints}>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {randomEvents.map((event, index) => (
+            <div key={index} className="bg-white p-4 rounded-lg shadow hover:shadow-lg transition-shadow duration-300">
+              <img src={event.image} alt={event.title} className="w-full h-48 object-cover rounded-t-lg" />
+              <h3 className="text-lg font-semibold mt-2">{event.title}</h3>
+              <p className="text-gray-600">{event.date}</p>
+            </div>
 
-            {randomEvents.map((event, index) => (
-              <div key={index} className="bg-white p-4 rounded-lg shadow hover:shadow-lg transition-shadow duration-300">
-                <img src={event.image} alt={event.title} className="w-full h-48 object-cover rounded-t-lg" />
-                <h3 className="text-lg font-semibold mt-2">{event.title}</h3>
-                <p className="text-gray-600">{event.date}</p>
-              </div>
-
-            ))}
-          </Carousel>
+          ))}
+          </div>
+          
         </section>
 
-        
+
         {/* Sign In and Sign Up Section (moved to bottom) */}
         {/* <section className="mt-12 text-center">
           <div className="flex justify-center space-x-4">
@@ -200,7 +183,7 @@ const HomePage = () => {
           </div>
         </section> */}
       </div>
-      <Insti/>
+      <Insti />
       {/* Footer */}
       {/* <footer className="bg-white mt-8 p-4 shadow">
         <div className="max-w-4xl mx-auto text-center">
@@ -225,7 +208,7 @@ const HomePage = () => {
         </div>
       </footer> */}
 
-      <Footer/>
+      <Footer />
     </div>
   );
 };
