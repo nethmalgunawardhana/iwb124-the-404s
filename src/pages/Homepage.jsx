@@ -170,43 +170,9 @@ const HomePage = () => {
           
         </section>
 
-
-        {/* Sign In and Sign Up Section (moved to bottom) */}
-        {/* <section className="mt-12 text-center">
-          <div className="flex justify-center space-x-4">
-            <button className="px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-800 transition-colors">
-              Sign In
-            </button>
-            <button className="px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-800 transition-colors">
-              Sign Up
-            </button>
-          </div>
-        </section> */}
       </div>
       <Insti />
-      {/* Footer */}
-      {/* <footer className="bg-white mt-8 p-4 shadow">
-        <div className="max-w-4xl mx-auto text-center">
-          <p className="text-gray-600">2024 Your Company. All rights reserved.</p>
-          <ul className="flex justify-center mt-4">
-            <li className="mr-4">
-              <a href="#" className="text-gray-600 hover:text-purple-600 transition-colors">
-                Contact Us
-              </a>
-            </li>
-            <li className="mr-4">
-              <a href="#" className="text-gray-600 hover:text-purple-600 transition-colors">
-                Terms of Service
-              </a>
-            </li>
-            <li>
-              <a href="#" className="text-gray-600 hover:text-purple-600 transition-colors">
-                Privacy Policy
-              </a>
-            </li>
-          </ul>
-        </div>
-      </footer> */}
+      
 
       <Footer />
     </div>
