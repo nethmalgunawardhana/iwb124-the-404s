@@ -16,14 +16,20 @@ import OrganizationVerification from "./pages/org-verify";
 import PVerification from "./pages/person-verify";
 import AdminDashboard from "./pages/Admin/admindashboard";
 import BrowseEventsPage from './pages/BrowseEventsPage';
+
+import { AuthProvider } from './context/authContext';
+import { PrivateRoute } from './components/Privateroute';
+
 import Login from './pages/Login'; 
 import EventPage from './pages/EventPage'; // Import the new EventPage component
+
 import "./App.css";
 
 function App() {
   const [count, setCount] = useState(0);
 
   return (
+    <AuthProvider>
     <BrowserRouter>
       <div>
         <Routes>
@@ -38,8 +44,16 @@ function App() {
           <Route path="/browse-events" element={<BrowseEventsPage />} />
           <Route path="/eventedit" element={<EventEdit />} />
           <Route path="/verify" element={<AccountVerification />} />
-          <Route path="/eventdashboard" element={<EventDashboard />} />
-          <Route path="/organization-verification" element={<OrganizationVerification />} />
+
+          <Route path="/eventdashboard" element={ <PrivateRoute>
+            <EventDashboard />
+            </PrivateRoute>
+          } />
+          <Route
+            path="/organization-verification"
+            element={<OrganizationVerification />}
+          />
+
           <Route path="/personal-verification" element={<PVerification />} />
           <Route path="/admin" element={<AdminDashboard />} />
           {/* Add the new route for EventPage */}
@@ -47,6 +61,7 @@ function App() {
         </Routes>
       </div>
     </BrowserRouter>
+    </AuthProvider>
   );
 }
 
