@@ -7,28 +7,41 @@ import { auth } from '../firebase/firebase';
 
 const NavbarforHomepage = () => {
   const navigate = useNavigate();
-  const { currentUser: globalUser } = useAuth(); // Use from global context
+  const { currentUser: globalUser } = useAuth();
   const [currentUser, setCurrentUser] = useState(globalUser);
   const [notifications, setNotifications] = useState([]);
   const [showWelcome, setShowWelcome] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
   const [showSettingsDropdown, setShowSettingsDropdown] = useState(false);
+  const [unreadCount, setUnreadCount] = useState(0);
 
   useEffect(() => {
     setCurrentUser(globalUser);
-    if (globalUser && !showWelcome){
+    if (globalUser && !showWelcome) {
       setShowWelcome(true);
+      // Add welcome notification
+      const welcomeNotif = {
+        id: Date.now(),
+        message: "Welcome to Eventvibe!",
+        timestamp: new Date(),
+        read: false
+      };
+      setNotifications([welcomeNotif]);
+      setUnreadCount(1);
+      
       setTimeout(() => {
         setShowWelcome(false);
       }, 3000);
-    } // Sync with global auth user when component loads
+    }
   }, [globalUser]);
 
   const handleLogout = async () => {
     try {
       await auth.signOut();
-      setCurrentUser(null); // Reset the currentUser state
-      navigate('/'); // Redirect to login page
+      setCurrentUser(null);
+      setNotifications([]);
+      setUnreadCount(0);
+      navigate('/');
     } catch (error) {
       console.error("Error signing out:", error);
     }
@@ -36,6 +49,15 @@ const NavbarforHomepage = () => {
 
   const toggleNotifications = () => {
     setShowNotifications(!showNotifications);
+    if (!showNotifications) {
+      // Mark all notifications as read when opening the notification panel
+      const updatedNotifications = notifications.map(notif => ({
+        ...notif,
+        read: true
+      }));
+      setNotifications(updatedNotifications);
+      setUnreadCount(0);
+    }
   };
 
   const toggleSettingsDropdown = () => {
@@ -74,16 +96,15 @@ const NavbarforHomepage = () => {
                 className="text-gray-700 hover:text-orange-600 cursor-pointer" 
                 onClick={toggleNotifications}
               />
-              {notifications.length > 0 && (
+              {unreadCount > 0 && (
                 <span className="absolute -top-1 -right-1 bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center text-xs">
-                  {notifications.length}
+                  {unreadCount}
                 </span>
               )}
             </div>
             <div className="bg-purple-600 text-white rounded-full w-8 h-8 flex items-center justify-center">
               {currentUser.displayName ? currentUser.displayName.charAt(0) : currentUser.email.charAt(0)}
             </div>
-            {/* Added text-black to make the username color black */}
             <span className="text-black">{currentUser.displayName || currentUser.email}</span>
             <div className="relative">
               <Settings
@@ -126,11 +147,14 @@ const NavbarforHomepage = () => {
         </div>
       )}
 
-      {showNotifications && (
-        <div className="fixed top-16 right-4 bg-white border shadow-lg rounded p-2">
+      {showNotifications && notifications.length > 0 && (
+        <div className="fixed top-16 right-4 bg-white border shadow-lg rounded p-2 min-w-[250px]">
           {notifications.map(notif => (
-            <div key={notif.id} className="p-2 hover:bg-gray-100">
-              {notif.message}
+            <div key={notif.id} className="p-3 bg-gray-300 hover:bg-gray-400 text-black border-b last:border-b-0">
+              <div className="font-medium">{notif.message}</div>
+              <div className="text-xs text-gray-900 mt-1">
+                {new Date(notif.timestamp).toLocaleString()}
+              </div>
             </div>
           ))}
         </div>
