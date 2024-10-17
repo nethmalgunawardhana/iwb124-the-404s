@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-
+import NavbarforHomepage from '../components/NavbarforHomepage';
 const BrowseEventsPage = () => {
   // Sample events data
   const allEvents = [
@@ -40,6 +40,7 @@ const BrowseEventsPage = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      <NavbarforHomepage />
       {/* Page Header */}
       <header className="bg-purple-600 text-white py-20" style={{ backgroundSize: 'cover', backgroundPosition: 'center' }}>
         <div className="max-w-4xl mx-auto text-center">

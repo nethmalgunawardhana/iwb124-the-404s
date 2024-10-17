@@ -7,28 +7,84 @@ import { auth } from '../firebase/firebase';
 
 const NavbarforHomepage = () => {
   const navigate = useNavigate();
-  const { currentUser: globalUser } = useAuth(); // Use from global context
+  const { currentUser: globalUser } = useAuth();
   const [currentUser, setCurrentUser] = useState(globalUser);
   const [notifications, setNotifications] = useState([]);
   const [showWelcome, setShowWelcome] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
   const [showSettingsDropdown, setShowSettingsDropdown] = useState(false);
+  const [unreadCount, setUnreadCount] = useState(0);
 
   useEffect(() => {
     setCurrentUser(globalUser);
-    if (globalUser && !showWelcome){
-      setShowWelcome(true);
-      setTimeout(() => {
-        setShowWelcome(false);
-      }, 3000);
-    } // Sync with global auth user when component loads
+    if (globalUser) {
+      // Check if welcome notification has been shown before for this session
+      const hasShownWelcome = sessionStorage.getItem(`welcomeShown_${globalUser.uid}`);
+      
+      if (!hasShownWelcome) {
+        setShowWelcome(true);
+        // Add welcome notification
+        const welcomeNotif = {
+          id: Date.now(),
+          message: "Welcome to Eventvibe!",
+          timestamp: new Date(),
+          read: false
+        };
+        setNotifications(prev => {
+          // Check if welcome notification already exists
+          const welcomeExists = prev.some(notif => notif.message === "Welcome to Eventvibe!");
+          if (!welcomeExists) {
+            return [...prev, welcomeNotif];
+          }
+          return prev;
+        });
+        setUnreadCount(prev => prev + 1);
+        
+        // Store in sessionStorage that welcome has been shown for this session
+        sessionStorage.setItem(`welcomeShown_${globalUser.uid}`, 'true');
+        
+        // Hide welcome message after 3 seconds
+        setTimeout(() => {
+          setShowWelcome(false);
+        }, 3000);
+      }
+    }
   }, [globalUser]);
+
+  // Load notifications from localStorage on component mount
+  useEffect(() => {
+    if (globalUser) {
+      const savedNotifications = localStorage.getItem(`notifications_${globalUser.uid}`);
+      if (savedNotifications) {
+        const parsedNotifications = JSON.parse(savedNotifications);
+        setNotifications(parsedNotifications);
+        setUnreadCount(parsedNotifications.filter(n => !n.read).length);
+      }
+    }
+  }, [globalUser]);
+
+  // Save notifications to localStorage whenever they change
+  useEffect(() => {
+    if (globalUser && notifications.length > 0) {
+      localStorage.setItem(`notifications_${globalUser.uid}`, JSON.stringify(notifications));
+    }
+  }, [notifications, globalUser]);
 
   const handleLogout = async () => {
     try {
+      if (currentUser) {
+        // Clear welcome status from sessionStorage
+        sessionStorage.removeItem(`welcomeShown_${currentUser.uid}`);
+        // Clear notifications from localStorage
+        localStorage.removeItem(`notifications_${currentUser.uid}`);
+      }
       await auth.signOut();
-      setCurrentUser(null); // Reset the currentUser state
-      navigate('/'); // Redirect to login page
+      setCurrentUser(null);
+      setNotifications([]);
+      setUnreadCount(0);
+      setShowNotifications(false);
+      setShowSettingsDropdown(false);
+      navigate('/');
     } catch (error) {
       console.error("Error signing out:", error);
     }
@@ -36,11 +92,37 @@ const NavbarforHomepage = () => {
 
   const toggleNotifications = () => {
     setShowNotifications(!showNotifications);
+    if (!showNotifications) {
+      // Mark all notifications as read when opening the notification panel
+      const updatedNotifications = notifications.map(notif => ({
+        ...notif,
+        read: true
+      }));
+      setNotifications(updatedNotifications);
+      setUnreadCount(0);
+    }
   };
 
   const toggleSettingsDropdown = () => {
     setShowSettingsDropdown(!showSettingsDropdown);
   };
+
+  // Close dropdowns when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (showNotifications || showSettingsDropdown) {
+        if (!event.target.closest('.notification-panel') && !event.target.closest('.settings-panel')) {
+          setShowNotifications(false);
+          setShowSettingsDropdown(false);
+        }
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showNotifications, showSettingsDropdown]);
 
   return (
     <nav className="flex justify-between items-center p-2 bg-white border-b fixed top-0 left-0 right-0 z-10">
@@ -69,31 +151,34 @@ const NavbarforHomepage = () => {
 
         {currentUser ? (
           <div className="flex items-center space-x-2">
-            <div className="relative">
+            <div className="relative notification-panel">
               <Bell 
                 className="text-gray-700 hover:text-orange-600 cursor-pointer" 
                 onClick={toggleNotifications}
               />
-              {notifications.length > 0 && (
+              {unreadCount > 0 && (
                 <span className="absolute -top-1 -right-1 bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center text-xs">
-                  {notifications.length}
+                  {unreadCount}
                 </span>
               )}
             </div>
             <div className="bg-purple-600 text-white rounded-full w-8 h-8 flex items-center justify-center">
               {currentUser.displayName ? currentUser.displayName.charAt(0) : currentUser.email.charAt(0)}
             </div>
-            {/* Added text-black to make the username color black */}
             <span className="text-black">{currentUser.displayName || currentUser.email}</span>
-            <div className="relative">
+            <div className="relative settings-panel">
               <Settings
                 className="text-gray-700 hover:text-orange-600 cursor-pointer"
                 onClick={toggleSettingsDropdown}
               />
               {showSettingsDropdown && (
                 <div className="absolute right-0 mt-2 w-48 bg-white border rounded-md shadow-lg z-20">
-                  <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Profile</a>
-                  <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Settings</a>
+                  <button
+                    onClick={() => navigate('/settings')}
+                    className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                  >
+                    Profile
+                  </button>
                   <button
                     onClick={handleLogout}
                     className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
@@ -126,11 +211,14 @@ const NavbarforHomepage = () => {
         </div>
       )}
 
-      {showNotifications && (
-        <div className="fixed top-16 right-4 bg-white border shadow-lg rounded p-2">
+      {showNotifications && notifications.length > 0 && (
+        <div className="fixed top-16 right-4 bg-white border shadow-lg rounded p-2 min-w-[250px] notification-panel">
           {notifications.map(notif => (
-            <div key={notif.id} className="p-2 hover:bg-gray-100">
-              {notif.message}
+            <div key={notif.id} className="p-3 bg-gray-300 hover:bg-gray-400 text-black border-b last:border-b-0">
+              <div className="font-medium">{notif.message}</div>
+              <div className="text-xs text-gray-900 mt-1">
+                {new Date(notif.timestamp).toLocaleString()}
+              </div>
             </div>
           ))}
         </div>

@@ -55,9 +55,7 @@ const Sidebar = () => {
             </li>
           </ul>
         </nav>
-        <button className="flex items-center text-gray-700 mt-8 p-2 rounded hover:bg-gray-100 transition-colors w-full">
-          <LogOut size={20} className="mr-3" /> Logout
-        </button>
+       
       </aside>
       <main className="flex-grow  overflow-y-auto bg-gray-50">
         <div className="p-8 ">
