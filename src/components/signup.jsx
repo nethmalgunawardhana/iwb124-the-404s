@@ -4,7 +4,7 @@ import { useAuth } from '../context/authContext';
 import { doCreateUserWithEmailAndPassword, doSendEmailVerification } from '../firebase/auth';
 import { auth } from '../firebase/firebase';
 import { updateProfile } from 'firebase/auth';
-
+import { useNavigate } from 'react-router-dom';
 const SignUpForm = () => {
   const navigate = useNavigate();
   const { setCurrentUser } = useAuth();

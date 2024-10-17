@@ -1,6 +1,6 @@
 // src/pages/Login.jsx
 import React from 'react';
-import LoginPage from '../components/Login'; // Adjust the path if necessary
+import LoginPage from '../components/login'; // Adjust the path if necessary
 
 const Login = () => {
   return <LoginPage />;
