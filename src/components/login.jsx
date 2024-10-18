@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { EyeOff, Eye } from 'lucide-react';
 import { useAuth } from '../context/authContext';
@@ -73,7 +73,7 @@ const LoginPage = () => {
     }
   };
 
-  const handleAdminLogin = () => {
+  const handleAdminLogin = useCallback(() => {
     Swal.fire({
       title: 'Admin Login',
       html:
@@ -90,15 +90,21 @@ const LoginPage = () => {
       if (result.isConfirmed) {
         const [adminUsername, adminPassword] = result.value;
         if (adminUsername === 'Nethmal' && adminPassword === '123654789') {
-          Swal.fire('Logged in as Admin!', '', 'success');
-          // Here you would typically set some admin state or redirect to an admin page
-          // For example: navigate('/admin-dashboard');
+          Swal.fire({
+            title: 'Logged in as Admin!',
+            icon: 'success',
+            timer: 1500,
+            showConfirmButton: false
+          }).then(() => {
+            console.log('Navigating to /eventdashboard');
+            navigate('/eventdashboard');
+          });
         } else {
           Swal.fire('Invalid Credentials', 'Please try again', 'error');
         }
       }
     });
-  };
+  }, [navigate]);
 
   return (
     <div className="background-radial-gradient overflow-hidden min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
