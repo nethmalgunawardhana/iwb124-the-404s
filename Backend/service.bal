@@ -116,6 +116,9 @@ service / on new http:Listener(9091) {
         if update.locationLink is string {
             updateFields["locationLink"] = update.locationLink;
         }
+         if update.locationLink is string {
+            updateFields["payment"] = update.payment;
+        }
         if update.institute is string {
             updateFields["institute"] = update.institute;
         }
@@ -176,6 +179,7 @@ public type EventInput record {|
     string date;
     string time;
     string locationLink;
+    string payment;
     string institute;
     string organizingCommittee;
     string tags;
@@ -190,6 +194,7 @@ public type EventUpdate record {|
     string date?;
     string time?;
     string locationLink?;
+    string payment?;
     string institute?;
     string organizingCommittee?;
     string tags?;
