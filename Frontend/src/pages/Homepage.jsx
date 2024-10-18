@@ -56,12 +56,17 @@ const HomePage = () => {
   return (
 
     <div className="min-h-screen bg-gray-50 relative">
-      {/*added nav bar*/}
-      < Navbar />
-      <br /><br /><br />
+      
       {/* Hero Section */}
       <header className="bg-purple-600 text-white py-20 relative overflow-hidden">
-      <div className="absolute inset-0 z-0 gap-x-28">
+        {/*added nav bar*/}
+    <div className='z-50'>
+    < Navbar />
+    </div>
+      
+      
+      <br /><br /><br />
+      <div className="absolute inset-0  gap-x-28">
             <div className="video-wrapper absolute inset-0 z-0">
                 <video autoPlay loop muted className="w-full h-full object-cover">
                     <source
@@ -73,7 +78,7 @@ const HomePage = () => {
             </div>
         </div>
         <br /><br /><br /><br /><br /><br /><br />
-        <div className="relative z-10 max-w-4xl mx-auto text-center">
+        <div className="relative  max-w-4xl mx-auto text-center">
           <h1 className="text-5xl font-bold">Discover Amazing Events</h1>
           <p className="mt-4 text-lg">Your one-stop solution for all your event needs!</p>
           <button className="mt-6 px-8 py-3 bg-white text-purple-600 rounded-lg hover:bg-gray-200 transition-colors animate-pulse">
