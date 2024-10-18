@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useAuth } from "../context/authContext";
 import { auth } from "../firebase/firebase";
 import { updateProfile } from "firebase/auth";
+import AdminAccessForm from "./AdminAccessForm";
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const phoneRegex = /^\+?[1-9]\d{1,14}$/;
@@ -36,6 +37,10 @@ const Profile = () => {
     e.preventDefault();
     // Handle form submission logic here
     setAdminPopup(false);
+  };
+
+  const handleAdminFormCancel = () => {
+    setAdminPopup(false); // Close the admin access form
   };
 
   // Load user data when component mounts
@@ -187,7 +192,7 @@ const Profile = () => {
         </h2>
         <button
           onClick={handleGetAdminAccess}
-          className="absolute top-4 right-4 px-4 py-2 text-sm md:text-base bg-purple-600 text-white rounded-lg hover:bg-purple-800 z-10"
+          className="absolute top-4 right-4 px-4 py-2 text-sm md:text-base bg-purple-600 text-white rounded-lg hover:bg-purple-800"
         >
           <span className="hidden md:inline">Get Admin Access</span>{" "}
           {/* Hidden on small screens */}
@@ -310,29 +315,8 @@ const Profile = () => {
 
       {adminPopup && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white rounded-lg p-6 w-1/3">
-            <h3 className="text-lg font-bold mb-4">Get Admin Access Form</h3>
-            <form onSubmit={handleAdminFormSubmit}>
-              {/* Add form fields here */}
-              <input
-                type="text"
-                placeholder="Enter your request"
-                className="mt-2 block w-full p-2 border border-gray-300 rounded"
-                required
-              />
-              <button
-                type="submit"
-                className="mt-4 w-full px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-800"
-              >
-                Submit
-              </button>
-            </form>
-            <button
-              onClick={() => setAdminPopup(false)}
-              className="mt-2 text-gray-600 hover:underline"
-            >
-              Cancel
-            </button>
+          <div className="bg-white rounded-lg p-6 sm:w-2/3 md:w-2/3 lg:w-1/3">
+            <AdminAccessForm onCancel={handleAdminFormCancel} />
           </div>
         </div>
       )}
