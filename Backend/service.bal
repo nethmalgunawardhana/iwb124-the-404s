@@ -62,6 +62,30 @@ service / on new http:Listener(9091) {
     resource function get events/[string id]() returns Event|error {
         return getEvent(self.eventDb, id);
     }
+   resource function post bookings(@http:Payload BookingInput input) returns Booking|error {
+        string id = uuid:createType1AsString();
+        Booking booking = {id, ...input};
+        mongodb:Collection bookings = check self.eventDb->getCollection("Booking");
+        check bookings->insertOne(booking);
+        return booking;
+    }
+
+    resource function get bookings() returns Booking[]|error {
+        mongodb:Collection bookings = check self.eventDb->getCollection("Booking");
+        stream<Booking, error?> result = check bookings->find();
+        Booking[] bookingList = [];
+        int count = 0;
+        check result.forEach(function(Booking|error booking) {
+            if (booking is Booking) {
+                bookingList.push(booking);
+                count += 1;
+            } else {
+                log:printError(string `Error processing booking: ${booking.message()}`, 'error = booking);
+            }
+        });
+        log:printInfo(string `Successfully retrieved ${count} bookings`);
+        return bookingList;
+    }
 
     resource function post events(@http:Payload EventInput input) returns Event|error {
         string id = uuid:createType1AsString();
@@ -164,7 +188,16 @@ public type EventUpdate record {|
     string registrationLink?;
     string resources?;
 |};
+public type BookingInput record {| 
+    string eventId;
+    string userId?;
+    string bookingDate?;
+|};
 
+public type Booking record {| 
+    readonly string id;
+    *BookingInput;
+|};
 public type Event record {| 
     readonly string id;
     *EventInput;
