@@ -20,16 +20,14 @@ const AdminAccessForm = ({ onCancel }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const formattedData = {
-        ...formData,
-      };
+      const { id, ...updateData } = eventData;
 
       const response = await fetch("http://localhost:9091/admin/access", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(formattedData),
+        body: JSON.stringify(updateData),
       });
 
       if (response.ok) {
