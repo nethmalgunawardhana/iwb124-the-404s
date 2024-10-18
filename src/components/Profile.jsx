@@ -18,6 +18,7 @@ const Profile = () => {
 
   const [isEditing, setIsEditing] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
+  const [adminPopup, setAdminPopup] = useState(false);
   const [newPicture, setNewPicture] = useState(null);
   const [changesMade, setChangesMade] = useState(false);
 
@@ -26,6 +27,16 @@ const Profile = () => {
     email: "",
     phoneNumber: "",
   });
+
+  const handleGetAdminAccess = () => {
+    setAdminPopup(true);
+  };
+
+  const handleAdminFormSubmit = (e) => {
+    e.preventDefault();
+    // Handle form submission logic here
+    setAdminPopup(false);
+  };
 
   // Load user data when component mounts
   useEffect(() => {
@@ -98,16 +109,16 @@ const Profile = () => {
         });
 
         // Save to localStorage for persistence
-        const userData = JSON.parse(localStorage.getItem('authUser') || '{}');
+        const userData = JSON.parse(localStorage.getItem("authUser") || "{}");
         userData.displayName = userInfo.fullName;
         userData.photoURL = userInfo.profilePicture;
-        localStorage.setItem('authUser', JSON.stringify(userData));
+        localStorage.setItem("authUser", JSON.stringify(userData));
 
-        alert('Changes saved successfully!');
+        alert("Changes saved successfully!");
         setIsEditing(false);
       } catch (error) {
         console.error("Error updating profile:", error);
-        alert('Failed to save changes. Please try again.');
+        alert("Failed to save changes. Please try again.");
       }
     }
   };
@@ -137,7 +148,7 @@ const Profile = () => {
   const handleSavePicture = async () => {
     try {
       const newPhotoURL = newPicture || "../user.png";
-      
+
       // Update profile in Firebase
       await updateProfile(auth.currentUser, {
         photoURL: newPhotoURL,
@@ -156,24 +167,33 @@ const Profile = () => {
       });
 
       // Update localStorage
-      const userData = JSON.parse(localStorage.getItem('authUser') || '{}');
+      const userData = JSON.parse(localStorage.getItem("authUser") || "{}");
       userData.photoURL = newPhotoURL;
-      localStorage.setItem('authUser', JSON.stringify(userData));
+      localStorage.setItem("authUser", JSON.stringify(userData));
 
       setShowPopup(false);
       setChangesMade(false);
     } catch (error) {
       console.error("Error updating profile picture:", error);
-      alert('Failed to update profile picture. Please try again.');
+      alert("Failed to update profile picture. Please try again.");
     }
   };
 
   return (
     <div className="min-h-screen bg-white">
-      <div className="max-w-4xl mx-auto p-6 bg-white rounded-lg shadow-md">
+      <div className="max-w-4xl mx-auto p-6 bg-white rounded-lg shadow-md relative">
         <h2 className="text-2xl font-bold mb-6 text-center text-purple-600">
           User Profile
         </h2>
+        <button
+          onClick={handleGetAdminAccess}
+          className="absolute top-4 right-4 px-4 py-2 text-sm md:text-base bg-purple-600 text-white rounded-lg hover:bg-purple-800 z-10"
+        >
+          <span className="hidden md:inline">Get Admin Access</span>{" "}
+          {/* Hidden on small screens */}
+          <span className="md:hidden">Admin Access</span>{" "}
+          {/* Shown on small screens */}
+        </button>
         <div className="flex items-center space-x-6 mb-6">
           <div className="relative">
             <img
@@ -242,8 +262,6 @@ const Profile = () => {
               <p className="text-red-500 text-sm">{errors.email}</p>
             )}
           </div>
-
-         
         </div>
 
         {/* Save Changes Button */}
@@ -251,7 +269,7 @@ const Profile = () => {
           <button
             onClick={handleSubmit}
             className="mt-6 w-full px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-800"
-            disabled={Object.values(errors).some(error => error)}
+            disabled={Object.values(errors).some((error) => error)}
           >
             Save Changes
           </button>
@@ -282,6 +300,35 @@ const Profile = () => {
             )}
             <button
               onClick={() => setShowPopup(false)}
+              className="mt-2 text-gray-600 hover:underline"
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      )}
+
+      {adminPopup && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white rounded-lg p-6 w-1/3">
+            <h3 className="text-lg font-bold mb-4">Get Admin Access Form</h3>
+            <form onSubmit={handleAdminFormSubmit}>
+              {/* Add form fields here */}
+              <input
+                type="text"
+                placeholder="Enter your request"
+                className="mt-2 block w-full p-2 border border-gray-300 rounded"
+                required
+              />
+              <button
+                type="submit"
+                className="mt-4 w-full px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-800"
+              >
+                Submit
+              </button>
+            </form>
+            <button
+              onClick={() => setAdminPopup(false)}
               className="mt-2 text-gray-600 hover:underline"
             >
               Cancel

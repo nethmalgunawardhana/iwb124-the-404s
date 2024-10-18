@@ -1,5 +1,11 @@
 import React, { useState } from 'react';
 import NavbarforHomepage from '../components/NavbarforHomepage';
+import musicIcon from '../assets/tag-music.png';
+import techIcon from '../assets/tag-technology.png';
+import artIcon from '../assets/tag-art.png';
+import danceIcon from '../assets/tag-dance.png';
+import { X } from 'react-feather'; // Make sure to import the X icon
+
 const BrowseEventsPage = () => {
   // Sample events data
   const allEvents = [
@@ -14,21 +20,20 @@ const BrowseEventsPage = () => {
   const [selectedInstitute, setSelectedInstitute] = useState('All Institutes');
   const [price, setPrice] = useState('');
   const [selectedTags, setSelectedTags] = useState([]);
-  const [visibleEvents, setVisibleEvents] = useState(20); // Initially show 20 events
+  const [visibleEvents, setVisibleEvents] = useState(20);
+  const [selectedEvent, setSelectedEvent] = useState(null); // State for the selected event
 
   const tags = [
-    { name: 'Music', image: 'https://via.placeholder.com/100x100?text=Music' },
-    { name: 'Technology', image: 'https://via.placeholder.com/100x100?text=Technology' },
-    { name: 'Art', image: 'https://via.placeholder.com/100x100?text=Art' },
-    { name: 'Dancing', image: 'https://via.placeholder.com/100x100?text=Dancing' },
+    { name: 'Music', image: musicIcon },
+    { name: 'Technology', image: techIcon },
+    { name: 'Art', image: artIcon },
+    { name: 'Dancing', image: danceIcon },
   ];
 
-  // Handle tag selection (only one tag can be selected at a time)
   const toggleTag = (tag) => {
-    setSelectedTags((prev) => (prev.includes(tag) ? [] : [tag])); // Only one tag at a time
+    setSelectedTags((prev) => (prev.includes(tag) ? [] : [tag]));
   };
 
-  // Filter events based on selected institutes, price, and tags
   const filteredEvents = allEvents.filter((event) => {
     const instituteMatch =
       selectedInstitute === 'All Institutes' || event.institute === selectedInstitute;
@@ -38,26 +43,58 @@ const BrowseEventsPage = () => {
     return instituteMatch && priceMatch && tagMatch;
   });
 
+  const openEventDetails = (event) => {
+    setSelectedEvent(event);
+  };
+
+  const closeEventDetails = () => {
+    setSelectedEvent(null);
+  };
+
+  const EventDetailPopup = ({ event, onClose }) => {
+    if (!event) return null;
+
+    return (
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center p-4 z-50">
+        <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+          <div className="p-6">
+            <div className="flex justify-between items-start mb-4">
+              <h2 className="text-2xl font-bold text-purple-800">{event.title}</h2>
+              <button onClick={onClose} className="text-gray-500 hover:text-gray-700">
+                <X size={24} />
+              </button>
+            </div>
+            <img src={event.image} alt={event.title} className="w-full h-64 object-cover rounded-lg mb-4" />
+            <p className="text-gray-600 mb-2">Event description goes here.</p>
+            <p className="text-gray-800"><strong>Date:</strong> {event.date}</p>
+            <p className="text-gray-800"><strong>Institute:</strong> {event.institute}</p>
+            <p className="text-gray-800"><strong>Price:</strong> {event.price === 'free' ? 'Free' : 'Paid'}</p>
+            {/* Add other event details if needed */}
+            <div className="mt-6">
+              <a href="#" className="px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors inline-block">
+                Enroll Now
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       <NavbarforHomepage />
-      {/* Page Header */}
-      <header className="bg-purple-600 text-white py-20" style={{ backgroundSize: 'cover', backgroundPosition: 'center' }}>
-        <div className="max-w-4xl mx-auto text-center">
+      <header className="bg-purple-600 text-white py-20">
+        <div className="max-w-6xl mx-auto text-center">
           <h1 className="text-5xl font-bold">Browse Events</h1>
           <p className="mt-4 text-lg">Find events by institutes, pricing, or tags!</p>
         </div>
       </header>
 
-      {/* Main Content */}
-      <main className="max-w-4xl mx-auto p-6">
-        {/* Filter Section */}
+      <main className="max-w-6xl mx-auto p-6">
         <section className="mb-12">
           <h2 className="text-3xl font-semibold text-center mb-6 text-purple-800">Filter Events</h2>
-
-          {/* Dropdowns in One Line */}
           <div className="flex justify-between mb-4 space-x-4">
-            {/* Institute Filter */}
             <div className="flex-grow">
               <label className="block font-semibold mb-2 text-gray-800">Select Institute</label>
               <select
@@ -72,8 +109,6 @@ const BrowseEventsPage = () => {
                 ))}
               </select>
             </div>
-
-            {/* Price Filter */}
             <div className="flex-grow">
               <label className="block font-semibold mb-2 text-gray-800">Select Price</label>
               <select
@@ -88,7 +123,6 @@ const BrowseEventsPage = () => {
             </div>
           </div>
 
-          {/* Tag Filter */}
           <div className="mb-8">
             <h3 className="text-xl font-semibold mb-4 text-purple-800">Select Tags</h3>
             <div className="flex space-x-4">
@@ -99,33 +133,35 @@ const BrowseEventsPage = () => {
                   onClick={() => toggleTag(tag.name)}
                 >
                   <img src={tag.image} alt={tag.name} className="w-24 h-24 object-cover rounded-md" />
-                  <p className="mt-2 text-center text-gray-800">{tag.name}</p> {/* Changed color for visibility */}
+                  <p className="mt-2 text-center text-gray-800">{tag.name}</p>
                 </div>
               ))}
             </div>
           </div>
         </section>
 
-        {/* Event Display Section */}
         <section>
           <h2 className="text-3xl font-semibold text-center mb-6 text-purple-800">Available Events</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {filteredEvents.slice(0, visibleEvents).map((event, index) => (
-              <div key={index} className="bg-white p-4 rounded-lg shadow hover:shadow-lg transition-shadow duration-300">
-                <img src={event.image} alt={event.title} className="w-full h-48 object-cover rounded-t-lg" />
-                <h3 className="text-lg font-semibold mt-2 text-gray-800">{event.title}</h3> {/* Changed color for visibility */}
-                <p className="text-gray-600">{event.date}</p>
-                <p className="text-gray-600">{event.institute}</p>
-                <p className="text-gray-600">{event.price === 'free' ? 'Free' : 'Paid'}</p>
+              <div 
+                key={index} 
+                className="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 cursor-pointer"
+                onClick={() => openEventDetails(event)}
+              >
+                <img src={event.image} alt={event.title} className="w-full h-64 object-cover rounded-lg mb-4" />
+                <h3 className="text-xl font-semibold mt-2 text-gray-800">{event.title}</h3>
+                <p className="text-gray-600 text-lg">{event.date}</p>
+                <p className="text-gray-600 text-lg">{event.institute}</p>
+                <p className="text-gray-600 text-lg font-medium mt-2">{event.price === 'free' ? 'Free' : 'Paid'}</p>
               </div>
             ))}
           </div>
 
-          {/* Load More Button */}
           {visibleEvents < filteredEvents.length && (
-            <div className="text-center mt-8">
+            <div className="text-center mt-12">
               <button
-                className="px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-800 transition-colors"
+                className="px-8 py-4 bg-purple-600 text-white rounded-lg hover:bg-purple-800 transition-colors"
                 onClick={() => setVisibleEvents(visibleEvents + 20)}
               >
                 Load More Events
@@ -135,12 +171,13 @@ const BrowseEventsPage = () => {
         </section>
       </main>
 
-      {/* Footer */}
-      <footer className="bg-white mt-8 p-4 shadow">
-        <div className="max-w-4xl mx-auto text-center">
-          <p className="text-gray-600">2023 Your Company. All rights reserved.</p>
+      <footer className="bg-white mt-12 p-6 shadow">
+        <div className="max-w-6xl mx-auto text-center">
+          <p className="text-gray-600">2024 EventUni. All rights reserved.</p>
         </div>
       </footer>
+
+      <EventDetailPopup event={selectedEvent} onClose={closeEventDetails} />
     </div>
   );
 };
