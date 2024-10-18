@@ -1,0 +1,171 @@
+import ballerina/http;
+import ballerina/uuid;
+import ballerinax/mongodb;
+import ballerina/io;
+import ballerina/log;
+
+configurable string host = "localhost";
+configurable int port = 27017;
+
+final mongodb:Client mongoDb = check new ({
+    connection: {
+        serverAddress: {
+            host,
+            port
+        }
+    }
+});
+
+@http:ServiceConfig {
+    cors: {
+        allowOrigins: ["http://localhost:5173"],
+        allowHeaders: ["REQUEST_ID", "Content-Type"],
+        exposeHeaders: ["RESPONSE_ID"],
+        allowMethods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+        maxAge: 84900
+    }
+}
+
+service / on new http:Listener(9091) {
+    private final mongodb:Database eventDb;
+
+    function init() returns error? {
+        self.eventDb = check mongoDb->getDatabase("EventDb");
+        io:println("MongoDB connected to EventDb");
+    }
+
+    resource function options events(http:Caller caller, http:Request req) returns error? {
+        http:Response res = new;
+        res.setHeader("Access-Control-Allow-Origin", "*");
+        res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+        res.setHeader("Access-Control-Allow-Headers", "REQUEST_ID, Content-Type");
+        check caller->respond(res);
+    }
+
+    resource function get events() returns Event[]|error {
+        mongodb:Collection events = check self.eventDb->getCollection("Event");
+        stream<Event, error?> result = check events->find();
+        Event[] eventList = [];
+        int count = 0;
+        check result.forEach(function(Event|error event) {
+            if (event is Event) {
+                eventList.push(event);
+                count += 1;
+            } else {
+                log:printError(string `Error processing event: ${event.message()}`, 'error = event);
+            }
+        });
+        log:printInfo(string `Successfully retrieved ${count} events`);
+        return eventList;
+    }
+
+    resource function get events/[string id]() returns Event|error {
+        return getEvent(self.eventDb, id);
+    }
+
+    resource function post events(@http:Payload EventInput input) returns Event|error {
+        string id = uuid:createType1AsString();
+        Event event = {id, ...input};
+        mongodb:Collection events = check self.eventDb->getCollection("Event");
+        check events->insertOne(event);
+        return event;
+    }
+
+    resource function put events/[string id](@http:Payload EventUpdate update) returns Event|error {
+        mongodb:Collection events = check self.eventDb->getCollection("Event");
+        // Create a map<json> to hold the fields to update.
+        map<json> updateFields = {};
+        if update.name is string {
+            updateFields["name"] = update.name;
+        }
+        if update.description is string {
+            updateFields["description"] = update.description;
+        }
+        if update.date is string {
+            updateFields["date"] = update.date;
+        }
+        if update.time is string {
+            updateFields["time"] = update.time;
+        }
+        if update.locationLink is string {
+            updateFields["locationLink"] = update.locationLink;
+        }
+        if update.institute is string {
+            updateFields["institute"] = update.institute;
+        }
+        if update.organizingCommittee is string {
+            updateFields["organizingCommittee"] = update.organizingCommittee;
+        }
+        if update.tags is string {
+            updateFields["tags"] = update.tags;
+        }
+        if update.image is string {
+            updateFields["image"] = update.image;
+        }
+        if update.registrationLink is string {
+            updateFields["registrationLink"] = update.registrationLink;
+        }
+        if update.resources is string {
+            updateFields["resources"] = update.resources;
+        }
+
+        mongodb:UpdateResult updateResult = check events->updateOne({id}, {set: updateFields});
+        if updateResult.modifiedCount != 1 {
+            return error(string `Failed to update the event with id ${id}`);
+        }
+        return getEvent(self.eventDb, id);
+    }
+
+    resource function delete events/[string id]() returns string|error {
+        mongodb:Collection events = check self.eventDb->getCollection("Event");
+        mongodb:DeleteResult deleteResult = check events->deleteOne({id});
+        if deleteResult.deletedCount != 1 {
+            return error(string `Failed to delete the event ${id}`);
+        }
+        return id;
+    }
+}
+
+isolated function getEvent(mongodb:Database eventDb, string id) returns Event|error {
+    mongodb:Collection events = check eventDb->getCollection("Event");
+    stream<Event, error?> findResult = check events->find({id});
+    Event[] result = check from Event e in findResult
+        select e;
+    if result.length() != 1 {
+        return error(string `Failed to find an event with id ${id}`);
+    }
+    return result[0];
+}
+
+public type EventInput record {| 
+    string name;
+    string description;
+    string date;
+    string time;
+    string locationLink;
+    string institute;
+    string organizingCommittee;
+    string tags;
+    string image;
+    string registrationLink;
+    string resources;
+|};
+
+public type EventUpdate record {| 
+    string name?;
+    string description?;
+    string date?;
+    string time?;
+    string locationLink?;
+    string institute?;
+    string organizingCommittee?;
+    string tags?;
+    string image?;
+    string registrationLink?;
+    string resources?;
+|};
+
+public type Event record {| 
+    readonly string id;
+    *EventInput;
+|};
