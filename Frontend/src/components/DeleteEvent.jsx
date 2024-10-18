@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Trash2 } from 'lucide-react';
+import Swal from 'sweetalert2';
 
 const DeleteEventPage = () => {
   const [events, setEvents] = useState([]);
@@ -25,7 +26,11 @@ const DeleteEventPage = () => {
 
   const handleDelete = async () => {
     if (!selectedEventId) {
-      alert('Please select an event to delete');
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: 'Please select an event to delete',
+      });
       return;
     }
 
@@ -35,15 +40,26 @@ const DeleteEventPage = () => {
       });
 
       if (response.ok) {
-        alert('Event deleted successfully');
+        Swal.fire({
+          title: "Success!",
+          text: 'Event deleted successfully',
+          icon: "success"
+        });
         setSelectedEventId('');
         fetchEvents(); // Refresh the list
       } else {
-        alert('Failed to delete event');
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text:'Failed to delete event',
+        });
       }
     } catch (error) {
-      console.error('Error deleting event:', error);
-      alert('Error deleting event');
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text:'Error deleting event:', error,
+      });
     }
   };
 
@@ -84,7 +100,7 @@ const DeleteEventPage = () => {
           Selected Event ID
         </label>
         <input
-          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          className="shadow appearance-none border bg-white rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
           id="selectedEventId"
           type="text"
           value={selectedEventId}

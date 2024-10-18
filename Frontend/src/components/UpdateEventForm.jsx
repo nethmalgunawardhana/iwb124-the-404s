@@ -1,16 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { Calendar, Clock, MapPin, Users, Tag, Image, Link, FileText } from 'lucide-react';
+import { Calendar, Clock, MapPin, Users, Tag, Image, Link, FileText, WalletCards } from 'lucide-react';
+import Swal from 'sweetalert2';
 
 const UpdateEventForm = () => {
   const [events, setEvents] = useState([]);
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [eventData, setEventData] = useState({
-    
     name: '',
     description: '',
     date: '',
     time: '',
     locationLink: '',
+    payment: 'free', // Added payment field with default value
     institute: '',
     organizingCommittee: '',
     tags: '',
@@ -41,6 +42,7 @@ const UpdateEventForm = () => {
     setSelectedEvent(event);
     setEventData({
       ...event,
+      payment: event.payment || 'free', // Ensure payment has a default value
     });
   };
 
@@ -55,30 +57,33 @@ const UpdateEventForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const formattedEventData = {
-        ...eventData,
-      };
-
+      const { id, ...updateData } = eventData;
+      
       const response = await fetch(`http://localhost:9091/events/${eventData.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formattedEventData),
+        body: JSON.stringify(updateData),
       });
 
       if (response.ok) {
         const updatedEvent = await response.json();
-        window.alert(`Event successfully updated: ${updatedEvent.name}`);
-        fetchEvents(); // Refresh the event list
+
+        Swal.fire({
+          title: "Success!",
+          text: `Event successfully updated: ${updatedEvent.name}`,
+          icon: "success"
+        });
+        fetchEvents();
         setSelectedEvent(null);
         setEventData({
-          
           name: '',
           description: '',
           date: '',
           time: '',
           locationLink: '',
+          payment: 'free',
           institute: '',
           organizingCommittee: '',
           tags: '',
@@ -88,18 +93,25 @@ const UpdateEventForm = () => {
         });
       } else {
         const errorData = await response.json();
-        window.alert(`Failed to update event: ${errorData.message}`);
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: `Failed to update event: ${errorData.message}`,
+        });
       }
     } catch (error) {
-      console.error('Error updating event:', error);
-      window.alert("Error updating event");
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "Error updating event",
+      });
     }
   };
 
   return (
     <div>
       <h2 className="text-2xl font-bold text-black mb-6">Update Event</h2>
-      
+
       <table className="w-full mb-6 border-collapse border border-gray-300 rounded-lg shadow-lg">
         <thead>
           <tr className="bg-gray-100">
@@ -114,7 +126,7 @@ const UpdateEventForm = () => {
               <td className="border border-gray-300 px-4 py-2">{event.name}</td>
               <td className="border border-gray-300 px-4 py-2">{event.description.substring(0, 50)}...</td>
               <td className="border border-gray-300 px-4 py-2">
-                <button 
+                <button
                   onClick={() => handleEventSelect(event)}
                   className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded"
                 >
@@ -129,7 +141,7 @@ const UpdateEventForm = () => {
       {selectedEvent && (
         <form onSubmit={handleSubmit} className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
           <h2 className="text-2xl font-bold text-black mb-6">Update Event</h2>
-          
+
           {/* Name Input */}
           <div className="mb-4">
             <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="name">
@@ -193,6 +205,37 @@ const UpdateEventForm = () => {
                 onChange={handleInputChange}
                 required
               />
+            </div>
+          </div>
+
+          {/* Payment Type Input */}
+          <div className="mb-4">
+            <div className="block text-gray-700 text-sm font-bold mb-2">
+              <WalletCards className="inline mr-2" size={16} /> Payment Type
+            </div>
+            <div className="flex space-x-4">
+              <label className="inline-flex items-center">
+                <input
+                  type="radio"
+                  name="payment"
+                  value="free"
+                  checked={eventData.payment === 'free'}
+                  onChange={handleInputChange}
+                  className="form-radio h-4 w-4 text-purple-600"
+                />
+                <span className="ml-2 text-gray-700">Free</span>
+              </label>
+              <label className="inline-flex items-center">
+                <input
+                  type="radio"
+                  name="payment"
+                  value="paid"
+                  checked={eventData.payment === 'paid'}
+                  onChange={handleInputChange}
+                  className="form-radio h-4 w-4 text-purple-600"
+                />
+                <span className="ml-2 text-gray-700">Paid</span>
+              </label>
             </div>
           </div>
 
@@ -316,7 +359,7 @@ const UpdateEventForm = () => {
           {/* Submit Button */}
           <div className="flex items-center justify-between">
             <button
-              className="bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+              className="bg-purple-900 hover:bg-purple-300 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
               type="submit"
             >
               Update Event

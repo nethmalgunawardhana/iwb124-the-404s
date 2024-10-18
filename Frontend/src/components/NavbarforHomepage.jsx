@@ -118,7 +118,7 @@ const NavbarforHomepage = () => {
         
         <form className="w-[400px] relative">
           <div className="relative">
-            <input type="search" placeholder="Search Event" className="w-full p-4 rounded-full bg-white border-2 border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500" />
+            <input type="search" placeholder="Search Event" className="w-full p-4 text-black rounded-full bg-white border-2 border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500" />
             <button className="absolute right-1 top-1/2 -translate-y-1/2 p-2 bg-purple-600 rounded-full text-white hover:bg-purple-700 transition-colors duration-300">
               <IoIosSearch />
             </button>
