@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Calendar, Clock, MapPin, Users, Tag, Image, Link, FileText, WalletCards } from 'lucide-react';
 import Swal from 'sweetalert2';
-import 'react-datepicker/dist/react-datepicker.css';
+
 
 const CreateEventForm = () => {
   const [eventData, setEventData] = useState({
