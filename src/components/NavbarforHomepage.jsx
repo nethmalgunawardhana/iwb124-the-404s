@@ -128,7 +128,7 @@ const NavbarforHomepage = () => {
 
       <div className="flex items-center space-x-4">
         <button onClick={() => navigate('/browse-events')} className="text-gray-700 hover:text-purple-600 transition-colors duration-300">Find Events</button>
-        <button onClick={() => navigate('/')} className="text-gray-700 hover:text-purple-600 transition-colors duration-300">Find my tickets</button>
+        <button onClick={() => navigate('/')} className="text-gray-700 hover:text-purple-600 transition-colors duration-300">My Bookings</button>
 
         {currentUser ? (
           <div className="flex items-center space-x-2">
