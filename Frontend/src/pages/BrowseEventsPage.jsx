@@ -5,7 +5,8 @@ import musicIcon from '../assets/tag-music.png';
 import techIcon from '../assets/tag-technology.png';
 import artIcon from '../assets/tag-art.png';
 import danceIcon from '../assets/tag-dance.png';
-import { X } from 'react-feather';
+import { X, Calendar, MapPin } from 'react-feather';
+import Swal from 'sweetalert2';
 
 const BrowseEventsPage = () => {
   const [events, setEvents] = useState([]);
@@ -17,7 +18,6 @@ const BrowseEventsPage = () => {
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
   const tags = [
     { name: 'Music', image: musicIcon },
     { name: 'Technology', image: techIcon },
@@ -74,6 +74,36 @@ const BrowseEventsPage = () => {
 
   const institutes = ['All Institutes', ...new Set(events.map(event => event.institute))];
 
+  const bookEvent = async (eventId) => {
+    const result = await Swal.fire({
+      title: 'Confirm Booking',
+      text: 'Are you sure you want to book this event?',
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, book it!'
+    });
+
+    if (result.isConfirmed) {
+      try {
+        await axios.post('http://localhost:9091/bookings', { eventId });
+        Swal.fire(
+          'Booked!',
+          'The event has been successfully booked.',
+          'success'
+        );
+        closeEventDetails();
+      } catch (error) {
+        Swal.fire(
+          'Error!',
+          'Failed to book the event. Please try again.',
+          'error'
+        );
+      }
+    }
+  };
+
   const EventDetailPopup = ({ event, onClose }) => {
     if (!event) return null;
 
@@ -88,16 +118,26 @@ const BrowseEventsPage = () => {
               </button>
             </div>
             <img src={event.image} alt={event.name} className="w-full h-64 object-cover rounded-lg mb-4" />
-            <p className="text-gray-600 mb-2">{event.description}</p>
-            <p className="text-gray-800"><strong>Date:</strong> {event.date}</p>
+            <p className="text-gray-600 mb-4">{event.description}</p>
+            <p className="text-gray-800 flex items-center mb-2">
+              <Calendar className="mr-2" size={18} />
+              <strong>Date:</strong> {event.date}
+            </p>
+            <p className="text-gray-800 flex items-center mb-2">
+              <MapPin className="mr-2" size={18} />
+              <strong>Location:</strong> <a href={event.locationLink} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">{event.locationLink}</a>
+            </p>
             <p className="text-gray-800"><strong>Time:</strong> {event.time}</p>
             <p className="text-gray-800"><strong>Institute:</strong> {event.institute}</p>
             <p className="text-gray-800"><strong>Organizing Committee:</strong> {event.organizingCommittee}</p>
             <p className="text-gray-800"><strong>Tags:</strong> {event.tags}</p>
-            <div className="mt-6">
+            <div className="mt-6 flex justify-between">
               <a href={event.registrationLink} target="_blank" rel="noopener noreferrer" className="px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors inline-block">
                 Register Now
               </a>
+              <button onClick={() => bookEvent(event.id)} className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
+                Book Now
+              </button>
             </div>
           </div>
         </div>
@@ -182,8 +222,15 @@ const BrowseEventsPage = () => {
                 onClick={() => openEventDetails(event)}
               >
                 <img src={event.image} alt={event.name} className="w-full h-64 object-cover rounded-lg mb-4" />
-                <h3 className="text-xl font-semibold mt-2 text-gray-800">{event.name}</h3>
-                <p className="text-gray-600 text-lg">{event.date}</p>
+                <h3 className="text-xl font-semibold mt-2 text-gray-800 text-center">{event.name}</h3>
+                <p className="text-gray-600 text-lg flex items-center mt-2">
+                  <Calendar className="mr-2" size={18} />
+                  {event.date}
+                </p>
+                <p className="text-gray-600 text-lg flex items-center mt-2">
+                  <MapPin className="mr-2" size={18} />
+                  <a href={event.locationLink} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">Location</a>
+                </p>
                 <p className="text-gray-600 text-lg">{event.institute}</p>
                 <p className="text-gray-600 text-lg font-medium mt-2">{event.price === 'free' ? 'Free' : 'Paid'}</p>
                 <p className="text-gray-600 text-sm mt-2">Tags: {event.tags}</p>
