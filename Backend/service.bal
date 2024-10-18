@@ -3,6 +3,7 @@ import ballerina/uuid;
 import ballerinax/mongodb;
 import ballerina/io;
 import ballerina/log;
+import ballerina/time;
 
 configurable string host = "localhost";
 configurable int port = 27017;
@@ -64,7 +65,8 @@ service / on new http:Listener(9091) {
     }
    resource function post bookings(@http:Payload BookingInput input) returns Booking|error {
         string id = uuid:createType1AsString();
-        Booking booking = {id, ...input};
+        string bookingDate = time:utcToString(time:utcNow()).substring(0, 10);  // Get current date in YYYY-MM-DD format
+        Booking booking = {id, bookingDate, ...input};
         mongodb:Collection bookings = check self.eventDb->getCollection("Booking");
         check bookings->insertOne(booking);
         return booking;
@@ -198,11 +200,12 @@ public type EventUpdate record {|
 public type BookingInput record {| 
     string eventId;
     string userId?;
-    string bookingDate?;
+    
 |};
 
 public type Booking record {| 
     readonly string id;
+    string bookingDate;
     *BookingInput;
 |};
 public type Event record {| 
