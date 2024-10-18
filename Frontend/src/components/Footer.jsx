@@ -145,7 +145,7 @@ const Footer = () => {
                     <nav className="flex justify-end mt-12 gap-4 w-full">
                         <div className="px-4 sm:px-1 lg:px-1">
                             <ul className="flex space-x-4 py-4">
-                                <li> <p className="text-sm text-center text-gray-300 mb-0 pr-28">© 2024 Eventbrite,</p></li>
+                                <li> <p className="text-sm text-center text-gray-300 mb-0 pr-28">© 2024 EventUni™</p></li>
                                 {eventLinks5.map((link, index) => (
                                     <li key={index}>
                                         <a
