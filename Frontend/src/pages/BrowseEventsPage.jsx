@@ -12,7 +12,7 @@ const BrowseEventsPage = () => {
   const [events, setEvents] = useState([]);
   const [filteredEvents, setFilteredEvents] = useState([]);
   const [selectedInstitute, setSelectedInstitute] = useState('All Institutes');
-  const [price, setPrice] = useState('');
+  const [selectedPayment, setSelectedPayment] = useState('');
   const [selectedTags, setSelectedTags] = useState([]);
   const [visibleEvents, setVisibleEvents] = useState(20);
   const [selectedEvent, setSelectedEvent] = useState(null);
@@ -31,7 +31,7 @@ const BrowseEventsPage = () => {
 
   useEffect(() => {
     filterEvents();
-  }, [events, selectedInstitute, price, selectedTags]);
+  }, [events, selectedInstitute, selectedPayment, selectedTags]);
 
   const fetchEvents = async () => {
     try {
@@ -49,10 +49,10 @@ const BrowseEventsPage = () => {
     const filtered = events.filter((event) => {
       const instituteMatch =
         selectedInstitute === 'All Institutes' || event.institute === selectedInstitute;
-      const priceMatch = price === '' || (price === 'free' ? event.price === 'free' : event.price !== 'free');
+      const paymentMatch = selectedPayment === '' || event.payment === selectedPayment;
       const tagMatch = selectedTags.length === 0 || selectedTags.some(tag => event.tags.includes(tag));
 
-      return instituteMatch && priceMatch && tagMatch;
+      return instituteMatch && paymentMatch && tagMatch;
     });
 
     setFilteredEvents(filtered);
@@ -87,7 +87,12 @@ const BrowseEventsPage = () => {
 
     if (result.isConfirmed) {
       try {
-        await axios.post('http://localhost:9091/bookings', { eventId });
+        // The booking payload matches the backend BookingInput type
+        await axios.post('http://localhost:9091/bookings', { 
+          eventId
+          // Optional field as per backend type
+        });
+        
         Swal.fire(
           'Booked!',
           'The event has been successfully booked.',
@@ -128,9 +133,13 @@ const BrowseEventsPage = () => {
               <strong>Location:</strong> <a href={event.locationLink} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">{event.locationLink}</a>
             </p>
             <p className="text-gray-800"><strong>Time:</strong> {event.time}</p>
+            <p className="text-gray-800"><strong>Payment:</strong> {event.payment}</p>
             <p className="text-gray-800"><strong>Institute:</strong> {event.institute}</p>
             <p className="text-gray-800"><strong>Organizing Committee:</strong> {event.organizingCommittee}</p>
             <p className="text-gray-800"><strong>Tags:</strong> {event.tags}</p>
+            {event.resources && (
+              <p className="text-gray-800"><strong>Resources:</strong> {event.resources}</p>
+            )}
             <div className="mt-6 flex justify-between">
               <a href={event.registrationLink} target="_blank" rel="noopener noreferrer" className="px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors inline-block">
                 Register Now
@@ -159,7 +168,7 @@ const BrowseEventsPage = () => {
       <header className="bg-purple-600 text-white py-20">
         <div className="max-w-6xl mx-auto text-center">
           <h1 className="text-5xl font-bold">Browse Events</h1>
-          <p className="mt-4 text-lg">Find events by institutes, pricing, or tags!</p>
+          <p className="mt-4 text-lg">Find events by institutes, payment options, or tags!</p>
         </div>
       </header>
 
@@ -182,15 +191,15 @@ const BrowseEventsPage = () => {
               </select>
             </div>
             <div className="flex-grow">
-              <label className="block font-semibold mb-2 text-gray-800">Select Price</label>
+              <label className="block font-semibold mb-2 text-gray-800">Select Payment</label>
               <select
-                value={price}
-                onChange={(e) => setPrice(e.target.value)}
+                value={selectedPayment}
+                onChange={(e) => setSelectedPayment(e.target.value)}
                 className="w-full p-2 border rounded-lg bg-white text-gray-800"
               >
-                <option value="">All Prices</option>
-                <option value="free">Free</option>
-                <option value="paid">Paid</option>
+                <option value="">All Payment Types</option>
+                <option value="Free">Free</option>
+                <option value="Paid">Paid</option>
               </select>
             </div>
           </div>
@@ -232,7 +241,7 @@ const BrowseEventsPage = () => {
                   <a href={event.locationLink} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">Location</a>
                 </p>
                 <p className="text-gray-600 text-lg">{event.institute}</p>
-                <p className="text-gray-600 text-lg font-medium mt-2">{event.price === 'free' ? 'Free' : 'Paid'}</p>
+                <p className="text-gray-600 text-lg font-medium mt-2">{event.payment}</p>
                 <p className="text-gray-600 text-sm mt-2">Tags: {event.tags}</p>
               </div>
             ))}

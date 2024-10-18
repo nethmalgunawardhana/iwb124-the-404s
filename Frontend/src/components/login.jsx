@@ -125,7 +125,7 @@ const LoginPage = () => {
               placeholder="john.doe@gmail.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-600"
+              className="w-full px-4 py-2 border border-gray-300 rounded-md bg-white text-black focus:outline-none focus:ring-2 focus:ring-purple-600"
               required
               disabled={loading}
             />
@@ -135,7 +135,7 @@ const LoginPage = () => {
                 placeholder="••••••••••••••••••••"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-600"
+                className="w-full px-4 py-2 border border-gray-300 rounded-md text-black bg-white focus:outline-none  focus:ring-2 focus:ring-purple-600"
                 required
                 disabled={loading}
               />
@@ -163,7 +163,7 @@ const LoginPage = () => {
                 className="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded"
                 disabled={loading}
               />
-              <label htmlFor="remember-me" className="ml-2 text-sm text-gray-900">
+              <label htmlFor="remember-me" className="ml-2 text-sm  text-gray-900">
                 Remember me
               </label>
             </div>
