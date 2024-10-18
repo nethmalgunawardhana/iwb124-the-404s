@@ -114,25 +114,25 @@ const Footer = () => {
                         ))}
                         <ul className="flex items-center space-x-3 mt-9">
                             <li>
-                                <a href="#" title="" className="flex items-center justify-center text-white transition-all duration-200 bg-gray-800 rounded-full w-7 h-7 hover:bg-blue-600 focus:bg-blue-600">
+                                <a href="https://www.twiitter.com" title="" className="flex items-center justify-center text-white transition-all duration-200 bg-gray-800 rounded-full w-7 h-7 hover:bg-blue-600 focus:bg-blue-600">
                                 <FaSquareXTwitter />
                                 </a>
                             </li>
 
                             <li>
-                                <a href="#" title="" className="flex items-center justify-center text-white transition-all duration-200 bg-gray-800 rounded-full w-7 h-7 hover:bg-blue-600 focus:bg-blue-600">
+                                <a href="https://www.facebook.com/" title="" className="flex items-center justify-center text-white transition-all duration-200 bg-gray-800 rounded-full w-7 h-7 hover:bg-blue-600 focus:bg-blue-600">
                                 <FaFacebook />
                                 </a>
                             </li>
 
                             <li>
-                                <a href="#" title="" className="flex items-center justify-center text-white transition-all duration-200 bg-gray-800 rounded-full w-7 h-7 hover:bg-blue-600 focus:bg-blue-600">
+                                <a href="https://www.linkedin.com/" title="" className="flex items-center justify-center text-white transition-all duration-200 bg-gray-800 rounded-full w-7 h-7 hover:bg-blue-600 focus:bg-blue-600">
                                 <FaLinkedin />
                                 </a>
                             </li>
 
                             <li>
-                                <a href="#" title="" className="flex items-center justify-center text-white transition-all duration-200 bg-gray-800 rounded-full w-7 h-7 hover:bg-blue-600 focus:bg-blue-600">
+                                <a href="https://www.instagram.com/" title="" className="flex items-center justify-center text-white transition-all duration-200 bg-gray-800 rounded-full w-7 h-7 hover:bg-blue-600 focus:bg-blue-600">
                                 <FaSquareInstagram />
                                 </a>
                             </li>
@@ -145,7 +145,7 @@ const Footer = () => {
                     <nav className="flex justify-end mt-12 gap-4 w-full">
                         <div className="px-4 sm:px-1 lg:px-1">
                             <ul className="flex space-x-4 py-4">
-                                <li> <p className="text-sm text-center text-gray-300 mb-0 pr-28">© 2024 Eventbrite,</p></li>
+                                <li> <p className="text-sm text-center text-gray-300 mb-0 pr-28">© 2024 EventUni™</p></li>
                                 {eventLinks5.map((link, index) => (
                                     <li key={index}>
                                         <a
