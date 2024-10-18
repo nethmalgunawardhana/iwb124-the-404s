@@ -56,26 +56,21 @@ const HomePage = () => {
   return (
 
     <div className="min-h-screen bg-gray-50 relative">
-      
+      {/*added nav bar*/}
+      < Navbar />
+      <br /><br /><br />
       {/* Hero Section */}
       <header className="bg-purple-600 text-white py-20 relative overflow-hidden">
-        {/*added nav bar*/}
-    <div className='z-50'>
-    < Navbar />
-    </div>
-      
-      
-      <br /><br /><br />
-      <div className="absolute inset-0  gap-x-28">
-            <div className="video-wrapper absolute inset-0 z-0">
-                <video autoPlay loop muted className="w-full h-full object-cover">
-                    <source
-                        src="https://videos.pexels.com/video-files/7722221/7722221-uhd_2560_1440_25fps.mp4"
-                        type="video/mp4"
-                    />
-                    Your browser does not support the video tag.
-                </video>
-            </div>
+        <div className="absolute inset-0 z-0">
+          <div className="absolute inset-0 overflow-hidden">
+            <video autoPlay loop muted className="w-full h-full object-cover">
+              <source
+                src="https://videos.pexels.com/video-files/7722221/7722221-uhd_2560_1440_25fps.mp4"
+                type="video/mp4"
+              />
+              Your browser does not support the video tag.
+            </video>
+          </div>
         </div>
         <br /><br /><br /><br /><br /><br /><br />
         <div className="relative  max-w-4xl mx-auto text-center">
@@ -176,21 +171,21 @@ const HomePage = () => {
           <h2 className="text-3xl font-semibold mb-4 text-purple-500">Available Events</h2>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {randomEvents.map((event, index) => (
-            <div key={index} className="bg-white p-4 rounded-lg shadow hover:shadow-lg transition-shadow duration-300">
-              <img src={event.image} alt={event.title} className="w-full h-48 object-cover rounded-t-lg" />
-              <h3 className="text-lg font-semibold mt-2">{event.title}</h3>
-              <p className="text-gray-600">{event.date}</p>
-            </div>
+            {randomEvents.map((event, index) => (
+              <div key={index} className="bg-white p-4 rounded-lg shadow hover:shadow-lg transition-shadow duration-300">
+                <img src={event.image} alt={event.title} className="w-full h-48 object-cover rounded-t-lg" />
+                <h3 className="text-lg font-semibold mt-2">{event.title}</h3>
+                <p className="text-gray-600">{event.date}</p>
+              </div>
 
-          ))}
+            ))}
           </div>
-          
+
         </section>
 
       </div>
       <Insti />
-      
+
 
       <Footer />
 
