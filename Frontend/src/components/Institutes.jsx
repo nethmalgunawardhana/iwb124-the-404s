@@ -63,7 +63,7 @@ function Institutes() {
         >
           <p className="absolute bottom-2 left-2 text-[20px] font-semibold text-white  opacity-100 p-2 rounded">
             {item.id}
-            <div className="w-full h-[10px] bg-orange-600 mt-1"></div>
+            <div className="w-full h-[10px] bg-purple-600 mt-1"></div>
           </p>
           
         </div>
