@@ -3,6 +3,7 @@ import { User, Calendar, Cog, MessageSquare, LogOut } from 'lucide-react';
 import Profile from './Profile';
 import SettingsContent from './Settingcontent';
 import ContactUs from './ContactUs';
+import BookedEventsPage from './BookEvent';
 
 const Sidebar = () => {
   const [activeComponent, setActiveComponent] = useState('profile');
@@ -14,7 +15,9 @@ const Sidebar = () => {
       case 'settings':
         return <SettingsContent />;
       case 'contact':
-        return <ContactUs />;  
+        return <ContactUs />; 
+      case 'bookings':
+         return <BookedEventsPage />;   
       default:
         return <SettingsContent />;
     }
@@ -47,7 +50,8 @@ const Sidebar = () => {
               </button>
             </li>
             <li>
-              <button className="flex items-center w-full text-left p-2 rounded text-gray-700 hover:bg-gray-100 transition-colors">
+              <button onClick={() => setActiveComponent('bookings')}
+              className="flex items-center w-full text-left p-2 rounded text-gray-700 hover:bg-gray-100 transition-colors">
                 <Calendar size={20} className="mr-3" /> Bookings
               </button>
             </li>
