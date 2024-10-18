@@ -1,0 +1,57 @@
+.background-radial-gradient {
+    background-color: hsl(283, 85%, 21%);
+    background-image: radial-gradient(650px circle at 0% 0%,
+        hsl(272, 88%, 32%) 15%,
+        hsl(278, 89%, 26%) 35%,
+        hsl(285, 92%, 15%) 75%,
+        hsl(285, 93%, 17%) 80%,
+        transparent 100%),
+      radial-gradient(1250px circle at 100% 100%,
+        hsl(283, 80%, 29%) 15%,
+        hsl(291, 88%, 20%) 35%,
+        hsl(278, 91%, 22%) 75%,
+        hsl(285, 69%, 29%) 80%,
+        transparent 100%);
+  }
+  
+  .bg-glass {
+    background-color: hsla(0, 0%, 100%, 0.9) !important;
+    backdrop-filter: saturate(200%) blur(25px);
+  }
+  
+  input {
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  }
+  
+  input:focus {
+    border-color: #a855f7;
+    box-shadow: 0 0 0 0.2rem rgba(168, 85, 247, 0.25);
+  }
+  
+  button {
+    transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out;
+  }
+  
+  button:hover {
+    opacity: 0.9;
+  }
+  
+  .text-purple-600 {
+    color: #9333ea;
+  }
+  
+  .hover\:text-purple-500:hover {
+    color: #a855f7;
+  }
+  
+  .bg-purple-600 {
+    background-color: #9333ea;
+  }
+  
+  .hover\:bg-purple-700:hover {
+    background-color: #7e22ce;
+  }
+  
+  .focus\:ring-purple-500:focus {
+    box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.5);
+  }
