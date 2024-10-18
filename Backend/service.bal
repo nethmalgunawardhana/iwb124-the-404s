@@ -1,8 +1,8 @@
 import ballerina/http;
-import ballerina/uuid;
-import ballerinax/mongodb;
 import ballerina/io;
 import ballerina/log;
+import ballerina/uuid;
+import ballerinax/mongodb;
 
 configurable string host = "localhost";
 configurable int port = 27017;
@@ -34,6 +34,31 @@ service / on new http:Listener(9091) {
         io:println("MongoDB connected to EventDb");
     }
 
+    isolated resource function post admin/access(@http:Payload AdminAccess input) returns AdminAccess|error {
+        string id = uuid:createType1AsString();
+        AdminAccess adminAccess = {id: id, name: input.name, phoneNumber: input.phoneNumber, request: input.request, description: input.description};
+        mongodb:Collection adminAccessCollection = check self.eventDb->getCollection("AdminAccess");
+        check adminAccessCollection->insertOne(adminAccess);
+        return adminAccess;
+    }
+
+    resource function get admin/access() returns AdminAccess[]|error {
+        mongodb:Collection adminAccessCollection = check self.eventDb->getCollection("AdminAccess");
+        stream<AdminAccess, error?> result = check adminAccessCollection->find();
+        AdminAccess[] adminAccessList = [];
+        int count = 0;
+        check result.forEach(function(AdminAccess|error adminAccess) {
+            if (adminAccess is AdminAccess) {
+                adminAccessList.push(adminAccess);
+                count += 1;
+            } else {
+                log:printError(string `Error processing admin access submission: ${adminAccess.message()}`, 'error = adminAccess);
+            }
+        });
+        log:printInfo(string `Successfully retrieved ${count} admin access submissions`);
+        return adminAccessList;
+    }
+
     resource function options events(http:Caller caller, http:Request req) returns error? {
         http:Response res = new;
         res.setHeader("Access-Control-Allow-Origin", "*");
@@ -62,7 +87,8 @@ service / on new http:Listener(9091) {
     resource function get events/[string id]() returns Event|error {
         return getEvent(self.eventDb, id);
     }
-   resource function post bookings(@http:Payload BookingInput input) returns Booking|error {
+
+    resource function post bookings(@http:Payload BookingInput input) returns Booking|error {
         string id = uuid:createType1AsString();
         Booking booking = {id, ...input};
         mongodb:Collection bookings = check self.eventDb->getCollection("Booking");
@@ -161,7 +187,7 @@ isolated function getEvent(mongodb:Database eventDb, string id) returns Event|er
     return result[0];
 }
 
-public type EventInput record {| 
+public type EventInput record {|
     string name;
     string description;
     string date;
@@ -175,7 +201,7 @@ public type EventInput record {|
     string resources;
 |};
 
-public type EventUpdate record {| 
+public type EventUpdate record {|
     string name?;
     string description?;
     string date?;
@@ -188,17 +214,27 @@ public type EventUpdate record {|
     string registrationLink?;
     string resources?;
 |};
-public type BookingInput record {| 
+
+public type BookingInput record {|
     string eventId;
     string userId?;
     string bookingDate?;
 |};
 
-public type Booking record {| 
+public type Booking record {|
     readonly string id;
     *BookingInput;
 |};
-public type Event record {| 
+
+public type Event record {|
     readonly string id;
     *EventInput;
 |};
+
+public type AdminAccess record {
+    readonly string id;
+    string name;
+    string phoneNumber;
+    string request;
+    string description;
+};
