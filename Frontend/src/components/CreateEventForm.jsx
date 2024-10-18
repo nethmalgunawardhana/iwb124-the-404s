@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Calendar, Clock, MapPin, Users, Tag, Image, Link, FileText, WalletCards } from 'lucide-react';
 import Swal from 'sweetalert2';
 
+
 const CreateEventForm = () => {
   const [eventData, setEventData] = useState({
     name: '',
