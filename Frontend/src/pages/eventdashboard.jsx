@@ -26,7 +26,7 @@ export default function EventDashboard() {
   return (
     <div className="flex h-screen bg-gray-100">
       {/* Sidebar */}
-      <div className="w-64 bg-purple-700 text-white p-6 fixed h-full overflow-y-auto">
+      <div className="w-64 bg-purple-900 text-white p-6 fixed h-full overflow-y-auto">
         <h2 className="text-2xl font-bold mb-6">Event Dashboard</h2>
         <nav>
           <ul className="space-y-2">

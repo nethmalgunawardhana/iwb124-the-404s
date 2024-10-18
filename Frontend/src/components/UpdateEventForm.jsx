@@ -6,7 +6,7 @@ const UpdateEventForm = () => {
   const [events, setEvents] = useState([]);
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [eventData, setEventData] = useState({
-    
+
     name: '',
     description: '',
     date: '',
@@ -70,7 +70,7 @@ const UpdateEventForm = () => {
 
       if (response.ok) {
         const updatedEvent = await response.json();
-       
+
         Swal.fire({
           title: "Success!",
           text: `Event successfully updated: ${updatedEvent.name}`,
@@ -79,7 +79,7 @@ const UpdateEventForm = () => {
         fetchEvents(); // Refresh the event list
         setSelectedEvent(null);
         setEventData({
-          
+
           name: '',
           description: '',
           date: '',
@@ -94,7 +94,7 @@ const UpdateEventForm = () => {
         });
       } else {
         const errorData = await response.json();
-        
+
         Swal.fire({
           icon: "error",
           title: "Oops...",
@@ -115,7 +115,7 @@ const UpdateEventForm = () => {
   return (
     <div>
       <h2 className="text-2xl font-bold text-black mb-6">Update Event</h2>
-      
+
       <table className="w-full mb-6 border-collapse border border-gray-300 rounded-lg shadow-lg">
         <thead>
           <tr className="bg-gray-100">
@@ -130,7 +130,7 @@ const UpdateEventForm = () => {
               <td className="border border-gray-300 px-4 py-2">{event.name}</td>
               <td className="border border-gray-300 px-4 py-2">{event.description.substring(0, 50)}...</td>
               <td className="border border-gray-300 px-4 py-2">
-                <button 
+                <button
                   onClick={() => handleEventSelect(event)}
                   className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded"
                 >
@@ -145,7 +145,7 @@ const UpdateEventForm = () => {
       {selectedEvent && (
         <form onSubmit={handleSubmit} className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
           <h2 className="text-2xl font-bold text-black mb-6">Update Event</h2>
-          
+
           {/* Name Input */}
           <div className="mb-4">
             <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="name">
@@ -211,7 +211,52 @@ const UpdateEventForm = () => {
               />
             </div>
           </div>
+          {/* Paid or not */}
+          <div className="mb-4">
+            <div className="block text-gray-700 text-sm font-bold mb-2" htmlFor="payment">
+              <WalletCards className="inline mr-2" size={16} /> Payment Type:
+            </div>
+            <div className="flex justify-between items-center p-5">
+              <label className="inline-flex items-center text-black">
+                <input
+                  id="default-radio-1"
+                  type="radio"
+                  name="payment"
+                  value="free"
+                  checked={eventData.payment === 'free'}
+                  onChange={handleInputChange}
+                  className="hidden peer" // Hide the default radio button
+                />
+                <span className="w-5 h-5 border-2 border-gray-300 rounded-full flex items-center justify-center mr-2 peer-checked:border-blue-600 peer-checked:bg-blue-600 transition duration-200 ease-in-out">
+                  {eventData.payment === 'free' && (
+                    <span className="w-3 h-3 bg-white rounded-full"></span>
+                  )}
+                </span>
+                Free
+              </label>
+              <div className="flex-grow flex justify-center">
+                <label className="inline-flex items-center text-black">
+                  <input
+                    id="default-radio-2"
+                    type="radio"
+                    name="payment"
+                    value="paid"
+                    checked={eventData.payment === 'paid'}
+                    onChange={handleInputChange}
+                    className="hidden peer" // Hide the default radio button
+                  />
+                  <span className="w-5 h-5 border-2 border-gray-300 rounded-full flex items-center justify-center mr-2 peer-checked:border-blue-600 peer-checked:bg-blue-600 transition duration-200 ease-in-out">
+                    {eventData.payment === 'paid' && (
+                      <span className="w-3 h-3 bg-white rounded-full"></span>
+                    )}
+                  </span>
+                  Paid
+                </label>
+              </div>
+            </div>
 
+          </div>
+          
           {/* Location Link Input */}
           <div className="mb-4">
             <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="locationLink">
