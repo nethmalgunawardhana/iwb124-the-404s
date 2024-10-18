@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
-import { Calendar, Clock, MapPin, Users, Tag, Image, Link, FileText } from 'lucide-react';
+import { Calendar, Clock, MapPin, Users, Tag, Image, Link, FileText, WalletCards } from 'lucide-react';
+import Swal from 'sweetalert2';
+import 'react-datepicker/dist/react-datepicker.css';
 
 const CreateEventForm = () => {
   const [eventData, setEventData] = useState({
@@ -8,6 +10,7 @@ const CreateEventForm = () => {
     date: '',
     time: '',
     locationLink: '',
+    payment: '',
     institute: '',
     organizingCommittee: '',
     tags: '',
@@ -31,7 +34,7 @@ const CreateEventForm = () => {
     try {
       const formattedEventData = {
         ...eventData,
-       
+
       };
 
       const response = await fetch('http://localhost:9091/events', {
@@ -44,13 +47,19 @@ const CreateEventForm = () => {
 
       if (response.ok) {
         const createdEvent = await response.json();
-        window.alert(`Event successfully created with ID: ${createdEvent.id}`);
+
+        Swal.fire({
+          title: "Success!",
+          text: `Event successfully created with ID: ${createdEvent.id}`,
+          icon: "success"
+        });
         setEventData({
           name: '',
           description: '',
           date: '',
           time: '',
           locationLink: '',
+          payment: '',
           institute: '',
           organizingCommittee: '',
           tags: '',
@@ -60,25 +69,33 @@ const CreateEventForm = () => {
         });
       } else {
         const errorData = await response.json();
-        window.alert(`Failed to create event: ${errorData.message}`);
+        Swal.fire({
+          title: "Success!",
+          text: `Event successfully created with ID:${createdEvent.id}`,
+          icon: "success"
+        });
       }
     } catch (error) {
-      console.error('Error creating event:', error);
-      window.alert("Error creating event");
+
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "Something went wrong!",
+      });
     }
   };
 
   return (
     <form onSubmit={handleSubmit} className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
       <h2 className="text-2xl font-bold text-black mb-6">Create a New Event</h2>
-      
+
       {/* Name Input */}
       <div className="mb-4">
         <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="name">
           <Calendar className="inline mr-2" size={16} /> Event Name
         </label>
         <input
-          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          className="shadow appearance-none border rounded w-full py-2 px-3  bg-gray-300 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
           id="name"
           type="text"
           name="name"
@@ -91,11 +108,11 @@ const CreateEventForm = () => {
 
       {/* Description Input */}
       <div className="mb-4">
-        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="description">
+        <label className="block  text-gray-700 text-sm font-bold mb-2" htmlFor="description">
           <FileText className="inline mr-2" size={16} /> Description
         </label>
         <textarea
-          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          className="shadow appearance-none border rounded  bg-gray-300  w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline "
           id="description"
           name="description"
           value={eventData.description}
@@ -113,7 +130,7 @@ const CreateEventForm = () => {
             <Calendar className="inline mr-2" size={16} /> Date
           </label>
           <input
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            className="shadow appearance-none  border rounded  bg-gray-300 w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             id="date"
             type="date"
             name="date"
@@ -121,13 +138,14 @@ const CreateEventForm = () => {
             onChange={handleInputChange}
             required
           />
+
         </div>
         <div className="w-1/2">
           <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="time">
-            <Clock className="inline mr-2" size={16} /> Time
+            <Clock className="inline mr-2 " size={16} /> Time
           </label>
           <input
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            className="shadow appearance-none border rounded  bg-gray-300 w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             id="time"
             type="time"
             name="time"
@@ -137,6 +155,51 @@ const CreateEventForm = () => {
           />
         </div>
       </div>
+      {/* Paid or not */}
+      <div className="mb-4">
+        <div className="block text-gray-700 text-sm font-bold mb-2" htmlFor="payment">
+          <WalletCards className="inline mr-2" size={16} /> Payment Type:
+        </div>
+        <div className="flex justify-between items-center p-5">
+          <label className="inline-flex items-center text-black">
+            <input
+              id="default-radio-1"
+              type="radio"
+              name="payment"
+              value="free"
+              checked={eventData.payment === 'free'}
+              onChange={handleInputChange}
+              className="hidden peer" // Hide the default radio button
+            />
+            <span className="w-5 h-5 border-2 border-gray-300 rounded-full flex items-center justify-center mr-2 peer-checked:border-blue-600 peer-checked:bg-blue-600 transition duration-200 ease-in-out">
+              {eventData.payment === 'free' && (
+                <span className="w-3 h-3 bg-white rounded-full"></span>
+              )}
+            </span>
+            Free
+          </label>
+          <div className="flex-grow flex justify-center">
+            <label className="inline-flex items-center text-black">
+              <input
+                id="default-radio-2"
+                type="radio"
+                name="payment"
+                value="paid"
+                checked={eventData.payment === 'paid'}
+                onChange={handleInputChange}
+                className="hidden peer" // Hide the default radio button
+              />
+              <span className="w-5 h-5 border-2 border-gray-300 rounded-full flex items-center justify-center mr-2 peer-checked:border-blue-600 peer-checked:bg-blue-600 transition duration-200 ease-in-out">
+                {eventData.payment === 'paid' && (
+                  <span className="w-3 h-3 bg-white rounded-full"></span>
+                )}
+              </span>
+              Paid
+            </label>
+          </div>
+        </div>
+
+      </div>
 
       {/* Location Link Input */}
       <div className="mb-4">
@@ -144,7 +207,7 @@ const CreateEventForm = () => {
           <MapPin className="inline mr-2" size={16} /> Location Link
         </label>
         <input
-          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          className="shadow appearance-none border rounded  bg-gray-300 w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
           id="locationLink"
           type="url"
           name="locationLink"
@@ -161,7 +224,7 @@ const CreateEventForm = () => {
           <Users className="inline mr-2" size={16} /> Institute
         </label>
         <input
-          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          className="shadow appearance-none border rounded  bg-gray-300 w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
           id="institute"
           type="text"
           name="institute"
@@ -178,7 +241,7 @@ const CreateEventForm = () => {
           <Users className="inline mr-2" size={16} /> Organizing Committee
         </label>
         <input
-          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          className="shadow appearance-none border rounded  bg-gray-300 w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
           id="organizingCommittee"
           type="text"
           name="organizingCommittee"
@@ -195,7 +258,7 @@ const CreateEventForm = () => {
           <Tag className="inline mr-2" size={16} /> Tags
         </label>
         <input
-          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          className="shadow appearance-none border rounded  bg-gray-300 w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
           id="tags"
           type="text"
           name="tags"
@@ -212,7 +275,7 @@ const CreateEventForm = () => {
           <Image className="inline mr-2" size={16} /> Event Image URL
         </label>
         <input
-          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          className="shadow appearance-none border rounded  bg-gray-300 w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
           id="image"
           type="url"
           name="image"
@@ -228,7 +291,7 @@ const CreateEventForm = () => {
           <Link className="inline mr-2" size={16} /> Registration Link
         </label>
         <input
-          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          className="shadow appearance-none border rounded  bg-gray-300 w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
           id="registrationLink"
           type="url"
           name="registrationLink"
@@ -245,7 +308,7 @@ const CreateEventForm = () => {
           <FileText className="inline mr-2" size={16} /> Resources
         </label>
         <textarea
-          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          className="shadow appearance-none border rounded  bg-gray-300 w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
           id="resources"
           name="resources"
           value={eventData.resources}
@@ -258,7 +321,7 @@ const CreateEventForm = () => {
       {/* Submit Button */}
       <div className="flex items-center justify-between">
         <button
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+          className="bg-purple-900 hover:bg-purple-300 hover:text-black text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
           type="submit"
         >
           Create Event

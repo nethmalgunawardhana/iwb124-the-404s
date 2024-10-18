@@ -33,7 +33,8 @@ export default function EventDashboard() {
             <li>
               <button
                 onClick={navigateToHome}
-                className="w-full text-left py-2 px-4 hover:bg-purple-900 rounded flex items-center"
+                
+                className="w-full text-left py-2 px-4 hover:bg-white hover:text-black rounded flex items-center"
               >
                 <Home className="mr-2" size={18} />
                 Home
@@ -42,7 +43,7 @@ export default function EventDashboard() {
             <li>
               <button
                 onClick={() => setActiveForm('create')}
-                className={`w-full text-left py-2 px-4 hover:bg-purple-900 rounded ${activeForm === 'create' ? 'bg-purple-900' : ''}`}
+                className={`w-full text-left py-2 px-4 hover:bg-white hover:text-black rounded ${activeForm === 'create' ? 'bg-white text-black' : ''}`}
               >
                 Create Event
               </button>
@@ -50,7 +51,7 @@ export default function EventDashboard() {
             <li>
               <button
                 onClick={() => setActiveForm('update')}
-                className={`w-full text-left py-2 px-4 hover:bg-purple-900 rounded ${activeForm === 'update' ? 'bg-purple-900' : ''}`}
+                className={`w-full text-left py-2 px-4  hover:bg-white hover:text-black rounded ${activeForm === 'update' ? 'bg-white text-black' : ''}`}
               >
                 Update Event
               </button>
@@ -58,7 +59,7 @@ export default function EventDashboard() {
             <li>
               <button
                 onClick={() => setActiveForm('delete')}
-                className={`w-full text-left py-2 px-4 hover:bg-purple-900 rounded ${activeForm === 'delete' ? 'bg-purple-900' : ''}`}
+                className={`w-full text-left py-2 px-4  hover:bg-white hover:text-black rounded ${activeForm === 'delete' ? 'bg-white text-black' : ''}`}
               >
                 Delete Event
               </button>

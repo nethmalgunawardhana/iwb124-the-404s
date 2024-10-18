@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Calendar, Clock, MapPin, Users, Tag, Image, Link, FileText } from 'lucide-react';
+import Swal from 'sweetalert2';
 
 const UpdateEventForm = () => {
   const [events, setEvents] = useState([]);
@@ -69,7 +70,12 @@ const UpdateEventForm = () => {
 
       if (response.ok) {
         const updatedEvent = await response.json();
-        window.alert(`Event successfully updated: ${updatedEvent.name}`);
+       
+        Swal.fire({
+          title: "Success!",
+          text: `Event successfully updated: ${updatedEvent.name}`,
+          icon: "success"
+        });
         fetchEvents(); // Refresh the event list
         setSelectedEvent(null);
         setEventData({
@@ -88,11 +94,21 @@ const UpdateEventForm = () => {
         });
       } else {
         const errorData = await response.json();
-        window.alert(`Failed to update event: ${errorData.message}`);
+        
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: `Failed to update event: ${errorData.message}`,
+        });
       }
     } catch (error) {
-      console.error('Error updating event:', error);
-      window.alert("Error updating event");
+      // console.error('Error updating event:', error);
+      // window.alert("Error updating event");
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "Error updating event",
+      });
     }
   };
 
@@ -316,7 +332,7 @@ const UpdateEventForm = () => {
           {/* Submit Button */}
           <div className="flex items-center justify-between">
             <button
-              className="bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+              className="bg-purple-900 hover:bg-purple-300 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
               type="submit"
             >
               Update Event
