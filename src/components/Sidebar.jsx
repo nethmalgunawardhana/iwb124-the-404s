@@ -52,7 +52,12 @@ const Sidebar = () => {
               </button>
             </li>
             <li>
-              <button onClick={() => setActiveComponent('contact')} className="flex items-center w-full text-left p-2 rounded text-gray-700 hover:bg-gray-100 transition-colors">
+              <button
+                onClick={() => setActiveComponent('contact')}
+                className={`flex items-center w-full text-left p-2 rounded transition-colors ${
+                  activeComponent === 'contact' ? 'bg-blue-100 text-blue-600' : 'text-gray-700 hover:bg-gray-100'
+                }`}
+              >
                 <MessageSquare size={20} className="mr-3" /> Contact us
               </button>
             </li>
