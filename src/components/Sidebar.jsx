@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { User, Calendar, Cog, MessageSquare, LogOut } from 'lucide-react';
 import Profile from './Profile';
 import SettingsContent from './Settingcontent';
+import ContactUs from './ContactUs';
 
 const Sidebar = () => {
   const [activeComponent, setActiveComponent] = useState('profile');
@@ -12,6 +13,8 @@ const Sidebar = () => {
         return <Profile />;
       case 'settings':
         return <SettingsContent />;
+      case 'contact':
+        return <ContactUs />;  
       default:
         return <SettingsContent />;
     }
@@ -49,7 +52,7 @@ const Sidebar = () => {
               </button>
             </li>
             <li>
-              <button className="flex items-center w-full text-left p-2 rounded text-gray-700 hover:bg-gray-100 transition-colors">
+              <button onClick={() => setActiveComponent('contact')} className="flex items-center w-full text-left p-2 rounded text-gray-700 hover:bg-gray-100 transition-colors">
                 <MessageSquare size={20} className="mr-3" /> Contact us
               </button>
             </li>
