@@ -139,7 +139,14 @@ service / on new http:Listener(9091) {
         }
         return getEvent(self.eventDb, id);
     }
-
+     resource function delete bookings/[string id]() returns string|error {
+        mongodb:Collection bookings = check self.eventDb->getCollection("Booking");
+        mongodb:DeleteResult deleteResult = check bookings->deleteOne({id});
+        if deleteResult.deletedCount != 1 {
+            return error(string `Failed to delete the booking ${id}`);
+        }
+        return id;
+    }
     resource function delete events/[string id]() returns string|error {
         mongodb:Collection events = check self.eventDb->getCollection("Event");
         mongodb:DeleteResult deleteResult = check events->deleteOne({id});
