@@ -111,7 +111,7 @@ const CreateEventForm = () => {
           <FileText className="inline mr-2" size={16} /> Description
         </label>
         <textarea
-          className="shadow appearance-none border rounded  bg-gray-300  w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline "
+          className="shadow appearance-none border rounded  bg-gray-300  w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none  focus:ring focus:ring-purple-300 "
           id="description"
           name="description"
           value={eventData.description}
@@ -307,7 +307,7 @@ const CreateEventForm = () => {
           <FileText className="inline mr-2" size={16} /> Resources
         </label>
         <textarea
-          className="shadow appearance-none border rounded  bg-gray-300 w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          className="shadow appearance-none border rounded  bg-gray-300 w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline focus:ring focus:ring-purple-300"
           id="resources"
           name="resources"
           value={eventData.resources}
