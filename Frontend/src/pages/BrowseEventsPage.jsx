@@ -18,6 +18,7 @@ const BrowseEventsPage = () => {
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [sortBy, setSortBy] = useState('date'); // New state for sorting
   const tags = [
     { name: 'Music', image: musicIcon },
     { name: 'Technology', image: techIcon },
@@ -30,8 +31,8 @@ const BrowseEventsPage = () => {
   }, []);
 
   useEffect(() => {
-    filterEvents();
-  }, [events, selectedInstitute, price, selectedTags]);
+    filterAndSortEvents();
+  }, [events, selectedInstitute, price, selectedTags, sortBy]);
 
   const fetchEvents = async () => {
     try {
@@ -45,14 +46,27 @@ const BrowseEventsPage = () => {
     }
   };
 
-  const filterEvents = () => {
-    const filtered = events.filter((event) => {
+  const filterAndSortEvents = () => {
+    let filtered = events.filter((event) => {
       const instituteMatch =
         selectedInstitute === 'All Institutes' || event.institute === selectedInstitute;
       const priceMatch = price === '' || (price === 'free' ? event.price === 'free' : event.price !== 'free');
       const tagMatch = selectedTags.length === 0 || selectedTags.some(tag => event.tags.includes(tag));
 
       return instituteMatch && priceMatch && tagMatch;
+    });
+
+    // Sort the filtered events
+    filtered.sort((a, b) => {
+      switch (sortBy) {
+        case 'institute':
+          return a.institute.localeCompare(b.institute);
+        case 'price':
+          return (a.price === 'free' ? 0 : 1) - (b.price === 'free' ? 0 : 1);
+        case 'date':
+        default:
+          return new Date(a.date) - new Date(b.date);
+      }
     });
 
     setFilteredEvents(filtered);
@@ -191,6 +205,18 @@ const BrowseEventsPage = () => {
                 <option value="">All Prices</option>
                 <option value="free">Free</option>
                 <option value="paid">Paid</option>
+              </select>
+            </div>
+            <div className="flex-grow">
+              <label className="block font-semibold mb-2 text-gray-800">Sort By</label>
+              <select
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value)}
+                className="w-full p-2 border rounded-lg bg-white text-gray-800"
+              >
+                <option value="date">Date</option>
+                <option value="institute">Institute</option>
+                <option value="price">Price</option>
               </select>
             </div>
           </div>
