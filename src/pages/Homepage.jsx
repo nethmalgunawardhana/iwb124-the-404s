@@ -61,16 +61,18 @@ const HomePage = () => {
       <br /><br /><br />
       {/* Hero Section */}
       <header className="bg-purple-600 text-white py-20 relative overflow-hidden">
-        <div className="absolute inset-0 z-0">
-          <div className="video-wrapper absolute inset-0 z-0">
-            <video autoPlay loop muted className="w-full h-full object-cover">
-
-              <source src="https://videos.pexels.com/video-files/4099065/4099065-hd_1920_1080_30fps.mp4" type="video/mp4" />
-
-
-            </video>
-          </div>
+      <div className="absolute inset-0 z-0 gap-x-28">
+            <div className="video-wrapper absolute inset-0 z-0">
+                <video autoPlay loop muted className="w-full h-full object-cover">
+                    <source
+                        src="https://videos.pexels.com/video-files/7722221/7722221-uhd_2560_1440_25fps.mp4"
+                        type="video/mp4"
+                    />
+                    Your browser does not support the video tag.
+                </video>
+            </div>
         </div>
+        <br /><br /><br /><br /><br /><br /><br />
         <div className="relative z-10 max-w-4xl mx-auto text-center">
           <h1 className="text-5xl font-bold">Discover Amazing Events</h1>
           <p className="mt-4 text-lg">Your one-stop solution for all your event needs!</p>

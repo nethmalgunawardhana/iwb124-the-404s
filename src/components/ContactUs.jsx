@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import Swal from 'sweetalert2'
 import * as Icon from 'react-feather';
+import contactUsImage from '../assets/contactus.png';
 
 const ContactUs = () => {
     const [name, setName] = useState('');
@@ -72,18 +73,17 @@ const ContactUs = () => {
       }
     };
   return (
-    <div className="flex flex-col min-h-screen items-center bg-gray-200 pb-12">
-      <div className="flex flex-col mt-10">
-        <b className="text-[30px] text-[rgb(4,4,59)] text-center">
+    <div className="flex flex-col min-h-screen items-center bg-gray-100 pb-12">
+      <div className="flex flex-col mt-10 ">
+        <b className="text-[30px] text-[rgb(4,4,59)] text-center ">
           Contact US
         </b>
-        <p className="text-[15px] text-[rgb(4,4,34)] text-center">
-          Any Question or remarks? Just write us a message
-        </p>
+        
       </div>
-      <div className="w-[70%] bg-white p-[5px] rounded-md h-[70vh] md:w-[90%] grid grid-cols-1 md:grid-cols-2 gap-4">
+      <br />
+      <div className="w-[70%] bg-white p-[5px] rounded-md h-[85vh] md:w-[90%] grid grid-cols-1 md:grid-cols-2 gap-4 shadow-[0_35px_60px_-15px_rgba(0,0,0,0.6)]">
         {/* Contact Information Section */}
-        <div className="bg-purple-900 rounded-md relative p-[30px] flex flex-col items-center pb-[100px] max-sm:pb-[80px]">
+        <div className="bg-purple-900 rounded-md relative h-[83.5vh] p-[20px] flex flex-col items-center pb-[100px] max-sm:pb-[80px]">
           <div className="flex flex-col items-center">
             <p className="text-center text-white text-lg font-bold">
               Contact Information
@@ -95,19 +95,23 @@ const ContactUs = () => {
           {/* Contact details */}
           <div>
             <a href='#' className="flex w-[200px] h-[10px] mt-12 cursor-pointer no-underline">
-              <Icon.Phone size={20} color="rgb(252, 113, 137)" />
+              <Icon.Phone size={15} color="rgb(252, 113, 137)" />
               <div className="text-white text-[15px] ml-2.5">+94 77 12 34 567</div>
             </a>
             <a href='#' className="flex w-[200px] h-[10px] mt-12 cursor-pointer no-underline">
-              <Icon.Mail size={20} color="rgb(252, 113, 137)" />
-              <div className="text-white text-[15px] ml-2.5">eventbright@gmail.com</div>
+              <Icon.Mail size={15} color="rgb(252, 113, 137)" />
+              <div className="text-white text-[15px] ml-2.5">eventuni@gmail.com</div>
             </a>
           </div>
           <br /><br />
-          <div>
-            <div className="h-[50px] w-[50px] mt-7 ml-2.5 bg-[rgb(124,17,224)] rounded-full z-20"></div>
-            <div className="absolute ml-2.5 bg-[rgb(246,146,163)] rounded-full h-[30px] w-[30px]"></div>
-          </div>
+          <div className='w-[300px] h-[300px] relative'>
+                {/* Uncomment the following code if you want to use the styled divs */}
+                {/* 
+                <div className="h-[50px] w-[50px] mt-7 ml-2.5 bg-[rgb(124,17,224)] rounded-full z-20"></div>
+                <div className="absolute ml-2.5 bg-[rgb(246,146,163)] rounded-full h-[30px] w-[30px]"></div> 
+                */}
+                <img src={contactUsImage} alt="Contact Us" className="w-full h-full object-cover" />
+            </div>
           {/* Social media icons */}
           <div className="flex justify-center h-[10px] absolute bottom-[30px] cursor-pointer">
             <a href='https://www.facebook.com/' target='_blank' className="w-[35px] h-[35px] rounded-full flex justify-center items-center hover:bg-[rgb(252,113,137)]">
