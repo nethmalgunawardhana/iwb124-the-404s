@@ -38,9 +38,9 @@ function App() {
           <Route path="/evenedit" element={<EventEdit />} />
           <Route path="/verify" element={<AccountVerification />} />
           <Route path="/eventdashboard" element={
-            <PrivateRoute>
+          
               <EventDashboard />
-            </PrivateRoute>
+         
           } />
           <Route path="/organization-verification" element={<OrganizationVerification />} />
 
