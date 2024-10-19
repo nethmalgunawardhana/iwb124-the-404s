@@ -35,9 +35,9 @@ service / on new http:Listener(9091) {
         io:println("MongoDB connected to EventDb");
     }
 
-    isolated resource function post admin/access(@http:Payload AdminAccess input) returns AdminAccess|error {
+    isolated resource function post admin/access(@http:Payload AdminAccessInput input) returns AdminAccess|error {
         string id = uuid:createType1AsString();
-        AdminAccess adminAccess = {id: id, name: input.name, phoneNumber: input.phoneNumber, request: input.request, description: input.description};
+        AdminAccess adminAccess = {id: id, ...input};
         mongodb:Collection adminAccessCollection = check self.eventDb->getCollection("AdminAccess");
         check adminAccessCollection->insertOne(adminAccess);
         return adminAccess;
@@ -248,10 +248,14 @@ public type Event record {|
     *EventInput;
 |};
 
-public type AdminAccess record {
-    string id;
+public type AdminAccessInput record {|
     string name;
     string phoneNumber;
     string request;
     string description;
-};
+|};
+
+public type AdminAccess record {|
+    readonly string id;
+    *AdminAccessInput;
+|};
