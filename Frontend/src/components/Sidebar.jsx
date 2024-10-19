@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { User, Calendar, Cog, MessageSquare, LogOut } from 'lucide-react';
+import { User, Calendar, Cog, MessageSquare, ListTodo } from 'lucide-react';
 import Profile from './Profile';
 import SettingsContent from './Settingcontent';
 import ContactUs from './ContactUs';
 import BookedEventsPage from './BookEvent';
+import AdminAccessList from './Adminacesslist';
 
 const Sidebar = () => {
   const [activeComponent, setActiveComponent] = useState('profile');
@@ -18,6 +19,8 @@ const Sidebar = () => {
         return <ContactUs />; 
       case 'bookings':
          return <BookedEventsPage />;   
+      case 'accesslist':
+         return <AdminAccessList/>   
       default:
         return <SettingsContent />;
     }
@@ -63,6 +66,16 @@ const Sidebar = () => {
                 }`}
               >
                 <MessageSquare size={20} className="mr-3" /> Contact us
+              </button>
+            </li>
+            <li>
+              <button
+                onClick={() => setActiveComponent('accesslist')}
+                className={`flex items-center w-full text-left p-2 rounded transition-colors ${
+                  activeComponent === 'contact' ? 'bg-blue-100 text-blue-600' : 'text-gray-700 hover:bg-gray-100'
+                }`}
+              >
+                <ListTodo size={20} className="mr-3" /> Requested List
               </button>
             </li>
           </ul>
