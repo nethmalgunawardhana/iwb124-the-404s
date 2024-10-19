@@ -199,35 +199,36 @@ const Profile = () => {
           <span className="md:hidden">Admin Access</span>{" "}
           {/* Shown on small screens */}
         </button>
-        <div className="flex items-center space-x-6 mb-6">
-          <div className="relative">
-            <img
-              className={`h-32 w-32 rounded-full object-cover border-4 ${
-                userInfo.verified ? "border-yellow-500" : "border-purple-500"
-              } cursor-pointer hover:opacity-80`}
-              src={newPicture || userInfo.profilePicture}
-              alt="User Profile"
-              onClick={handlePictureClick}
-            />
-          </div>
-          <div>
-            <h3 className="text-xl font-bold text-gray-800 flex items-center">
-              {userInfo.fullName}
-              {userInfo.verified && (
-                <img
-                  className="ml-2 h-6 w-6"
-                  src="https://upload.wikimedia.org/wikipedia/commons/e/e4/Twitter_Verified_Badge.svg"
-                  alt="Verified Icon"
-                />
-              )}
-            </h3>
-            <p className="text-gray-600">{userInfo.email}</p>
-            <button
-              onClick={handleEdit}
-              className="mt-4 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-800"
-            >
-              Edit Profile
-            </button>
+        <div className="flex items-center justify-center">
+          <div className="flex items-center space-x-6 mb-6">
+            <div className="relative">
+              <img
+                className={`h-32 w-32 rounded-full object-cover border-4 ${userInfo.verified ? "border-yellow-500" : "border-purple-500"
+                  } cursor-pointer hover:opacity-80`}
+                src={newPicture || userInfo.profilePicture}
+                alt="User Profile"
+                onClick={handlePictureClick}
+              />
+            </div>
+            <div>
+              <h3 className="text-xl font-bold text-gray-800 flex items-center">
+                {userInfo.fullName}
+                {userInfo.verified && (
+                  <img
+                    className="ml-2 h-6 w-6"
+                    src="https://upload.wikimedia.org/wikipedia/commons/e/e4/Twitter_Verified_Badge.svg"
+                    alt="Verified Icon"
+                  />
+                )}
+              </h3>
+              <p className="text-gray-600">{userInfo.email}</p>
+              <button
+                onClick={handleEdit}
+                className="mt-4 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-800"
+              >
+                Edit Profile
+              </button>
+            </div>
           </div>
         </div>
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
@@ -239,9 +240,8 @@ const Profile = () => {
             <input
               type="text"
               name="fullName"
-              className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 bg-white text-purple-600 ${
-                isEditing ? "cursor-text" : "cursor-not-allowed"
-              }`}
+              className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 bg-white text-purple-600 ${isEditing ? "cursor-text" : "cursor-not-allowed"
+                }`}
               value={userInfo.fullName}
               onChange={handleChange}
               disabled={!isEditing}
