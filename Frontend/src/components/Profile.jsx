@@ -3,7 +3,9 @@ import { useAuth } from "../context/authContext";
 import { auth } from "../firebase/firebase";
 import { updateProfile } from "firebase/auth";
 import AdminAccessForm from "./AdminAccessForm";
-
+import manImage from "../assets/man.png";
+import AOS from "aos";
+import "aos/dist/aos.css";
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const phoneRegex = /^\+?[1-9]\d{1,14}$/;
 
@@ -22,12 +24,20 @@ const Profile = () => {
   const [adminPopup, setAdminPopup] = useState(false);
   const [newPicture, setNewPicture] = useState(null);
   const [changesMade, setChangesMade] = useState(false);
-
+  const [successMessage, setSuccessMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
   const [errors, setErrors] = useState({
     fullName: "",
     email: "",
     phoneNumber: "",
   });
+   
+  useEffect(() => {
+    AOS.init({
+      duration: 1000,
+      once: true,
+    });
+  }, []);
 
   const handleGetAdminAccess = () => {
     setAdminPopup(true);
@@ -55,6 +65,8 @@ const Profile = () => {
       });
     }
   }, [currentUser]);
+
+  
 
   const validateForm = () => {
     let valid = true;
@@ -186,102 +198,140 @@ const Profile = () => {
 
   return (
     <div className="min-h-screen bg-white">
-      <div className="max-w-4xl mx-auto p-6 bg-white rounded-lg shadow-md relative">
-        <h2 className="text-2xl font-bold mb-6 text-center text-purple-600">
-          User Profile
-        </h2>
-        <button
-          onClick={handleGetAdminAccess}
-          className="absolute top-4 right-4 px-4 py-2 text-sm md:text-base bg-purple-600 text-white rounded-lg hover:bg-purple-800"
+      <div className="flex flex-col md:flex-row items-center justify-center md:justify-between max-w-6xl mx-auto p-6">
+        {/* Left side - Man Image */}
+        <div 
+          className="hidden md:block w-1/3"
+          data-aos="fade-right"
+          data-aos-duration="1200"
         >
-          <span className="hidden md:inline">Get Admin Access</span>{" "}
-          {/* Hidden on small screens */}
-          <span className="md:hidden">Admin Access</span>{" "}
-          {/* Shown on small screens */}
-        </button>
-        <div className="flex items-center justify-center">
-          <div className="flex items-center space-x-6 mb-6">
-            <div className="relative">
-              <img
-                className={`h-32 w-32 rounded-full object-cover border-4 ${userInfo.verified ? "border-yellow-500" : "border-purple-500"
-                  } cursor-pointer hover:opacity-80`}
-                src={newPicture || userInfo.profilePicture}
-                alt="User Profile"
-                onClick={handlePictureClick}
-              />
-            </div>
-            <div>
-              <h3 className="text-xl font-bold text-gray-800 flex items-center">
-                {userInfo.fullName}
-                {userInfo.verified && (
+         <img
+  src={manImage}
+  alt="Decorative man illustration"
+  style={{ height: '600px', width: '100%' }}
+/>
+        </div>
+
+        {/* Right side - Profile Content */}
+        <div 
+          className="w-full md:w-2/3 md:ml-8"
+          data-aos="fade-left"
+          data-aos-duration="1200"
+        >
+          <div className="bg-white rounded-lg shadow-md relative p-6">
+            <h2 
+              className="text-2xl font-bold mb-6 text-center text-purple-600"
+              data-aos="fade-down"
+              data-aos-delay="200"
+            >
+              User Profile
+            </h2>
+            <button
+              onClick={handleGetAdminAccess}
+              className="absolute top-4 right-4 px-4 py-2 text-sm md:text-base bg-purple-600 text-white rounded-lg hover:bg-purple-800"
+              data-aos="fade-left"
+              data-aos-delay="400"
+            >
+              <span className="hidden md:inline">Get Admin Access</span>
+              <span className="md:hidden">Admin Access</span>
+            </button>
+            <div 
+              className="flex items-center justify-center"
+              data-aos="fade-up"
+              data-aos-delay="300"
+            >
+              <div className="flex items-center space-x-6 mb-6">
+                <div className="relative">
                   <img
-                    className="ml-2 h-6 w-6"
-                    src="https://upload.wikimedia.org/wikipedia/commons/e/e4/Twitter_Verified_Badge.svg"
-                    alt="Verified Icon"
+                    className={`h-32 w-32 rounded-full object-cover border-4 ${
+                      userInfo.verified ? "border-yellow-500" : "border-purple-500"
+                    } cursor-pointer hover:opacity-80 transition-all duration-300`}
+                    src={newPicture || userInfo.profilePicture}
+                    alt="User Profile"
+                    onClick={handlePictureClick}
                   />
-                )}
-              </h3>
-              <p className="text-gray-600">{userInfo.email}</p>
-              <button
-                onClick={handleEdit}
-                className="mt-4 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-800"
-              >
-                Edit Profile
-              </button>
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold text-gray-800 flex items-center">
+                    {userInfo.fullName}
+                    {userInfo.verified && (
+                      <img
+                        className="ml-2 h-6 w-6"
+                        src="https://upload.wikimedia.org/wikipedia/commons/e/e4/Twitter_Verified_Badge.svg"
+                        alt="Verified Icon"
+                      />
+                    )}
+                  </h3>
+                  <p className="text-gray-600">{userInfo.email}</p>
+                  <button
+                    onClick={handleEdit}
+                    className="mt-4 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-800 transition-colors duration-300"
+                  >
+                    Edit Profile
+                  </button>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-          {/* Full Name */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Full Name
-            </label>
-            <input
-              type="text"
-              name="fullName"
-              className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 bg-white text-purple-600 ${isEditing ? "cursor-text" : "cursor-not-allowed"
-                }`}
-              value={userInfo.fullName}
-              onChange={handleChange}
-              disabled={!isEditing}
-            />
-            {errors.fullName && (
-              <p className="text-red-500 text-sm">{errors.fullName}</p>
+            <div 
+              className="grid grid-cols-1 gap-6 md:grid-cols-2"
+              data-aos="fade-up"
+              data-aos-delay="400"
+            >
+              {/* Full Name */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700">
+                  Full Name
+                </label>
+                <input
+                  type="text"
+                  name="fullName"
+                  className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 bg-white text-purple-600 ${
+                    isEditing ? "cursor-text" : "cursor-not-allowed"
+                  }`}
+                  value={userInfo.fullName}
+                  onChange={handleChange}
+                  disabled={!isEditing}
+                />
+                {errors.fullName && (
+                  <p className="text-red-500 text-sm">{errors.fullName}</p>
+                )}
+              </div>
+
+              {/* Email */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700">
+                  Email
+                </label>
+                <input
+                  type="email"
+                  name="email"
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 bg-white text-purple-600 cursor-not-allowed"
+                  value={userInfo.email}
+                  disabled={true}
+                />
+                {errors.email && (
+                  <p className="text-red-500 text-sm">{errors.email}</p>
+                )}
+              </div>
+            </div>
+
+            {/* Save Changes Button */}
+            {isEditing && (
+              <button
+                onClick={handleSubmit}
+                className="mt-6 w-full px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-800 transition-colors duration-300"
+                disabled={Object.values(errors).some((error) => error)}
+                data-aos="fade-up"
+                data-aos-delay="500"
+              >
+                Save Changes
+              </button>
             )}
           </div>
-
-          {/* Email */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Email
-            </label>
-            <input
-              type="email"
-              name="email"
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 bg-white text-purple-600 cursor-not-allowed"
-              value={userInfo.email}
-              disabled={true}
-            />
-            {errors.email && (
-              <p className="text-red-500 text-sm">{errors.email}</p>
-            )}
-          </div>
         </div>
-
-        {/* Save Changes Button */}
-        {isEditing && (
-          <button
-            onClick={handleSubmit}
-            className="mt-6 w-full px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-800"
-            disabled={Object.values(errors).some((error) => error)}
-          >
-            Save Changes
-          </button>
-        )}
       </div>
 
-      {/* Popup for changing profile picture */}
+      {/* Popups remain unchanged */}
       {showPopup && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white rounded-lg p-6 w-1/3">
