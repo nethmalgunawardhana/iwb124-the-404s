@@ -200,7 +200,7 @@ const AdminAccessForm = ({ onCancel, onClose }) => {
         {/* Buttons */}
         <div className="flex items-center justify-between gap-4">
           <button
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded focus:outline-none focus:shadow-outline flex-1 transition-all transform hover:scale-105"
+            className="bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-6 rounded focus:outline-none focus:shadow-outline flex-1 transition-all transform hover:scale-105"
             type="submit"
           >
             Submit Request
