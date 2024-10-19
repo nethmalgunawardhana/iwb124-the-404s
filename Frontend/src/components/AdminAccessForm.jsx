@@ -54,7 +54,7 @@ const AdminAccessForm = ({ onCancel, onClose }) => {
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#EF4444",
-      cancelButtonColor: "#3B82F6",
+      cancelButtonColor: "#8856D6",
       confirmButtonText: "Yes, cancel it!",
       cancelButtonText: "No, keep editing",
     }).then((result) => {
