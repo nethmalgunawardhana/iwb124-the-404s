@@ -75,7 +75,7 @@ const Sidebar = () => {
               <button
                 onClick={() => setActiveComponent('accesslist')}
                 className={`flex items-center w-full text-left p-2 rounded transition-colors ${
-                  activeComponent === 'contact' ? 'bg-blue-100 text-blue-600' : 'text-gray-700 hover:bg-gray-100'
+                  activeComponent === 'accesslist' ? "bg-white text-black" : ''
                 }`}
               >
                 <ListTodo size={20} className="mr-3" /> Requested List
