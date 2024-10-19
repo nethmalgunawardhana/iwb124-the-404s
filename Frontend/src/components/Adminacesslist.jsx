@@ -78,7 +78,7 @@ const AdminAccessList = () => {
     return (
       <div className="flex items-center justify-center min-h-screen bg-gray-100">
         <div className="bg-white rounded-lg shadow-md p-6 w-full max-w-md">
-          <h2 className="text-2xl font-bold text-center mb-6">
+          <h2 className="text-2xl font-bold text-center mb-6 text-black">
             Admin Authentication Required
           </h2>
           <button
