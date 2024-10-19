@@ -4,7 +4,7 @@ import { IoIosSearch } from "react-icons/io";
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/authContext';
 import { auth } from '../firebase/firebase';
-import EventSearch from './Eventsearch'; // Make sure the import path is correct
+import EventSearch from './Eventsearch';
 
 const NavbarforHomepage = () => {
   const navigate = useNavigate();
@@ -16,57 +16,97 @@ const NavbarforHomepage = () => {
   const [showSettingsDropdown, setShowSettingsDropdown] = useState(false);
   const [showSearchPopup, setShowSearchPopup] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
+  const [isInitialMount, setIsInitialMount] = useState(true);
 
+  // Handle initial mount and user changes
   useEffect(() => {
-    setCurrentUser(globalUser);
-    if (globalUser) {
-      const hasShownWelcome = sessionStorage.getItem(`welcomeShown_${globalUser.uid}`);
-      
-      if (!hasShownWelcome) {
-        setShowWelcome(true);
-        const welcomeNotif = {
-          id: Date.now(),
-          message: "Welcome to EventUni™!",
-          timestamp: new Date(),
-          read: false
-        };
-        setNotifications(prev => {
-          const welcomeExists = prev.some(notif => notif.message === "Welcome to EventUni™!");
-          if (!welcomeExists) {
-            return [...prev, welcomeNotif];
+    if (globalUser && isInitialMount) {
+      const checkAndShowWelcome = async () => {
+        try {
+          // Check if this is a new login session
+          const lastLoginTime = sessionStorage.getItem(`lastLogin_${globalUser.uid}`);
+          const currentTime = new Date().getTime();
+          
+          // Show welcome message if it's a new session (more than 1 hour gap)
+          if (!lastLoginTime || (currentTime - parseInt(lastLoginTime)) > 3600000) {
+            setShowWelcome(true);
+            
+            // Add welcome notification
+            const welcomeNotif = {
+              id: Date.now(),
+              message: "Welcome to EventUni™!",
+              timestamp: new Date(),
+              read: false
+            };
+            
+            setNotifications(prev => {
+              const welcomeExists = prev.some(notif => 
+                notif.message === "Welcome to EventUni™!" && 
+                (new Date() - new Date(notif.timestamp)) < 3600000
+              );
+              if (!welcomeExists) {
+                return [...prev, welcomeNotif];
+              }
+              return prev;
+            });
+            
+            setUnreadCount(prev => prev + 1);
+            
+            // Update last login time
+            sessionStorage.setItem(`lastLogin_${globalUser.uid}`, currentTime.toString());
+            
+            // Hide welcome message after 3 seconds
+            setTimeout(() => {
+              setShowWelcome(false);
+            }, 3000);
           }
-          return prev;
-        });
-        setUnreadCount(prev => prev + 1);
-        sessionStorage.setItem(`welcomeShown_${globalUser.uid}`, 'true');
-        setTimeout(() => {
-          setShowWelcome(false);
-        }, 3000);
-      }
-    }
-  }, [globalUser]);
+        } catch (error) {
+          console.error("Error showing welcome message:", error);
+        }
+      };
 
+      checkAndShowWelcome();
+      setIsInitialMount(false);
+    }
+  }, [globalUser, isInitialMount]);
+
+  // Load saved notifications
   useEffect(() => {
     if (globalUser) {
-      const savedNotifications = localStorage.getItem(`notifications_${globalUser.uid}`);
-      if (savedNotifications) {
-        const parsedNotifications = JSON.parse(savedNotifications);
-        setNotifications(parsedNotifications);
-        setUnreadCount(parsedNotifications.filter(n => !n.read).length);
+      try {
+        const savedNotifications = localStorage.getItem(`notifications_${globalUser.uid}`);
+        if (savedNotifications) {
+          const parsedNotifications = JSON.parse(savedNotifications);
+          setNotifications(parsedNotifications);
+          setUnreadCount(parsedNotifications.filter(n => !n.read).length);
+        }
+      } catch (error) {
+        console.error("Error loading notifications:", error);
       }
     }
   }, [globalUser]);
 
+  // Save notifications when they change
   useEffect(() => {
     if (globalUser && notifications.length > 0) {
-      localStorage.setItem(`notifications_${globalUser.uid}`, JSON.stringify(notifications));
+      try {
+        localStorage.setItem(`notifications_${globalUser.uid}`, JSON.stringify(notifications));
+      } catch (error) {
+        console.error("Error saving notifications:", error);
+      }
     }
   }, [notifications, globalUser]);
+
+  // Update current user when global user changes
+  useEffect(() => {
+    setCurrentUser(globalUser);
+  }, [globalUser]);
 
   const handleLogout = async () => {
     try {
       if (currentUser) {
-        sessionStorage.removeItem(`welcomeShown_${currentUser.uid}`);
+        // Clear session storage
+        sessionStorage.removeItem(`lastLogin_${currentUser.uid}`);
         localStorage.removeItem(`notifications_${currentUser.uid}`);
       }
       await auth.signOut();
@@ -75,6 +115,7 @@ const NavbarforHomepage = () => {
       setUnreadCount(0);
       setShowNotifications(false);
       setShowSettingsDropdown(false);
+      setIsInitialMount(true); // Reset initial mount state
       navigate('/');
     } catch (error) {
       console.error("Error signing out:", error);
@@ -97,6 +138,7 @@ const NavbarforHomepage = () => {
     setShowSettingsDropdown(!showSettingsDropdown);
   };
 
+  // Handle clicking outside of panels
   useEffect(() => {
     const handleClickOutside = (event) => {
       if ((showNotifications || showSettingsDropdown) && 
@@ -196,7 +238,7 @@ const NavbarforHomepage = () => {
 
       {/* Welcome Notification */}
       {showWelcome && (
-        <div className="fixed top-16 right-4 bg-purple-600 text-white p-4 rounded shadow-lg flex items-center space-x-2 animate-fadeIn">
+        <div className="fixed top-16 right-4 bg-purple-600 text-white p-4 rounded shadow-lg flex items-center space-x-2 animate-fadeIn z-50">
           <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
           </svg>
@@ -209,7 +251,7 @@ const NavbarforHomepage = () => {
 
       {/* Notifications Panel */}
       {showNotifications && notifications.length > 0 && (
-        <div className="fixed top-16 right-4 bg-white border shadow-lg rounded p-2 min-w-[250px] notification-panel">
+        <div className="fixed top-16 right-4 bg-white border shadow-lg rounded p-2 min-w-[250px] notification-panel z-40">
           {notifications.map(notif => (
             <div key={notif.id} className="p-3 bg-gray-100 hover:bg-gray-200 text-black border-b last:border-b-0">
               <div className="font-medium">{notif.message}</div>
