@@ -163,7 +163,7 @@ const AdminAccessForm = ({ onCancel, onClose }) => {
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="request"
           >
-            <FileText className="inline mr-2" size={16} /> Request Type
+            <FileText className="inline mr-2" size={16} /> Request
           </label>
           <input
             className="shadow appearance-none border rounded bg-white w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline hover:border-blue-500 transition-colors"
@@ -172,7 +172,7 @@ const AdminAccessForm = ({ onCancel, onClose }) => {
             name="request"
             value={formData.request}
             onChange={handleInputChange}
-            placeholder="Type of Access Request"
+            placeholder="Your Request"
             required
           />
         </div>
