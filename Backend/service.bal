@@ -63,7 +63,6 @@ service / on new http:Listener(9091) {
         return adminAccessList;
     }
 
-
     resource function options events(http:Caller caller, http:Request req) returns error? {
         http:Response res = new;
         res.setHeader("Access-Control-Allow-Origin", "*");
