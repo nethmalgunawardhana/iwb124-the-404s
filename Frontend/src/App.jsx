@@ -18,6 +18,7 @@ import { PrivateRoute } from './components/Privateroute';
 import Login from './pages/Login'; 
 import SignUpPage from './pages/Signup';
 import EventPage from './pages/EventPage'; // Import the new EventPage component
+import BookedEventsPage from "./pages/BookEventPage";
 
 import "./App.css";
 
@@ -47,7 +48,10 @@ function App() {
           <Route path="/personal-verification" element={<PVerification />} />
           <Route path="/admin" element={<AdminDashboard />} />
           {/* Add the new route for EventPage */}
-          <Route path="/event-page" element={<EventPage />} /> {/* New route for Event Page */}
+          <Route path="/event-page" element={<EventPage />} />
+          <Route path="/bookedevents" element={<BookedEventsPage />} />
+         
+           {/* New route for Event Page */}
         </Routes>
       </BrowserRouter>
     </AuthProvider>

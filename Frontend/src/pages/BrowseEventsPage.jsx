@@ -1,28 +1,24 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import NavbarforHomepage from '../components/NavbarforHomepage';
 import musicIcon from '../assets/tag-music.png';
 import techIcon from '../assets/tag-technology.png';
 import artIcon from '../assets/tag-art.png';
 import danceIcon from '../assets/tag-dance.png';
-import { X } from 'react-feather'; // Make sure to import the X icon
+import { X, Calendar, MapPin } from 'react-feather';
+import Swal from 'sweetalert2';
 
 const BrowseEventsPage = () => {
-  // Sample events data
-  const allEvents = [
-    { image: 'https://via.placeholder.com/300x200?text=Event+1', title: 'Music Fest', date: 'October 12, 2024', institute: 'Institute 1', price: 'free', tags: ['Music'] },
-    { image: 'https://via.placeholder.com/300x200?text=Event+2', title: 'Tech Expo', date: 'November 15, 2024', institute: 'Institute 2', price: 'paid', tags: ['Technology'] },
-    { image: 'https://via.placeholder.com/300x200?text=Event+3', title: 'Art Gala', date: 'December 20, 2024', institute: 'Institute 1', price: 'free', tags: ['Art'] },
-    { image: 'https://via.placeholder.com/300x200?text=Event+4', title: 'Dance Show', date: 'January 10, 2025', institute: 'Institute 2', price: 'paid', tags: ['Dancing'] },
-    // Add more events...
-  ];
-
-  const institutes = ['All Institutes', 'Institute 1', 'Institute 2', 'Institute 3'];
+  const [events, setEvents] = useState([]);
+  const [filteredEvents, setFilteredEvents] = useState([]);
   const [selectedInstitute, setSelectedInstitute] = useState('All Institutes');
-  const [price, setPrice] = useState('');
+  const [selectedPayment, setSelectedPayment] = useState('');
   const [selectedTags, setSelectedTags] = useState([]);
   const [visibleEvents, setVisibleEvents] = useState(20);
-  const [selectedEvent, setSelectedEvent] = useState(null); // State for the selected event
-
+  const [selectedEvent, setSelectedEvent] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [sortBy, setSortBy] = useState('date'); // New state for sorting
   const tags = [
     { name: 'Music', image: musicIcon },
     { name: 'Technology', image: techIcon },
@@ -30,18 +26,59 @@ const BrowseEventsPage = () => {
     { name: 'Dancing', image: danceIcon },
   ];
 
-  const toggleTag = (tag) => {
-    setSelectedTags((prev) => (prev.includes(tag) ? [] : [tag]));
+  useEffect(() => {
+    fetchEvents();
+  }, []);
+
+  useEffect(() => {
+
+    filterAndSortEvents();
+  }, [events, selectedInstitute, price, selectedTags, sortBy]);
+
+
+  const fetchEvents = async () => {
+    try {
+      setLoading(true);
+      const response = await axios.get('http://localhost:9091/events');
+      setEvents(response.data);
+      setLoading(false);
+    } catch (err) {
+      setError('Failed to fetch events. Please try again later.');
+      setLoading(false);
+    }
   };
 
-  const filteredEvents = allEvents.filter((event) => {
-    const instituteMatch =
-      selectedInstitute === 'All Institutes' || event.institute === selectedInstitute;
-    const priceMatch = price === '' || event.price === price;
-    const tagMatch = selectedTags.length === 0 || event.tags.includes(selectedTags[0]);
+  const filterAndSortEvents = () => {
+    let filtered = events.filter((event) => {
+      const instituteMatch =
+        selectedInstitute === 'All Institutes' || event.institute === selectedInstitute;
+      const paymentMatch = selectedPayment === '' || event.payment === selectedPayment;
+      const tagMatch = selectedTags.length === 0 || selectedTags.some(tag => event.tags.includes(tag));
 
-    return instituteMatch && priceMatch && tagMatch;
-  });
+      return instituteMatch && paymentMatch && tagMatch;
+    });
+
+    // Sort the filtered events
+    filtered.sort((a, b) => {
+      switch (sortBy) {
+        case 'institute':
+          return a.institute.localeCompare(b.institute);
+        case 'price':
+          return (a.price === 'free' ? 0 : 1) - (b.price === 'free' ? 0 : 1);
+        case 'date':
+        default:
+          return new Date(a.date) - new Date(b.date);
+      }
+    });
+
+    setFilteredEvents(filtered);
+  };
+
+  const toggleTag = (tag) => {
+    setSelectedTags((prev) =>
+      prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag]
+    );
+  };
 
   const openEventDetails = (event) => {
     setSelectedEvent(event);
@@ -49,6 +86,43 @@ const BrowseEventsPage = () => {
 
   const closeEventDetails = () => {
     setSelectedEvent(null);
+  };
+
+  const institutes = ['All Institutes', ...new Set(events.map(event => event.institute))];
+
+  const bookEvent = async (eventId) => {
+    const result = await Swal.fire({
+      title: 'Confirm Booking',
+      text: 'Are you sure you want to book this event?',
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, book it!'
+    });
+
+    if (result.isConfirmed) {
+      try {
+        // The booking payload matches the backend BookingInput type
+        await axios.post('http://localhost:9091/bookings', { 
+          eventId
+          // Optional field as per backend type
+        });
+        
+        Swal.fire(
+          'Booked!',
+          'The event has been successfully booked.',
+          'success'
+        );
+        closeEventDetails();
+      } catch (error) {
+        Swal.fire(
+          'Error!',
+          'Failed to book the event. Please try again.',
+          'error'
+        );
+      }
+    }
   };
 
   const EventDetailPopup = ({ event, onClose }) => {
@@ -59,21 +133,36 @@ const BrowseEventsPage = () => {
         <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
           <div className="p-6">
             <div className="flex justify-between items-start mb-4">
-              <h2 className="text-2xl font-bold text-purple-800">{event.title}</h2>
+              <h2 className="text-2xl font-bold text-purple-800">{event.name}</h2>
               <button onClick={onClose} className="text-gray-500 hover:text-gray-700">
                 <X size={24} />
               </button>
             </div>
-            <img src={event.image} alt={event.title} className="w-full h-64 object-cover rounded-lg mb-4" />
-            <p className="text-gray-600 mb-2">Event description goes here.</p>
-            <p className="text-gray-800"><strong>Date:</strong> {event.date}</p>
+            <img src={event.image} alt={event.name} className="w-full h-64 object-cover rounded-lg mb-4" />
+            <p className="text-gray-600 mb-4">{event.description}</p>
+            <p className="text-gray-800 flex items-center mb-2">
+              <Calendar className="mr-2" size={18} />
+              <strong>Date:</strong> {event.date}
+            </p>
+            <p className="text-gray-800 flex items-center mb-2">
+              <MapPin className="mr-2" size={18} />
+              <strong>Location:</strong> <a href={event.locationLink} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">{event.locationLink}</a>
+            </p>
+            <p className="text-gray-800"><strong>Time:</strong> {event.time}</p>
+            <p className="text-gray-800"><strong>Payment:</strong> {event.payment}</p>
             <p className="text-gray-800"><strong>Institute:</strong> {event.institute}</p>
-            <p className="text-gray-800"><strong>Price:</strong> {event.price === 'free' ? 'Free' : 'Paid'}</p>
-            {/* Add other event details if needed */}
-            <div className="mt-6">
-              <a href="#" className="px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors inline-block">
-                Enroll Now
+            <p className="text-gray-800"><strong>Organizing Committee:</strong> {event.organizingCommittee}</p>
+            <p className="text-gray-800"><strong>Tags:</strong> {event.tags}</p>
+            {event.resources && (
+              <p className="text-gray-800"><strong>Resources:</strong> {event.resources}</p>
+            )}
+            <div className="mt-6 flex justify-between">
+              <a href={event.registrationLink} target="_blank" rel="noopener noreferrer" className="px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors inline-block">
+                Register Now
               </a>
+              <button onClick={() => bookEvent(event.id)} className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
+                Book Now
+              </button>
             </div>
           </div>
         </div>
@@ -81,13 +170,21 @@ const BrowseEventsPage = () => {
     );
   };
 
+  if (loading) {
+    return <div className="text-center mt-20">Loading events...</div>;
+  }
+
+  if (error) {
+    return <div className="text-center mt-20 text-red-600">{error}</div>;
+  }
+
   return (
     <div className="min-h-screen bg-gray-50">
       <NavbarforHomepage />
       <header className="bg-purple-600 text-white py-20">
         <div className="max-w-6xl mx-auto text-center">
           <h1 className="text-5xl font-bold">Browse Events</h1>
-          <p className="mt-4 text-lg">Find events by institutes, pricing, or tags!</p>
+          <p className="mt-4 text-lg">Find events by institutes, payment options, or tags!</p>
         </div>
       </header>
 
@@ -110,15 +207,27 @@ const BrowseEventsPage = () => {
               </select>
             </div>
             <div className="flex-grow">
-              <label className="block font-semibold mb-2 text-gray-800">Select Price</label>
+              <label className="block font-semibold mb-2 text-gray-800">Select Payment</label>
               <select
-                value={price}
-                onChange={(e) => setPrice(e.target.value)}
+                value={selectedPayment}
+                onChange={(e) => setSelectedPayment(e.target.value)}
                 className="w-full p-2 border rounded-lg bg-white text-gray-800"
               >
-                <option value="">All Prices</option>
-                <option value="free">Free</option>
-                <option value="paid">Paid</option>
+                <option value="">All Payment Types</option>
+                <option value="Free">Free</option>
+                <option value="Paid">Paid</option>
+              </select>
+            </div>
+            <div className="flex-grow">
+              <label className="block font-semibold mb-2 text-gray-800">Sort By</label>
+              <select
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value)}
+                className="w-full p-2 border rounded-lg bg-white text-gray-800"
+              >
+                <option value="date">Date</option>
+                <option value="institute">Institute</option>
+                <option value="price">Price</option>
               </select>
             </div>
           </div>
@@ -143,17 +252,25 @@ const BrowseEventsPage = () => {
         <section>
           <h2 className="text-3xl font-semibold text-center mb-6 text-purple-800">Available Events</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            {filteredEvents.slice(0, visibleEvents).map((event, index) => (
+            {filteredEvents.slice(0, visibleEvents).map((event) => (
               <div 
-                key={index} 
+                key={event.id} 
                 className="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 cursor-pointer"
                 onClick={() => openEventDetails(event)}
               >
-                <img src={event.image} alt={event.title} className="w-full h-64 object-cover rounded-lg mb-4" />
-                <h3 className="text-xl font-semibold mt-2 text-gray-800">{event.title}</h3>
-                <p className="text-gray-600 text-lg">{event.date}</p>
+                <img src={event.image} alt={event.name} className="w-full h-64 object-cover rounded-lg mb-4" />
+                <h3 className="text-xl font-semibold mt-2 text-gray-800 text-center">{event.name}</h3>
+                <p className="text-gray-600 text-lg flex items-center mt-2">
+                  <Calendar className="mr-2" size={18} />
+                  {event.date}
+                </p>
+                <p className="text-gray-600 text-lg flex items-center mt-2">
+                  <MapPin className="mr-2" size={18} />
+                  <a href={event.locationLink} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">Location</a>
+                </p>
                 <p className="text-gray-600 text-lg">{event.institute}</p>
-                <p className="text-gray-600 text-lg font-medium mt-2">{event.price === 'free' ? 'Free' : 'Paid'}</p>
+                <p className="text-gray-600 text-lg font-medium mt-2">{event.payment}</p>
+                <p className="text-gray-600 text-sm mt-2">Tags: {event.tags}</p>
               </div>
             ))}
           </div>
@@ -161,7 +278,7 @@ const BrowseEventsPage = () => {
           {visibleEvents < filteredEvents.length && (
             <div className="text-center mt-12">
               <button
-                className="px-8 py-4 bg-purple-600 text-white rounded-lg hover:bg-purple-800 transition-colors"
+                className="px-8 py-4 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
                 onClick={() => setVisibleEvents(visibleEvents + 20)}
               >
                 Load More Events
