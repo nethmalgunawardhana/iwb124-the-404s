@@ -1,9 +1,9 @@
 import ballerina/http;
-import ballerina/uuid;
-import ballerinax/mongodb;
 import ballerina/io;
 import ballerina/log;
 import ballerina/time;
+import ballerina/uuid;
+import ballerinax/mongodb;
 
 configurable string host = "localhost";
 configurable int port = 27017;
@@ -34,6 +34,32 @@ service / on new http:Listener(9091) {
         self.eventDb = check mongoDb->getDatabase("EventDb");
         io:println("MongoDB connected to EventDb");
     }
+
+    isolated resource function post admin/access(@http:Payload AdminAccessInput input) returns AdminAccess|error {
+        string id = uuid:createType1AsString();
+        AdminAccess adminAccess = {id: id, ...input};
+        mongodb:Collection adminAccessCollection = check self.eventDb->getCollection("AdminAccess");
+        check adminAccessCollection->insertOne(adminAccess);
+        return adminAccess;
+    }
+
+    resource function get admin/access() returns AdminAccess[]|error {
+        mongodb:Collection adminAccessCollection = check self.eventDb->getCollection("AdminAccess");
+        stream<AdminAccess, error?> result = check adminAccessCollection->find();
+        AdminAccess[] adminAccessList = [];
+        int count = 0;
+        check result.forEach(function(AdminAccess|error adminAccess) {
+            if (adminAccess is AdminAccess) {
+                adminAccessList.push(adminAccess);
+                count += 1;
+            } else {
+                log:printError(string `Error processing admin access submission: ${adminAccess.message()}`, 'error = adminAccess);
+            }
+        });
+        log:printInfo(string `Successfully retrieved ${count} admin access submissions`);
+        return adminAccessList;
+    }
+
 
     resource function options events(http:Caller caller, http:Request req) returns error? {
         http:Response res = new;
@@ -66,7 +92,7 @@ service / on new http:Listener(9091) {
 
     resource function post bookings(@http:Payload BookingInput input) returns Booking|error {
         string id = uuid:createType1AsString();
-        string bookingDate = time:utcToString(time:utcNow()).substring(0, 10);
+        string bookingDate = time:utcToString(time:utcNow()).substring(0, 10); // Get current date in YYYY-MM-DD format
         Booking booking = {id, bookingDate, ...input};
         mongodb:Collection bookings = check self.eventDb->getCollection("Booking");
         check bookings->insertOne(booking);
@@ -97,7 +123,29 @@ service / on new http:Listener(9091) {
         check events->insertOne(event);
         return event;
     }
-
+    resource function get events/search(string query) returns Event[]|error {
+    mongodb:Collection events = check self.eventDb->getCollection("Event");
+    
+    // Create a search filter using regex for case-insensitive search across multiple fields
+    map<json> searchFilter = {
+        "$or": [
+            {"name": {"$regex": query, "$options": "i"}},
+            {"description": {"$regex": query, "$options": "i"}},
+            {"institute": {"$regex": query, "$options": "i"}},
+            {"tags": {"$regex": query, "$options": "i"}}
+        ]
+    };
+    
+    stream<Event, error?> result = check events->find(searchFilter);
+    Event[] eventList = [];
+    check result.forEach(function(Event|error event) {
+        if (event is Event) {
+            eventList.push(event);
+        }
+    });
+    
+    return eventList;
+}
     resource function put events/[string id](@http:Payload EventUpdate update) returns Event|error {
         mongodb:Collection events = check self.eventDb->getCollection("Event");
         map<json> updateFields = {};
@@ -116,7 +164,7 @@ service / on new http:Listener(9091) {
         if update.locationLink is string {
             updateFields["locationLink"] = update.locationLink;
         }
-        if update.payment is string {
+        if update.locationLink is string {
             updateFields["payment"] = update.payment;
         }
         if update.institute is string {
@@ -208,6 +256,7 @@ public type EventUpdate record {|
 public type BookingInput record {|
     string eventId;
     string userId?;
+
 |};
 
 public type Booking record {|
@@ -219,4 +268,16 @@ public type Booking record {|
 public type Event record {|
     readonly string id;
     *EventInput;
+|};
+
+public type AdminAccessInput record {|
+    string name;
+    string phoneNumber;
+    string request;
+    string description;
+|};
+
+public type AdminAccess record {|
+    readonly string id;
+    *AdminAccessInput;
 |};

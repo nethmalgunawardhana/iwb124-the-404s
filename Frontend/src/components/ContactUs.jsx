@@ -110,7 +110,7 @@ const ContactUs = () => {
                 <div className="h-[50px] w-[50px] mt-7 ml-2.5 bg-[rgb(124,17,224)] rounded-full z-20"></div>
                 <div className="absolute ml-2.5 bg-[rgb(246,146,163)] rounded-full h-[30px] w-[30px]"></div> 
                 */}
-                <img src={contactUsImage} alt="Contact Us" className="w-full h-full object-cover" />
+                <img src={contactUsImage} alt="Contact Us" className=" w-[100%] h-[100%] object-cover" />
             </div>
           {/* Social media icons */}
           <div className="flex justify-center h-[10px] absolute bottom-[30px] cursor-pointer">
@@ -130,7 +130,7 @@ const ContactUs = () => {
           <div className="border-2 border-transparent w-[90%] pl-[10px] flex flex-col">
             <p className="text-black">Name</p>
             <input
-              className="text-[#333] bg-white w-full text-[15px] p-[8px] border-b-2 border-b-[rgb(100,21,173)] border-l-0 border-r-0 border-t-0 outline-none"
+              className="text-[#333] bg-white w-full text-[15px] p-[8px] border-b-2 border-b-[rgb(100,21,173)] border-l-0 border-r-0 border-t-0 leading-tight focus:outline-none focus:ring-0"
               type="text"
               placeholder="Navoda Chathurya"
               value={name}
@@ -142,7 +142,7 @@ const ContactUs = () => {
           <div className="border-2 border-transparent w-[90%] pl-[10px] flex flex-col">
             <p className="text-black">Email</p>
             <input
-              className="text-[#333] bg-white w-full text-[15px] p-[8px] border-b-2 border-b-[rgb(100,21,173)] border-l-0 border-r-0 border-t-0 outline-none"
+              className="text-[#333] bg-white w-full text-[15px] p-[8px] border-b-2 border-b-[rgb(100,21,173)] border-l-0 border-r-0 border-t-0 leading-tight focus:outline-none focus:ring-0"
               type="email"
               placeholder="example@gmail.com"
               value={email}
@@ -154,7 +154,7 @@ const ContactUs = () => {
           <div className="border-2 border-transparent w-[90%] pl-[10px] flex flex-col">
             <p className="text-black">Phone</p>
             <input
-              className="text-[#333] bg-white w-full text-[15px] p-[8px] border-b-2 border-b-[rgb(100,21,173)] border-l-0 border-r-0 border-t-0 outline-none"
+              className="text-[#333] bg-white w-full text-[15px] p-[8px] border-b-2 border-b-[rgb(100,21,173)] border-l-0 border-r-0 border-t-0 leading-tight focus:outline-none focus:ring-0"
               type="text"
               placeholder="+94 77 77 77 777"
               value={phone}

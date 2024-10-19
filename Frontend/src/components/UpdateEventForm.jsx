@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { Calendar, Clock, MapPin, Users, Tag, Image, Link, FileText } from 'lucide-react';
+import { Calendar, Clock, MapPin, Users, Tag, Image, Link, FileText, WalletCards } from 'lucide-react';
 import Swal from 'sweetalert2';
 
 const UpdateEventForm = () => {
   const [events, setEvents] = useState([]);
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [eventData, setEventData] = useState({
-
     name: '',
     description: '',
     date: '',
     time: '',
     locationLink: '',
+    payment: 'free', // Added payment field with default value
     institute: '',
     organizingCommittee: '',
     tags: '',
@@ -42,6 +42,7 @@ const UpdateEventForm = () => {
     setSelectedEvent(event);
     setEventData({
       ...event,
+      payment: event.payment || 'free', // Ensure payment has a default value
     });
   };
 
@@ -56,16 +57,14 @@ const UpdateEventForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const formattedEventData = {
-        ...eventData,
-      };
-
+      const { id, ...updateData } = eventData;
+      
       const response = await fetch(`http://localhost:9091/events/${eventData.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formattedEventData),
+        body: JSON.stringify(updateData),
       });
 
       if (response.ok) {
@@ -76,15 +75,15 @@ const UpdateEventForm = () => {
           text: `Event successfully updated: ${updatedEvent.name}`,
           icon: "success"
         });
-        fetchEvents(); // Refresh the event list
+        fetchEvents();
         setSelectedEvent(null);
         setEventData({
-
           name: '',
           description: '',
           date: '',
           time: '',
           locationLink: '',
+          payment: 'free',
           institute: '',
           organizingCommittee: '',
           tags: '',
@@ -94,7 +93,6 @@ const UpdateEventForm = () => {
         });
       } else {
         const errorData = await response.json();
-
         Swal.fire({
           icon: "error",
           title: "Oops...",
@@ -102,8 +100,6 @@ const UpdateEventForm = () => {
         });
       }
     } catch (error) {
-      // console.error('Error updating event:', error);
-      // window.alert("Error updating event");
       Swal.fire({
         icon: "error",
         title: "Oops...",
@@ -126,7 +122,7 @@ const UpdateEventForm = () => {
         </thead>
         <tbody>
           {events.map(event => (
-            <tr key={event.id} className="hover:bg-purple-800 text-black">
+            <tr key={event.id} className="hover:bg-purple-900 hover:text-white text-black">
               <td className="border border-gray-300 px-4 py-2">{event.name}</td>
               <td className="border border-gray-300 px-4 py-2">{event.description.substring(0, 50)}...</td>
               <td className="border border-gray-300 px-4 py-2">
@@ -169,7 +165,7 @@ const UpdateEventForm = () => {
               <FileText className="inline mr-2" size={16} /> Description
             </label>
             <textarea
-              className="shadow appearance-none border rounded w-full py-2 px-3 bg-gray-300 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              className="shadow appearance-none border rounded w-full py-2 px-3 bg-gray-300 text-gray-700 leading-tight focus:outline-none focus:shadow-outline focus:ring focus:ring-purple-300"
               id="description"
               name="description"
               value={eventData.description}
@@ -211,52 +207,38 @@ const UpdateEventForm = () => {
               />
             </div>
           </div>
-          {/* Paid or not */}
+
+          {/* Payment Type Input */}
           <div className="mb-4">
-            <div className="block text-gray-700 text-sm font-bold mb-2" htmlFor="payment">
-              <WalletCards className="inline mr-2" size={16} /> Payment Type:
+            <div className="block text-gray-700 text-sm font-bold mb-2">
+              <WalletCards className="inline mr-2" size={16} /> Payment Type
             </div>
-            <div className="flex justify-between items-center p-5">
-              <label className="inline-flex items-center text-black">
+            <div className="flex space-x-4">
+              <label className="inline-flex items-center">
                 <input
-                  id="default-radio-1"
                   type="radio"
                   name="payment"
                   value="free"
                   checked={eventData.payment === 'free'}
                   onChange={handleInputChange}
-                  className="hidden peer" // Hide the default radio button
+                  className="form-radio h-4 w-4 text-purple-600"
                 />
-                <span className="w-5 h-5 border-2 border-gray-300 rounded-full flex items-center justify-center mr-2 peer-checked:border-blue-600 peer-checked:bg-blue-600 transition duration-200 ease-in-out">
-                  {eventData.payment === 'free' && (
-                    <span className="w-3 h-3 bg-white rounded-full"></span>
-                  )}
-                </span>
-                Free
+                <span className="ml-2 text-gray-700">Free</span>
               </label>
-              <div className="flex-grow flex justify-center">
-                <label className="inline-flex items-center text-black">
-                  <input
-                    id="default-radio-2"
-                    type="radio"
-                    name="payment"
-                    value="paid"
-                    checked={eventData.payment === 'paid'}
-                    onChange={handleInputChange}
-                    className="hidden peer" // Hide the default radio button
-                  />
-                  <span className="w-5 h-5 border-2 border-gray-300 rounded-full flex items-center justify-center mr-2 peer-checked:border-blue-600 peer-checked:bg-blue-600 transition duration-200 ease-in-out">
-                    {eventData.payment === 'paid' && (
-                      <span className="w-3 h-3 bg-white rounded-full"></span>
-                    )}
-                  </span>
-                  Paid
-                </label>
-              </div>
+              <label className="inline-flex items-center">
+                <input
+                  type="radio"
+                  name="payment"
+                  value="paid"
+                  checked={eventData.payment === 'paid'}
+                  onChange={handleInputChange}
+                  className="form-radio h-4 w-4 text-purple-600"
+                />
+                <span className="ml-2 text-gray-700">Paid</span>
+              </label>
             </div>
-
           </div>
-          
+
           {/* Location Link Input */}
           <div className="mb-4">
             <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="locationLink">
@@ -364,7 +346,7 @@ const UpdateEventForm = () => {
               <FileText className="inline mr-2" size={16} /> Resources
             </label>
             <textarea
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 bg-gray-300 leading-tight focus:outline-none focus:shadow-outline"
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 bg-gray-300 leading-tight focus:outline-none focus:shadow-outline focus:ring focus:ring-purple-300"
               id="resources"
               name="resources"
               value={eventData.resources}
