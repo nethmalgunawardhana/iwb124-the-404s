@@ -18,6 +18,7 @@ const BrowseEventsPage = () => {
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [sortBy, setSortBy] = useState('date');
   const tags = [
     { name: 'Music', image: musicIcon },
     { name: 'Technology', image: techIcon },
@@ -30,8 +31,8 @@ const BrowseEventsPage = () => {
   }, []);
 
   useEffect(() => {
-    filterEvents();
-  }, [events, selectedInstitute, selectedPayment, selectedTags]);
+    filterAndSortEvents();
+  }, [events, selectedInstitute, selectedPayment, selectedTags, sortBy]);
 
   const fetchEvents = async () => {
     try {
@@ -45,14 +46,26 @@ const BrowseEventsPage = () => {
     }
   };
 
-  const filterEvents = () => {
-    const filtered = events.filter((event) => {
+  const filterAndSortEvents = () => {
+    let filtered = events.filter((event) => {
       const instituteMatch =
         selectedInstitute === 'All Institutes' || event.institute === selectedInstitute;
       const paymentMatch = selectedPayment === '' || event.payment === selectedPayment;
       const tagMatch = selectedTags.length === 0 || selectedTags.some(tag => event.tags.includes(tag));
 
       return instituteMatch && paymentMatch && tagMatch;
+    });
+
+    filtered.sort((a, b) => {
+      switch (sortBy) {
+        case 'institute':
+          return a.institute.localeCompare(b.institute);
+        case 'payment':
+          return (a.payment === 'free' ? 0 : 1) - (b.payment === 'free' ? 0 : 1);
+        case 'date':
+        default:
+          return new Date(a.date) - new Date(b.date);
+      }
     });
 
     setFilteredEvents(filtered);
@@ -87,10 +100,8 @@ const BrowseEventsPage = () => {
 
     if (result.isConfirmed) {
       try {
-        // The booking payload matches the backend BookingInput type
         await axios.post('http://localhost:9091/bookings', { 
           eventId
-          // Optional field as per backend type
         });
         
         Swal.fire(
@@ -198,8 +209,20 @@ const BrowseEventsPage = () => {
                 className="w-full p-2 border rounded-lg bg-white text-gray-800"
               >
                 <option value="">All Payment Types</option>
-                <option value="Free">Free</option>
-                <option value="Paid">Paid</option>
+                <option value="free">Free</option>
+                <option value="paid">Paid</option>
+              </select>
+            </div>
+            <div className="flex-grow">
+              <label className="block font-semibold mb-2 text-gray-800">Sort By</label>
+              <select
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value)}
+                className="w-full p-2 border rounded-lg bg-white text-gray-800"
+              >
+                <option value="date">Date</option>
+                <option value="institute">Institute</option>
+                <option value="payment">Payment</option>
               </select>
             </div>
           </div>
