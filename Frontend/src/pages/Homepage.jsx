@@ -56,20 +56,20 @@ const HomePage = () => {
 
       <div className="max-w-6xl mx-auto px-4 py-12">
         {/* Upcoming Events Section */}
-        <section className="mt-12 text-center">
+        <section className="mt-2 text-center">
           <h2 className="text-3xl font-semibold mb-4 text-purple-500">Upcoming Events</h2>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
 
             {upcomingEvents.map((event, index) => (
-              <div key={event.id} className="bg-white p-4 rounded-lg shadow hover:shadow-lg transition-shadow duration-300 relative">
+              <div key={event.id} className="bg-white p-5 h-[50vh] rounded-lg shadow hover:shadow-lg transition-shadow duration-300 relative">
                 {index < 2 && (
                   <div className="absolute top-2 right-2 bg-purple-500 text-white px-2 py-1 rounded-full text-xs font-bold animate-pulse">
                     NEW
                   </div>
                 )}
                 <img src={event.image || `https://via.placeholder.com/300x200?text=${event.name}`} alt={event.name} className="w-full h-48 object-cover rounded-t-lg" />
-                <h3 className="text-lg text-black font-semibold mt-2">{event.name}</h3>
+                <h3 className="text-lg mt-10 text-black font-semibold ">{event.name}</h3>
                 <p className="text-gray-600">{new Date(event.date).toLocaleDateString()}</p>
               </div>
             ))}

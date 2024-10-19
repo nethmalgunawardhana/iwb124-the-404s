@@ -84,7 +84,7 @@ const DeleteEventPage = () => {
                 <td className="py-2 text-right">
                   <button
                     onClick={() => setSelectedEventId(event.id)}
-                    className="text-blue-400 hover:text-blue-300"
+                    className="text-purple-400 hover:text-purple-300"
                   >
                     Select
                   </button>
