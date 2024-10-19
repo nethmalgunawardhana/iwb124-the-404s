@@ -299,10 +299,10 @@ const BrowseEventsPage = () => {
         </section>
       </main>
 
-      <footer className="bg-white mt-12 p-6 shadow">
-        <div className="max-w-6xl mx-auto text-center">
-          <p className="text-gray-600">2024 EventUni. All rights reserved.</p>
-        </div>
+      <footer className="bg-purple-600 mt-12 p-6 shadow">
+       <div className="max-w-6xl mx-auto text-center">
+       <p className="text-white">2024 EventUni. All rights reserved.</p>
+       </div>
       </footer>
 
       <EventDetailPopup event={selectedEvent} onClose={closeEventDetails} />
