@@ -31,7 +31,7 @@ const Profile = () => {
     email: "",
     phoneNumber: "",
   });
-   
+
   useEffect(() => {
     AOS.init({
       duration: 1000,
@@ -65,8 +65,6 @@ const Profile = () => {
       });
     }
   }, [currentUser]);
-
-  
 
   const validateForm = () => {
     let valid = true;
@@ -200,26 +198,26 @@ const Profile = () => {
     <div className="min-h-screen bg-white">
       <div className="flex flex-col md:flex-row items-center justify-center md:justify-between max-w-6xl mx-auto p-6">
         {/* Left side - Man Image */}
-        <div 
+        <div
           className="hidden md:block w-1/3"
           data-aos="fade-right"
           data-aos-duration="1200"
         >
-         <img
-  src={manImage}
-  alt="Decorative man illustration"
-  style={{ height: '600px', width: '100%' }}
-/>
+          <img
+            src={manImage}
+            alt="Decorative man illustration"
+            style={{ height: "600px", width: "100%" }}
+          />
         </div>
 
         {/* Right side - Profile Content */}
-        <div 
+        <div
           className="w-full md:w-2/3 md:ml-8"
           data-aos="fade-left"
           data-aos-duration="1200"
         >
           <div className="bg-white rounded-lg shadow-md relative p-6">
-            <h2 
+            <h2
               className="text-2xl font-bold mb-6 text-center text-purple-600"
               data-aos="fade-down"
               data-aos-delay="200"
@@ -232,10 +230,10 @@ const Profile = () => {
               data-aos="fade-left"
               data-aos-delay="400"
             >
-              <span className="hidden md:inline">Get Admin Access</span>
-              <span className="md:hidden">Admin Access</span>
+              <span className="hidden md:inline">Event Creator Access</span>
+              <span className="md:hidden">Creator Access</span>
             </button>
-            <div 
+            <div
               className="flex items-center justify-center"
               data-aos="fade-up"
               data-aos-delay="300"
@@ -244,7 +242,9 @@ const Profile = () => {
                 <div className="relative">
                   <img
                     className={`h-32 w-32 rounded-full object-cover border-4 ${
-                      userInfo.verified ? "border-yellow-500" : "border-purple-500"
+                      userInfo.verified
+                        ? "border-yellow-500"
+                        : "border-purple-500"
                     } cursor-pointer hover:opacity-80 transition-all duration-300`}
                     src={newPicture || userInfo.profilePicture}
                     alt="User Profile"
@@ -272,7 +272,7 @@ const Profile = () => {
                 </div>
               </div>
             </div>
-            <div 
+            <div
               className="grid grid-cols-1 gap-6 md:grid-cols-2"
               data-aos="fade-up"
               data-aos-delay="400"

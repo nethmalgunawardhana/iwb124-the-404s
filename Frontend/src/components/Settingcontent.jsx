@@ -67,10 +67,9 @@ const SettingsContent = () => {
   };
 
   return (
+    <div className="w-[100%] bg-white p-[20px] rounded-md min-h-screen md:w-[100%] shadow-[0_35px_60px_-15px_rgba(0,0,0,0.6)]">
     <div className="w-full text-black max-w-4xl mx-auto">
       <h1 className="text-2xl font-semibold mb-6">General Settings</h1>
-      <p className="mb-6">Your current Primary email address is <span className="text-blue-500">{formData.email || 'dashprops@example.com'}</span></p>
-
       <div className="mb-6">
         <h2 className="text-lg font-semibold mb-2">Avatar</h2>
         <div className="flex items-center space-x-4">
@@ -194,6 +193,7 @@ const SettingsContent = () => {
           </button>
         </form>
       </div>
+    </div>
     </div>
   );
 };

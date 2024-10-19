@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Users, FileText } from "lucide-react";
-import Swal from 'sweetalert2';
+import Swal from "sweetalert2";
 
 const AdminAccessForm = ({ onCancel, onClose }) => {
   const [formData, setFormData] = useState({
@@ -29,10 +29,10 @@ const AdminAccessForm = ({ onCancel, onClose }) => {
 
   const showSuccessAlert = (id) => {
     Swal.fire({
-      icon: 'success',
-      title: 'Success!',
+      icon: "success",
+      title: "Success!",
       text: `Request successfully created with ID: ${id}`,
-      confirmButtonColor: '#3B82F6',
+      confirmButtonColor: "#3B82F6",
     }).then(() => {
       onClose(); // Close the popup window after the success message
     });
@@ -40,23 +40,23 @@ const AdminAccessForm = ({ onCancel, onClose }) => {
 
   const showErrorAlert = (message) => {
     Swal.fire({
-      icon: 'error',
-      title: 'Error!',
-      text: message || 'Error creating request. Please try again.',
-      confirmButtonColor: '#EF4444',
+      icon: "error",
+      title: "Error!",
+      text: message || "Error creating request. Please try again.",
+      confirmButtonColor: "#EF4444",
     });
   };
 
   const showCancelConfirmation = () => {
     Swal.fire({
-      title: 'Are you sure?',
+      title: "Are you sure?",
       text: "You will lose all entered data!",
-      icon: 'warning',
+      icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: '#EF4444',
-      cancelButtonColor: '#3B82F6',
-      confirmButtonText: 'Yes, cancel it!',
-      cancelButtonText: 'No, keep editing'
+      confirmButtonColor: "#EF4444",
+      cancelButtonColor: "#3B82F6",
+      confirmButtonText: "Yes, cancel it!",
+      cancelButtonText: "No, keep editing",
     }).then((result) => {
       if (result.isConfirmed) {
         resetForm();
@@ -67,15 +67,15 @@ const AdminAccessForm = ({ onCancel, onClose }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     try {
       // Show loading state
       Swal.fire({
-        title: 'Submitting...',
+        title: "Submitting...",
         allowOutsideClick: false,
         didOpen: () => {
           Swal.showLoading();
-        }
+        },
       });
 
       const response = await fetch("http://localhost:9091/admin/access", {
@@ -99,7 +99,9 @@ const AdminAccessForm = ({ onCancel, onClose }) => {
       }
     } catch (error) {
       console.error("Error creating request:", error);
-      showErrorAlert('Network error. Please check your connection and try again.');
+      showErrorAlert(
+        "Network error. Please check your connection and try again."
+      );
     }
   };
 
@@ -111,7 +113,7 @@ const AdminAccessForm = ({ onCancel, onClose }) => {
       >
         <h2 className="text-2xl font-bold text-gray-800 mb-6 flex items-center justify-center">
           <Users className="mr-2" size={24} />
-          Admin Access Request
+          Creator Access Request
         </h2>
 
         {/* Name Input */}
@@ -198,7 +200,7 @@ const AdminAccessForm = ({ onCancel, onClose }) => {
         {/* Buttons */}
         <div className="flex items-center justify-between gap-4">
           <button
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded focus:outline-none focus:shadow-outline flex-1 transition-all transform hover:scale-105"
+            className="bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-6 rounded focus:outline-none focus:shadow-outline flex-1 transition-all transform hover:scale-105"
             type="submit"
           >
             Submit Request
