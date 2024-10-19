@@ -122,7 +122,7 @@ const UpdateEventForm = () => {
         </thead>
         <tbody>
           {events.map(event => (
-            <tr key={event.id} className="hover:bg-purple-800 text-black">
+            <tr key={event.id} className="hover:bg-purple-900 hover:text-white text-black">
               <td className="border border-gray-300 px-4 py-2">{event.name}</td>
               <td className="border border-gray-300 px-4 py-2">{event.description.substring(0, 50)}...</td>
               <td className="border border-gray-300 px-4 py-2">
@@ -165,7 +165,7 @@ const UpdateEventForm = () => {
               <FileText className="inline mr-2" size={16} /> Description
             </label>
             <textarea
-              className="shadow appearance-none border rounded w-full py-2 px-3 bg-gray-300 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              className="shadow appearance-none border rounded w-full py-2 px-3 bg-gray-300 text-gray-700 leading-tight focus:outline-none focus:shadow-outline focus:ring focus:ring-purple-300"
               id="description"
               name="description"
               value={eventData.description}
@@ -346,7 +346,7 @@ const UpdateEventForm = () => {
               <FileText className="inline mr-2" size={16} /> Resources
             </label>
             <textarea
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 bg-gray-300 leading-tight focus:outline-none focus:shadow-outline"
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 bg-gray-300 leading-tight focus:outline-none focus:shadow-outline focus:ring focus:ring-purple-300"
               id="resources"
               name="resources"
               value={eventData.resources}

@@ -157,6 +157,7 @@ const NavbarforHomepage = () => {
   }, [showNotifications, showSettingsDropdown]);
 
   return (
+
     <>
       <nav className="flex justify-between items-center p-4 bg-white border-b fixed top-0 left-0 right-0 z-10 shadow-md">
         <div className="flex items-center space-x-4">
@@ -178,6 +179,7 @@ const NavbarforHomepage = () => {
                 <IoIosSearch />
               </button>
             </div>
+
           </div>
         </div>
 
