@@ -1,84 +1,81 @@
-
-import React, { useState } from 'react';
-import Swal from 'sweetalert2'
-import * as Icon from 'react-feather';
-import contactUsImage from '../assets/contactus.png';
+import React, { useState } from "react";
+import Swal from "sweetalert2";
+import * as Icon from "react-feather";
+import contactUsImage from "../assets/contactus.png";
 
 const ContactUs = () => {
-    const [name, setName] = useState('');
-    const [email, setEmail] = useState('');
-    const [phone, setPhone] = useState('');
-    const [message, setMessage] = useState('');
-    const [buttonLoading, setButtonLoading] = useState(false);
-  
-    const nameHandler = (e) => setName(e.target.value);
-    const emailHandler = (e) => setEmail(e.target.value);
-    const phoneHandler = (e) => setPhone(e.target.value);
-    const messageHandler = (e) => setMessage(e.target.value);
-  
-    const handleSubmit = async (e) => {
-      e.preventDefault();
-      setButtonLoading(true);
-  
-      // Prepare the form data
-      const formData = {
-        access_key: 'aaeb199b-246f-4ac4-8618-a59d31e3299d',
-        name,
-        email,
-        phone,
-        message,
-      };
-  
-      try {
-        // Send form data to Web3Forms API
-        const response = await fetch('https://api.web3forms.com/submit', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Accept: 'application/json',
-          },
-          body: JSON.stringify(formData),
-        });
-  
-        const res = await response.json();
-  
-        if (res.success) {
-            Swal.fire({
-                title: "Success!",
-                text: "Message sent successfully!",
-                icon: "success"
-              });
-  
-          // Clear form fields
-          setName('');
-          setEmail('');
-          setPhone('');
-          setMessage('');
-        } else {
-            Swal.fire({
-                icon: "error",
-                title: "Oops...",
-                text: "Something went wrong!",
-              });
-        }
-      } catch (error) {
-        Swal.fire({
-            icon: "error",
-            title: "Oops...",
-            text: "Something went wrong!",
-            
-          });
-      } finally {
-        setButtonLoading(false);
-      }
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [message, setMessage] = useState("");
+  const [buttonLoading, setButtonLoading] = useState(false);
+
+  const nameHandler = (e) => setName(e.target.value);
+  const emailHandler = (e) => setEmail(e.target.value);
+  const phoneHandler = (e) => setPhone(e.target.value);
+  const messageHandler = (e) => setMessage(e.target.value);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setButtonLoading(true);
+
+    // Prepare the form data
+    const formData = {
+      access_key: "aaeb199b-246f-4ac4-8618-a59d31e3299d",
+      name,
+      email,
+      phone,
+      message,
     };
+
+    try {
+      // Send form data to Web3Forms API
+      const response = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const res = await response.json();
+
+      if (res.success) {
+        Swal.fire({
+          title: "Success!",
+          text: "Message sent successfully!",
+          icon: "success",
+        });
+
+        // Clear form fields
+        setName("");
+        setEmail("");
+        setPhone("");
+        setMessage("");
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: "Something went wrong!",
+        });
+      }
+    } catch (error) {
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "Something went wrong!",
+      });
+    } finally {
+      setButtonLoading(false);
+    }
+  };
   return (
     <div className="flex flex-col min-h-screen items-center bg-gray-100 pb-12">
       <div className="flex flex-col mt-10 ">
         <b className="text-[30px] text-[rgb(4,4,59)] text-center ">
           Contact US
         </b>
-        
       </div>
       <br />
       <div className="w-[70%] bg-white p-[5px] rounded-md h-[85vh] md:w-[90%] grid grid-cols-1 md:grid-cols-2 gap-4 shadow-[0_35px_60px_-15px_rgba(0,0,0,0.6)]">
@@ -94,39 +91,69 @@ const ContactUs = () => {
           </div>
           {/* Contact details */}
           <div>
-            <a href='#' className="flex w-[200px] h-[10px] mt-12 cursor-pointer no-underline">
+            <a
+              href="#"
+              className="flex w-[200px] h-[10px] mt-12 cursor-pointer no-underline"
+            >
               <Icon.Phone size={15} color="rgb(252, 113, 137)" />
-              <div className="text-white text-[15px] ml-2.5">+94 77 12 34 567</div>
+              <div className="text-white text-[15px] ml-2.5">
+                +94 77 12 34 567
+              </div>
             </a>
-            <a href='#' className="flex w-[200px] h-[10px] mt-12 cursor-pointer no-underline">
+            <a
+              href="#"
+              className="flex w-[200px] h-[10px] mt-12 cursor-pointer no-underline"
+            >
               <Icon.Mail size={15} color="rgb(252, 113, 137)" />
-              <div className="text-white text-[15px] ml-2.5">eventuni@gmail.com</div>
+              <div className="text-white text-[15px] ml-2.5">
+                eventuni@gmail.com
+              </div>
             </a>
           </div>
-          <br /><br />
-          <div className='w-[300px] h-[300px] relative'>
-                {/* Uncomment the following code if you want to use the styled divs */}
-                {/* 
+          <br />
+          <br />
+          <div className="w-[300px] h-[300px] relative">
+            {/* Uncomment the following code if you want to use the styled divs */}
+            {/* 
                 <div className="h-[50px] w-[50px] mt-7 ml-2.5 bg-[rgb(124,17,224)] rounded-full z-20"></div>
                 <div className="absolute ml-2.5 bg-[rgb(246,146,163)] rounded-full h-[30px] w-[30px]"></div> 
                 */}
-                <img src={contactUsImage} alt="Contact Us" className=" w-[100%] h-[100%] object-cover" />
-            </div>
+            <img
+              src={contactUsImage}
+              alt="Contact Us"
+              className=" w-[100%] h-[100%] object-cover"
+            />
+          </div>
           {/* Social media icons */}
           <div className="flex justify-center h-[10px] absolute bottom-[30px] cursor-pointer">
-            <a href='https://www.facebook.com/' target='_blank' className="w-[35px] h-[35px] rounded-full flex justify-center items-center hover:bg-[rgb(252,113,137)]">
+            <a
+              href="https://www.facebook.com/"
+              target="_blank"
+              className="w-[35px] h-[35px] rounded-full flex justify-center items-center hover:bg-[rgb(252,113,137)]"
+            >
               <Icon.Facebook color="#fff" size={20} />
             </a>
-            <a href='https://instagram.com/' target='_blank' className="w-[35px] h-[35px] rounded-full flex justify-center items-center hover:bg-[rgb(252,113,137)]">
+            <a
+              href="https://instagram.com/"
+              target="_blank"
+              className="w-[35px] h-[35px] rounded-full flex justify-center items-center hover:bg-[rgb(252,113,137)]"
+            >
               <Icon.Instagram color="#fff" size={20} />
             </a>
-            <a href='https://linkedin.com' target='_blank' className="w-[35px] h-[35px] rounded-full flex justify-center items-center hover:bg-[rgb(252,113,137)]">
+            <a
+              href="https://linkedin.com"
+              target="_blank"
+              className="w-[35px] h-[35px] rounded-full flex justify-center items-center hover:bg-[rgb(252,113,137)]"
+            >
               <Icon.Linkedin color="#fff" size={20} />
             </a>
           </div>
         </div>
         {/* Form Section */}
-        <form onSubmit={handleSubmit } className="h-auto pb-[100px] relative p-[10px] flex flex-col justify-between">
+        <form
+          onSubmit={handleSubmit}
+          className="h-auto pb-[100px] relative p-6 flex flex-col justify-between"
+        >
           <div className="border-2 border-transparent w-[90%] pl-[10px] flex flex-col">
             <p className="text-black">Name</p>
             <input
@@ -135,7 +162,7 @@ const ContactUs = () => {
               placeholder="Navoda Chathurya"
               value={name}
               onChange={nameHandler}
-              name='name'
+              name="name"
               required
             />
           </div>
@@ -147,7 +174,7 @@ const ContactUs = () => {
               placeholder="example@gmail.com"
               value={email}
               onChange={emailHandler}
-              name='email'
+              name="email"
               required
             />
           </div>
@@ -159,7 +186,7 @@ const ContactUs = () => {
               placeholder="+94 77 77 77 777"
               value={phone}
               onChange={phoneHandler}
-              name='phone'
+              name="phone"
               required
             />
           </div>
@@ -170,18 +197,20 @@ const ContactUs = () => {
               placeholder="Write your message"
               value={message}
               onChange={messageHandler}
-              name='message'
+              name="message"
               required
             ></textarea>
           </div>
           <button
             type="submit"
             className={`absolute bottom-[20px] right-[20px] p-[10px] text-white border-none rounded-md px-[24px] py-[12px] cursor-pointer ${
-              buttonLoading ? 'bg-purple-400 cursor-not-allowed' : 'bg-purple-900 hover:text-slate-800 hover:bg-purple-300'
+              buttonLoading
+                ? "bg-purple-400 cursor-not-allowed"
+                : "bg-purple-900 hover:text-slate-800 hover:bg-purple-300"
             }`}
             disabled={buttonLoading}
           >
-            {buttonLoading ? 'Sending...' : 'Submit'}
+            {buttonLoading ? "Sending..." : "Submit"}
           </button>
         </form>
       </div>
