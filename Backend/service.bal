@@ -5,8 +5,10 @@ import ballerina/time;
 import ballerina/uuid;
 import ballerinax/mongodb;
 
+
 configurable string host = "localhost";
 configurable int port = 27017;
+
 
 final mongodb:Client mongoDb = check new ({
     connection: {
@@ -16,6 +18,7 @@ final mongodb:Client mongoDb = check new ({
         }
     }
 });
+
 
 @http:ServiceConfig {
     cors: {
@@ -223,6 +226,9 @@ isolated function getEvent(mongodb:Database eventDb, string id) returns Event|er
     }
     return result[0];
 }
+type ChatbotRequest record {|
+    string message;
+|};
 
 public type EventInput record {|
     string name;

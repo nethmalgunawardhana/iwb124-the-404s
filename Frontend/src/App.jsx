@@ -50,7 +50,7 @@ function App() {
           {/* Add the new route for EventPage */}
           <Route path="/event-page" element={<EventPage />} />
           <Route path="/bookedevents" element={<BookedEventsPage />} />
-         
+       
            {/* New route for Event Page */}
         </Routes>
       </BrowserRouter>
