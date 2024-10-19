@@ -249,7 +249,7 @@ public type Event record {|
 |};
 
 public type AdminAccess record {
-    readonly string id;
+    string id;
     string name;
     string phoneNumber;
     string request;
