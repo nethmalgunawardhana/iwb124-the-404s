@@ -124,8 +124,8 @@ const BookedEventsPage = () => {
       
       <header className="bg-purple-600 text-white mt-16 py-9">
         <div className="max-w-6xl mx-auto text-center">
-          <h1 className="text-5xl font-bold">Your Booked Events</h1>
-          <p className="mt-4 text-lg">Manage your event bookings and registrations</p>
+          <h1 className="text-5xl mt-12 font-bold">Your Booked Events</h1>
+          <p className="mt-4 mb-10 text-lg">Manage your event bookings and registrations</p>
         </div>
       </header>
 
