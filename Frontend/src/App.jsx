@@ -19,6 +19,7 @@ import Login from './pages/Login';
 import SignUpPage from './pages/Signup';
 import EventPage from './pages/EventPage'; // Import the new EventPage component
 import BookedEventsPage from "./pages/BookEventPage";
+
 import "./App.css";
 
 function App() {
@@ -49,6 +50,7 @@ function App() {
           {/* Add the new route for EventPage */}
           <Route path="/event-page" element={<EventPage />} />
           <Route path="/bookedevents" element={<BookedEventsPage />} />
+       
            {/* New route for Event Page */}
         </Routes>
       </BrowserRouter>

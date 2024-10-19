@@ -2,13 +2,14 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import NavbarforHomepage from '../components/NavbarforHomepage';
-import { Calendar, MapPin, Trash2, Clock, Tag, CreditCard, Users } from 'react-feather';
+import { Calendar, MapPin, Trash2, Clock, Tag, CreditCard, Users, Edit } from 'react-feather';
 
 const BookedEventsPage = () => {
   const [bookedEvents, setBookedEvents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selectedEvents, setSelectedEvents] = useState([]);
+  const [isEditMode, setIsEditMode] = useState(false);
 
   useEffect(() => {
     fetchBookedEvents();
@@ -17,11 +18,9 @@ const BookedEventsPage = () => {
   const fetchBookedEvents = async () => {
     try {
       setLoading(true);
-      // First get all bookings
       const bookingsResponse = await axios.get('http://localhost:9091/bookings');
       const bookings = bookingsResponse.data;
 
-      // Then fetch event details for each booking
       const eventsWithDetails = await Promise.all(
         bookings.map(async (booking) => {
           try {
@@ -57,6 +56,13 @@ const BookedEventsPage = () => {
     );
   };
 
+  const toggleEditMode = () => {
+    setIsEditMode(!isEditMode);
+    if (!isEditMode) {
+      setSelectedEvents([]);
+    }
+  };
+
   const handleDeleteSelected = async () => {
     const result = await Swal.fire({
       title: 'Are you sure?',
@@ -76,6 +82,7 @@ const BookedEventsPage = () => {
         
         await fetchBookedEvents();
         setSelectedEvents([]);
+        setIsEditMode(false);
 
         Swal.fire({
           title: 'Deleted!',
@@ -123,17 +130,27 @@ const BookedEventsPage = () => {
       </header>
 
       <main className="flex-grow max-w-6xl mx-auto p-6">
-        {selectedEvents.length > 0 && (
-          <div className="mb-6">
+        <div className="mb-6 flex justify-between items-center">
+          <button 
+            onClick={toggleEditMode}
+            className={`${
+              isEditMode ? 'bg-gray-500' : 'bg-purple-600'
+            } hover:opacity-90 text-white font-bold py-2 px-4 rounded flex items-center transition-colors duration-300`}
+          >
+            <Edit className="mr-2" size={18} />
+            {isEditMode ? 'Cancel Edit' : 'Edit Bookings'}
+          </button>
+
+          {isEditMode && selectedEvents.length > 0 && (
             <button 
               onClick={handleDeleteSelected}
               className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded flex items-center transition-colors duration-300"
             >
               <Trash2 className="mr-2" size={18} />
-              Delete Selected Bookings ({selectedEvents.length})
+              Delete Selected ({selectedEvents.length})
             </button>
-          </div>
-        )}
+          )}
+        </div>
 
         {bookedEvents.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -142,12 +159,14 @@ const BookedEventsPage = () => {
                 key={booking.id}
                 className="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 relative"
               >
-                <input 
-                  type="checkbox" 
-                  checked={selectedEvents.includes(booking.id)}
-                  onChange={() => handleSelectEvent(booking.id)}
-                  className="absolute top-4 right-4 h-5 w-5 z-10 cursor-pointer"
-                />
+                {isEditMode && (
+                  <input 
+                    type="checkbox" 
+                    checked={selectedEvents.includes(booking.id)}
+                    onChange={() => handleSelectEvent(booking.id)}
+                    className="absolute top-4 right-4 h-5 w-5 z-10 cursor-pointer"
+                  />
+                )}
                 
                 <img 
                   src={booking.eventDetails.image || '/placeholder-event.jpg'} 

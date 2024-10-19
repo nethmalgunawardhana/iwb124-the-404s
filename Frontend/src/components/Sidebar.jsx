@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { User, Calendar, Cog, MessageSquare, LogOut } from 'lucide-react';
+import { User, Calendar, Cog, MessageSquare, ListTodo } from 'lucide-react';
 import Profile from './Profile';
 import SettingsContent from './Settingcontent';
 import ContactUs from './ContactUs';
 import BookedEventsPage from './BookEvent';
+import AdminAccessList from './Adminacesslist';
 
 const Sidebar = () => {
   const [activeComponent, setActiveComponent] = useState('profile');
@@ -18,22 +19,24 @@ const Sidebar = () => {
         return <ContactUs />; 
       case 'bookings':
          return <BookedEventsPage />;   
+      case 'accesslist':
+         return <AdminAccessList/>   
       default:
         return <SettingsContent />;
     }
   };
 
   return (
-    <div className="flex h-full pt-16 overflow-hidden bg-gray-100">
-     <aside className="w-64 bg-white p-4 border-r shadow-lg flex-shrink-0 overflow-y-auto">
-        <h2 className="text-xl font-semibold mb-6">Settings</h2>
+    <div className="flex h-full pt-20 overflow-hidden bg-gray-100">
+     <aside className="w-64 bg-purple-900 p-4 border-r shadow-lg flex-shrink-0 overflow-y-auto">
+        <h2 className="text-xl pt-10 font-semibold mb-6">Settings</h2>
         <nav>
           <ul className="space-y-2">
             <li>
               <button
                 onClick={() => setActiveComponent('profile')}
                 className={`flex items-center w-full text-left p-2 rounded transition-colors ${
-                  activeComponent === 'profile' ? 'bg-blue-100 text-blue-600' : 'text-gray-700 hover:bg-gray-100'
+                  activeComponent === 'profile' ? "bg-white text-black" : ""
                 }`}
               >
                 <User size={20} className="mr-3" /> My Profile
@@ -43,7 +46,7 @@ const Sidebar = () => {
               <button
                 onClick={() => setActiveComponent('settings')}
                 className={`flex items-center w-full text-left p-2 rounded transition-colors ${
-                  activeComponent === 'settings' ? 'bg-blue-100 text-blue-600' : 'text-gray-700 hover:bg-gray-100'
+                  activeComponent === 'settings' ? "bg-white text-black" : ""
                 }`}
               >
                 <Cog size={20} className="mr-3" /> Settings
@@ -51,7 +54,10 @@ const Sidebar = () => {
             </li>
             <li>
               <button onClick={() => setActiveComponent('bookings')}
-              className="flex items-center w-full text-left p-2 rounded text-gray-700 hover:bg-gray-100 transition-colors">
+              className={`flex items-center w-full text-left p-2 rounded transition-colors ${
+                activeComponent === 'bookings' ? "bg-white text-black" : ""
+              }`}
+              >
                 <Calendar size={20} className="mr-3" /> Bookings
               </button>
             </li>
@@ -59,10 +65,20 @@ const Sidebar = () => {
               <button
                 onClick={() => setActiveComponent('contact')}
                 className={`flex items-center w-full text-left p-2 rounded transition-colors ${
-                  activeComponent === 'contact' ? 'bg-blue-100 text-blue-600' : 'text-gray-700 hover:bg-gray-100'
+                  activeComponent === 'contact' ? "bg-white text-black" : ""
                 }`}
               >
                 <MessageSquare size={20} className="mr-3" /> Contact us
+              </button>
+            </li>
+            <li>
+              <button
+                onClick={() => setActiveComponent('accesslist')}
+                className={`flex items-center w-full text-left p-2 rounded transition-colors ${
+                  activeComponent === 'accesslist' ? "bg-white text-black" : ''
+                }`}
+              >
+                <ListTodo size={20} className="mr-3" /> Requested List
               </button>
             </li>
           </ul>

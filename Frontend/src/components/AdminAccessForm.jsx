@@ -123,7 +123,7 @@ const AdminAccessForm = ({ onCancel, onClose }) => {
             <Users className="inline mr-2" size={16} /> Name
           </label>
           <input
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline hover:border-blue-500 transition-colors"
+            className="shadow appearance-none border rounded bg-white w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline hover:border-blue-500 transition-colors"
             id="name"
             type="text"
             name="name"
@@ -143,7 +143,7 @@ const AdminAccessForm = ({ onCancel, onClose }) => {
             <Users className="inline mr-2" size={16} /> Phone Number
           </label>
           <input
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline hover:border-blue-500 transition-colors"
+            className="shadow appearance-none border rounded bg-white w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline hover:border-blue-500 transition-colors"
             id="phoneNumber"
             type="tel"
             name="phoneNumber"
@@ -164,7 +164,7 @@ const AdminAccessForm = ({ onCancel, onClose }) => {
             <FileText className="inline mr-2" size={16} /> Request Type
           </label>
           <input
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline hover:border-blue-500 transition-colors"
+            className="shadow appearance-none border rounded bg-white w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline hover:border-blue-500 transition-colors"
             id="request"
             type="text"
             name="request"
@@ -184,7 +184,7 @@ const AdminAccessForm = ({ onCancel, onClose }) => {
             <FileText className="inline mr-2" size={16} /> Description
           </label>
           <textarea
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline hover:border-blue-500 transition-colors"
+            className="shadow appearance-none border rounded bg-white w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline hover:border-blue-500 transition-colors   focus:ring focus:ring-purple-300"
             id="description"
             name="description"
             value={formData.description}

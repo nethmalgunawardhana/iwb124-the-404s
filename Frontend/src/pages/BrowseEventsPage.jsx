@@ -5,6 +5,13 @@ import musicIcon from '../assets/tag-music.png';
 import techIcon from '../assets/tag-technology.png';
 import artIcon from '../assets/tag-art.png';
 import danceIcon from '../assets/tag-dance.png';
+import festivalIcon from '../assets/tag-festival.png'
+import fashionIcon from '../assets/tag-fashion.png'
+import competitionsIcon from '../assets/tag-competitions.png'
+import volunteerIcon from '../assets/tag-volunteer.png'
+import religiousIcon from '../assets/tag-religious.png'
+import workshopIcon from '../assets/tag-workshop.png'
+import foodIcon from '../assets/tag-food.png'
 import { X, Calendar, MapPin } from 'react-feather';
 import Swal from 'sweetalert2';
 
@@ -18,11 +25,19 @@ const BrowseEventsPage = () => {
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [sortBy, setSortBy] = useState('date');
   const tags = [
     { name: 'Music', image: musicIcon },
     { name: 'Technology', image: techIcon },
     { name: 'Art', image: artIcon },
     { name: 'Dancing', image: danceIcon },
+    { name: 'Festival', image: festivalIcon },
+    { name: 'Fashion', image: fashionIcon },
+    { name: 'Competitions', image: competitionsIcon },
+    { name: 'Volunteer', image: volunteerIcon },
+    { name: 'Religious', image: religiousIcon },
+    { name: 'Workshops', image: workshopIcon },
+    { name: 'Food', image: foodIcon },
   ];
 
   useEffect(() => {
@@ -30,8 +45,8 @@ const BrowseEventsPage = () => {
   }, []);
 
   useEffect(() => {
-    filterEvents();
-  }, [events, selectedInstitute, selectedPayment, selectedTags]);
+    filterAndSortEvents();
+  }, [events, selectedInstitute, selectedPayment, selectedTags, sortBy]);
 
   const fetchEvents = async () => {
     try {
@@ -45,14 +60,26 @@ const BrowseEventsPage = () => {
     }
   };
 
-  const filterEvents = () => {
-    const filtered = events.filter((event) => {
+  const filterAndSortEvents = () => {
+    let filtered = events.filter((event) => {
       const instituteMatch =
         selectedInstitute === 'All Institutes' || event.institute === selectedInstitute;
       const paymentMatch = selectedPayment === '' || event.payment === selectedPayment;
       const tagMatch = selectedTags.length === 0 || selectedTags.some(tag => event.tags.includes(tag));
 
       return instituteMatch && paymentMatch && tagMatch;
+    });
+
+    filtered.sort((a, b) => {
+      switch (sortBy) {
+        case 'institute':
+          return a.institute.localeCompare(b.institute);
+        case 'payment':
+          return (a.payment === 'free' ? 0 : 1) - (b.payment === 'free' ? 0 : 1);
+        case 'date':
+        default:
+          return new Date(a.date) - new Date(b.date);
+      }
     });
 
     setFilteredEvents(filtered);
@@ -87,10 +114,8 @@ const BrowseEventsPage = () => {
 
     if (result.isConfirmed) {
       try {
-        // The booking payload matches the backend BookingInput type
         await axios.post('http://localhost:9091/bookings', { 
           eventId
-          // Optional field as per backend type
         });
         
         Swal.fire(
@@ -198,24 +223,38 @@ const BrowseEventsPage = () => {
                 className="w-full p-2 border rounded-lg bg-white text-gray-800"
               >
                 <option value="">All Payment Types</option>
-                <option value="Free">Free</option>
-                <option value="Paid">Paid</option>
+                <option value="free">Free</option>
+                <option value="paid">Paid</option>
+              </select>
+            </div>
+            <div className="flex-grow">
+              <label className="block font-semibold mb-2 text-gray-800">Sort By</label>
+              <select
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value)}
+                className="w-full p-2 border rounded-lg bg-white text-gray-800"
+              >
+                <option value="date">Date</option>
+                <option value="institute">Institute</option>
+                <option value="payment">Payment</option>
               </select>
             </div>
           </div>
 
           <div className="mb-8">
-            <h3 className="text-xl font-semibold mb-4 text-purple-800">Select Tags</h3>
-            <div className="flex space-x-4">
+          <h3 className="text-xl font-semibold mb-4 text-purple-800">Select Tags</h3>
+          <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-11 gap-4">
               {tags.map((tag) => (
                 <div
-                  key={tag.name}
-                  className={`cursor-pointer p-4 rounded-lg border hover:shadow-md transition-shadow ${selectedTags.includes(tag.name) ? 'border-purple-700' : 'border-gray-300'}`}
-                  onClick={() => toggleTag(tag.name)}
-                >
-                  <img src={tag.image} alt={tag.name} className="w-24 h-24 object-cover rounded-md" />
-                  <p className="mt-2 text-center text-gray-800">{tag.name}</p>
-                </div>
+                key={tag.name}
+                className={`cursor-pointer p-2 rounded-lg border hover:shadow-md transition-shadow ${
+                  selectedTags.includes(tag.name) ? 'border-purple-700' : 'border-gray-300'
+                }`}
+                onClick={() => toggleTag(tag.name)}
+              >
+                <img src={tag.image} alt={tag.name} className="w-12 h-12 object-cover rounded-md mx-auto" />
+                <p className="mt-2 text-center text-gray-800 text-xs">{tag.name}</p>
+              </div>
               ))}
             </div>
           </div>

@@ -5,8 +5,10 @@ import ballerina/time;
 import ballerina/uuid;
 import ballerinax/mongodb;
 
+
 configurable string host = "localhost";
 configurable int port = 27017;
+
 
 final mongodb:Client mongoDb = check new ({
     connection: {
@@ -16,6 +18,7 @@ final mongodb:Client mongoDb = check new ({
         }
     }
 });
+
 
 @http:ServiceConfig {
     cors: {
@@ -122,7 +125,29 @@ service / on new http:Listener(9091) {
         check events->insertOne(event);
         return event;
     }
-
+    resource function get events/search(string query) returns Event[]|error {
+    mongodb:Collection events = check self.eventDb->getCollection("Event");
+    
+    // Create a search filter using regex for case-insensitive search across multiple fields
+    map<json> searchFilter = {
+        "$or": [
+            {"name": {"$regex": query, "$options": "i"}},
+            {"description": {"$regex": query, "$options": "i"}},
+            {"institute": {"$regex": query, "$options": "i"}},
+            {"tags": {"$regex": query, "$options": "i"}}
+        ]
+    };
+    
+    stream<Event, error?> result = check events->find(searchFilter);
+    Event[] eventList = [];
+    check result.forEach(function(Event|error event) {
+        if (event is Event) {
+            eventList.push(event);
+        }
+    });
+    
+    return eventList;
+}
     resource function put events/[string id](@http:Payload EventUpdate update) returns Event|error {
         mongodb:Collection events = check self.eventDb->getCollection("Event");
         // Create a map<json> to hold the fields to update.
@@ -200,6 +225,9 @@ isolated function getEvent(mongodb:Database eventDb, string id) returns Event|er
     }
     return result[0];
 }
+type ChatbotRequest record {|
+    string message;
+|};
 
 public type EventInput record {|
     string name;
