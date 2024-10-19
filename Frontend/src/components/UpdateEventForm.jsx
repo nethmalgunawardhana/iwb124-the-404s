@@ -126,7 +126,7 @@ const UpdateEventForm = () => {
         </thead>
         <tbody>
           {events.map(event => (
-            <tr key={event.id} className="hover:bg-purple-800 text-black">
+            <tr key={event.id} className="hover:bg-purple-900 hover:text-white text-black">
               <td className="border border-gray-300 px-4 py-2">{event.name}</td>
               <td className="border border-gray-300 px-4 py-2">{event.description.substring(0, 50)}...</td>
               <td className="border border-gray-300 px-4 py-2">
