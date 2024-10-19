@@ -31,8 +31,10 @@ const HomePage = () => {
       
       {/* Hero Section */}
       <header className="bg-purple-600 text-white py-20 relative overflow-hidden">
+
         <div className="absolute inset-0 z-0 gap-x-28">
           <div className="video-wrapper absolute inset-0 z-0">
+
             <video autoPlay loop muted className="w-full h-full object-cover">
               <source
                 src="https://videos.pexels.com/video-files/7722221/7722221-uhd_2560_1440_25fps.mp4"
@@ -43,7 +45,7 @@ const HomePage = () => {
           </div>
         </div>
         <br /><br /><br /><br /><br /><br /><br />
-        <div className="relative z-10 max-w-4xl mx-auto text-center">
+        <div className="relative  max-w-4xl mx-auto text-center">
           <h1 className="text-5xl font-bold">Discover Amazing Events</h1>
           <p className="mt-4 text-lg">Your one-stop solution for all your event needs!</p>
           <button className="mt-6 px-8 py-3 bg-white text-purple-600 rounded-lg hover:bg-gray-200 transition-colors animate-pulse">
@@ -58,6 +60,7 @@ const HomePage = () => {
           <h2 className="text-3xl font-semibold mb-4 text-purple-500">Upcoming Events</h2>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+
             {upcomingEvents.map((event, index) => (
               <div key={event.id} className="bg-white p-4 rounded-lg shadow hover:shadow-lg transition-shadow duration-300 relative">
                 {index < 2 && (
@@ -71,8 +74,10 @@ const HomePage = () => {
               </div>
             ))}
           </div>
+
         </section>
       </div>
+
 
       <Insti />
       <Footer />
