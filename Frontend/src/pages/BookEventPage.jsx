@@ -233,9 +233,9 @@ const BookedEventsPage = () => {
         )}
       </main>
 
-      <footer className="bg-gray-50 border-t border-gray-200 py-8 mt-auto">
+      <footer className="bg-purple-800 border-t border-gray-200 py-8 mt-auto">
         <div className="max-w-6xl mx-auto text-center">
-          <p className="text-gray-600">© 2024 EventUni. All rights reserved.</p>
+          <p className="text-white-600">© 2024 EventUni. All rights reserved.</p>
         </div>
       </footer>
     </div>

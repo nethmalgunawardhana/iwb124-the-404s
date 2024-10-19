@@ -299,7 +299,7 @@ const BrowseEventsPage = () => {
         </section>
       </main>
 
-      <footer className="bg-purple-600 mt-12 p-6 shadow">
+      <footer className="bg-purple-800 mt-12 p-6 shadow">
        <div className="max-w-6xl mx-auto text-center">
        <p className="text-white">2024 EventUni. All rights reserved.</p>
        </div>
