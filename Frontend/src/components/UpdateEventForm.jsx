@@ -122,13 +122,13 @@ const UpdateEventForm = () => {
         </thead>
         <tbody>
           {events.map(event => (
-            <tr key={event.id} className="hover:bg-purple-900 hover:text-white text-black">
+            <tr key={event.id} className="hover:bg-purple-200  hover:text-black text-black">
               <td className="border border-gray-300 px-4 py-2">{event.name}</td>
               <td className="border border-gray-300 px-4 py-2">{event.description.substring(0, 50)}...</td>
               <td className="border border-gray-300 px-4 py-2">
                 <button
                   onClick={() => handleEventSelect(event)}
-                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded"
+                  className="bg-purple-800 hover:bg-purple-500 text-white font-bold py-1 px-2 rounded"
                 >
                   Select
                 </button>
