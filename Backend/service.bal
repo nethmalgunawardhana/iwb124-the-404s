@@ -148,10 +148,9 @@ service / on new http:Listener(9091) {
 }
     resource function put events/[string id](@http:Payload EventUpdate update) returns Event|error {
         mongodb:Collection events = check self.eventDb->getCollection("Event");
-        // Create a map<json> to hold the fields to update.
         map<json> updateFields = {};
         if update.name is string {
-            updateFields["name"] = update.name;
+            updateFields["name"] = update.name ;
         }
         if update.description is string {
             updateFields["description"] = update.description;
