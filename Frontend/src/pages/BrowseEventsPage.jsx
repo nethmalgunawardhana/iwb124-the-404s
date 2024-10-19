@@ -190,11 +190,11 @@ const BrowseEventsPage = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       <NavbarforHomepage />
-      <header className="bg-purple-600 text-white py-20">
-        <div className="max-w-6xl mx-auto text-center">
-          <h1 className="text-5xl font-bold">Browse Events</h1>
-          <p className="mt-4 text-lg">Find events by institutes, payment options, or tags!</p>
-        </div>
+      <header className="bg-purple-600 text-white py-20 mt-16">
+       <div className="max-w-6xl mx-auto text-center">
+       <h1 className="text-5xl font-bold">Browse Events</h1>
+       <p className="mt-4 text-lg">Find events by institutes, payment options, or tags!</p>
+       </div>
       </header>
 
       <main className="max-w-6xl mx-auto p-6">
@@ -299,10 +299,10 @@ const BrowseEventsPage = () => {
         </section>
       </main>
 
-      <footer className="bg-white mt-12 p-6 shadow">
-        <div className="max-w-6xl mx-auto text-center">
-          <p className="text-gray-600">2024 EventUni. All rights reserved.</p>
-        </div>
+      <footer className="bg-purple-800 mt-12 p-6 shadow">
+       <div className="max-w-6xl mx-auto text-center">
+       <p className="text-white">2024 EventUni. All rights reserved.</p>
+       </div>
       </footer>
 
       <EventDetailPopup event={selectedEvent} onClose={closeEventDetails} />
