@@ -1,8 +1,17 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import Swal from 'sweetalert2';
-import NavbarforHomepage from '../components/NavbarforHomepage';
-import { Calendar, MapPin, Trash2, Clock, Tag, CreditCard, Users, Edit } from 'react-feather';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import Swal from "sweetalert2";
+import NavbarforHomepage from "../components/NavbarforHomepage";
+import {
+  Calendar,
+  MapPin,
+  Trash2,
+  Clock,
+  Tag,
+  CreditCard,
+  Users,
+  Edit,
+} from "react-feather";
 
 const BookedEventsPage = () => {
   const [bookedEvents, setBookedEvents] = useState([]);
@@ -18,22 +27,32 @@ const BookedEventsPage = () => {
   const fetchBookedEvents = async () => {
     try {
       setLoading(true);
-      const bookingsResponse = await axios.get('http://localhost:9091/bookings');
+      const bookingsResponse = await axios.get(
+        "http://localhost:9091/bookings"
+      );
       const bookings = bookingsResponse.data;
 
       const eventsWithDetails = await Promise.all(
         bookings.map(async (booking) => {
           try {
-            const eventResponse = await axios.get(`http://localhost:9091/events/${booking.eventId}`);
+            const eventResponse = await axios.get(
+              `http://localhost:9091/events/${booking.eventId}`
+            );
             return {
               ...booking,
-              eventDetails: eventResponse.data
+              eventDetails: eventResponse.data,
             };
           } catch (err) {
-            console.error(`Failed to fetch event details for booking ${booking.id}:`, err);
+            console.error(
+              `Failed to fetch event details for booking ${booking.id}:`,
+              err
+            );
             return {
               ...booking,
-              eventDetails: { name: 'Event details not available', error: true }
+              eventDetails: {
+                name: "Event details not available",
+                error: true,
+              },
             };
           }
         })
@@ -42,16 +61,16 @@ const BookedEventsPage = () => {
       setBookedEvents(eventsWithDetails);
       setLoading(false);
     } catch (err) {
-      setError('Failed to fetch booked events. Please try again later.');
+      setError("Failed to fetch booked events. Please try again later.");
       setLoading(false);
-      console.error('Error fetching booked events:', err);
+      console.error("Error fetching booked events:", err);
     }
   };
 
   const handleSelectEvent = (bookingId) => {
-    setSelectedEvents(prev => 
-      prev.includes(bookingId) 
-        ? prev.filter(id => id !== bookingId) 
+    setSelectedEvents((prev) =>
+      prev.includes(bookingId)
+        ? prev.filter((id) => id !== bookingId)
         : [...prev, bookingId]
     );
   };
@@ -65,38 +84,40 @@ const BookedEventsPage = () => {
 
   const handleDeleteSelected = async () => {
     const result = await Swal.fire({
-      title: 'Are you sure?',
+      title: "Are you sure?",
       text: `You are about to delete ${selectedEvents.length} booking(s). This action cannot be undone.`,
-      icon: 'warning',
+      icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes, delete them!'
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete them!",
     });
 
     if (result.isConfirmed) {
       try {
-        await Promise.all(selectedEvents.map(bookingId => 
-          axios.delete(`http://localhost:9091/bookings/${bookingId}`)
-        ));
-        
+        await Promise.all(
+          selectedEvents.map((bookingId) =>
+            axios.delete(`http://localhost:9091/bookings/${bookingId}`)
+          )
+        );
+
         await fetchBookedEvents();
         setSelectedEvents([]);
         setIsEditMode(false);
 
         Swal.fire({
-          title: 'Deleted!',
-          text: 'The selected bookings have been deleted.',
-          icon: 'success',
+          title: "Deleted!",
+          text: "The selected bookings have been deleted.",
+          icon: "success",
           timer: 2000,
-          showConfirmButton: false
+          showConfirmButton: false,
         });
       } catch (err) {
-        console.error('Error deleting bookings:', err);
+        console.error("Error deleting bookings:", err);
         Swal.fire({
-          title: 'Error',
-          text: 'Failed to delete selected bookings. Please try again.',
-          icon: 'error'
+          title: "Error",
+          text: "Failed to delete selected bookings. Please try again.",
+          icon: "error",
         });
       }
     }
@@ -105,7 +126,9 @@ const BookedEventsPage = () => {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="text-xl text-purple-600">Loading your booked events...</div>
+        <div className="text-xl text-purple-600">
+          Loading your booked events...
+        </div>
       </div>
     );
   }
@@ -121,28 +144,30 @@ const BookedEventsPage = () => {
   return (
     <div className="min-h-screen flex flex-col">
       <NavbarforHomepage />
-      
+
       <header className="bg-purple-600 text-white mt-16 py-9">
         <div className="max-w-6xl mx-auto text-center">
           <h1 className="text-5xl mt-12 font-bold">Your Booked Events</h1>
-          <p className="mt-4 mb-10 text-lg">Manage your event bookings and registrations</p>
+          <p className="mt-4 mb-10 text-lg">
+            Manage your event bookings and registrations
+          </p>
         </div>
       </header>
 
       <main className="flex-grow max-w-6xl mx-auto p-6">
         <div className="mb-6 flex justify-between items-center">
-          <button 
+          <button
             onClick={toggleEditMode}
             className={`${
-              isEditMode ? 'bg-gray-500' : 'bg-purple-600'
+              isEditMode ? "bg-gray-500" : "bg-purple-600"
             } hover:opacity-90 text-white font-bold py-2 px-4 rounded flex items-center transition-colors duration-300`}
           >
             <Edit className="mr-2" size={18} />
-            {isEditMode ? 'Cancel Edit' : 'Edit Bookings'}
+            {isEditMode ? "Cancel Edit" : "Edit Bookings"}
           </button>
 
           {isEditMode && selectedEvents.length > 0 && (
-            <button 
+            <button
               onClick={handleDeleteSelected}
               className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded flex items-center transition-colors duration-300"
             >
@@ -160,20 +185,20 @@ const BookedEventsPage = () => {
                 className="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 relative"
               >
                 {isEditMode && (
-                  <input 
-                    type="checkbox" 
+                  <input
+                    type="checkbox"
                     checked={selectedEvents.includes(booking.id)}
                     onChange={() => handleSelectEvent(booking.id)}
                     className="absolute top-4 right-4 h-5 w-5 z-10 cursor-pointer"
                   />
                 )}
-                
-                <img 
-                  src={booking.eventDetails.image || '/placeholder-event.jpg'} 
-                  alt={booking.eventDetails.name} 
+
+                <img
+                  src={booking.eventDetails.image || "/placeholder-event.jpg"}
+                  alt={booking.eventDetails.name}
                   className="w-full h-48 object-cover rounded-lg mb-4"
                   onError={(e) => {
-                    e.target.src = '/placeholder-event.jpg';
+                    e.target.src = "/placeholder-event.jpg";
                   }}
                 />
 
@@ -186,7 +211,7 @@ const BookedEventsPage = () => {
                     <Calendar className="mr-2 flex-shrink-0" size={16} />
                     <span className="truncate">{booking.eventDetails.date}</span>
                   </p>
-                  
+
                   <p className="text-gray-600 flex items-center">
                     <Clock className="mr-2 flex-shrink-0" size={16} />
                     <span className="truncate">{booking.eventDetails.time}</span>
@@ -216,10 +241,12 @@ const BookedEventsPage = () => {
                 </div>
 
                 <div className="mt-4 pt-4 border-t border-gray-200">
+
                   <p className="text-sm text-gray-500 truncate">Booking ID: {booking.id}</p>
                   <p className="text-sm text-gray-500 truncate">Booked on: {booking.bookingDate}</p>
                   {booking.userId && (
                     <p className="text-sm text-gray-500 truncate">User ID: {booking.userId}</p>
+
                   )}
                 </div>
               </div>
@@ -228,14 +255,18 @@ const BookedEventsPage = () => {
         ) : (
           <div className="text-center py-12">
             <p className="text-xl text-gray-600">No booked events found.</p>
-            <p className="mt-2 text-gray-500">Your bookings will appear here once you register for events.</p>
+            <p className="mt-2 text-gray-500">
+              Your bookings will appear here once you register for events.
+            </p>
           </div>
         )}
       </main>
 
       <footer className="bg-purple-800 border-t border-gray-200 py-8 mt-auto">
         <div className="max-w-6xl mx-auto text-center">
-          <p className="text-white-600">© 2024 EventUni. All rights reserved.</p>
+          <p className="text-white-600">
+            © 2024 EventUni. All rights reserved.
+          </p>
         </div>
       </footer>
     </div>
