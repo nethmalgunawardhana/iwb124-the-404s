@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { IoIosSearch, IoIosClose } from "react-icons/io";
 import { motion, AnimatePresence } from 'framer-motion';
-import { toast } from 'react-hot-toast';
+import Swal from 'sweetalert2';
 
 const EventSearch = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -114,10 +114,18 @@ const EventSearch = () => {
 
       if (!response.ok) throw new Error('Booking failed');
       const data = await response.json();
-      toast.success('Event booked successfully!');
+      Swal.fire(
+        'Booked!',
+        'The event has been successfully booked.',
+        'success'
+      );
       setSelectedEvent(null);
     } catch (err) {
-      toast.error('Failed to book event');
+      Swal.fire(
+        'Error!',
+        'Failed to book the event. Please try again.',
+        'error'
+      );
       console.error(err);
     } finally {
       setIsBooking(false);
