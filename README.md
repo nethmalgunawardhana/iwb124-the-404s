@@ -64,10 +64,10 @@ To get a local copy up and running, follow these simple steps:
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/your-username/EventUni.git
+   git clone https://github.com/nethmalgunawardhana/iwb124-the-404s.git
 2. Navigate to the project directory:
    ```bash
-   cd EventUni
+   cd Frontend
 3. Install dependencies:
    ```bash
    npm install
@@ -85,7 +85,7 @@ To get a local copy up and running, follow these simple steps:
    mongo
 3. Create a new database for EventUni:
    ```bash
-   use eventuni
+   use EventDb
 #### Ballerina Setup
 
 1. Navigate to the backend directory in your project:
