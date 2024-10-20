@@ -272,21 +272,26 @@ const NavbarforHomepage = () => {
           )}
         </div>
       </nav>
-
-      {/* Search Popup */}
       {showSearchPopup && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center animate-fadeIn">
-          <div className="bg-white rounded-lg w-full max-w-4xl mx-4 relative search-popup">
-            <button
-              onClick={() => setShowSearchPopup(false)}
-              className="absolute right-4 top-4 text-gray-500 hover:text-gray-700 z-10 transform hover:rotate-90 transition-all duration-300"
-            >
-              <X size={24} />
-            </button>
-            <EventSearch />
-          </div>
-        </div>
-      )}
+  <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center animate-fadeIn">
+    <div className="bg-white rounded-lg w-full max-w-4xl mx-4 relative search-popup">
+      {/* Close button positioned absolutely in the top-right corner */}
+      <div className="absolute top-4 right-4 z-[999]">
+        <button
+          onClick={() => setShowSearchPopup(false)}
+          className="flex items-center justify-center w-8 h-8 bg-purple-600 hover:bg-purple-700 text-white rounded-full shadow-lg transform hover:scale-110 transition-all duration-300"
+          aria-label="Close search"
+        >
+          <X size={20} strokeWidth={2.5} />
+        </button>
+      </div>
+      {/* Add padding to prevent content from overlapping with the close button */}
+      <div className="pt-12">
+        <EventSearch />
+      </div>
+    </div>
+  </div>
+)}
 
       {/* Welcome Notification */}
       {showWelcome && (
