@@ -45,15 +45,13 @@ const Profile = () => {
 
   const handleAdminFormSubmit = (e) => {
     e.preventDefault();
-    // Handle form submission logic here
     setAdminPopup(false);
   };
 
   const handleAdminFormCancel = () => {
-    setAdminPopup(false); // Close the admin access form
+    setAdminPopup(false);
   };
 
-  // Load user data when component mounts
   useEffect(() => {
     if (currentUser) {
       setUserInfo({
@@ -83,10 +81,7 @@ const Profile = () => {
       valid = false;
     }
 
-    if (!userInfo.phoneNumber) {
-      newErrors.phoneNumber = "Phone number cannot be empty.";
-      valid = false;
-    } else if (!phoneRegex.test(userInfo.phoneNumber)) {
+    if (userInfo.phoneNumber && !phoneRegex.test(userInfo.phoneNumber)) {
       newErrors.phoneNumber = "Please enter a valid phone number.";
       valid = false;
     }
@@ -97,33 +92,50 @@ const Profile = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setUserInfo({
-      ...userInfo,
+    setUserInfo((prevInfo) => ({
+      ...prevInfo,
       [name]: value,
-    });
+    }));
+    setChangesMade(true);
   };
 
   const handleEdit = () => {
     setIsEditing(true);
+    setSuccessMessage("");
+    setErrorMessage("");
+  };
+
+  const handleCancel = () => {
+    setIsEditing(false);
+    setSuccessMessage("");
+    setErrorMessage("");
+    // Reset to original values
+    if (currentUser) {
+      setUserInfo({
+        fullName: currentUser.displayName || "",
+        email: currentUser.email || "",
+        phoneNumber: currentUser.phoneNumber || "",
+        verified: currentUser.emailVerified || false,
+        profilePicture: currentUser.photoURL || "../user.png",
+      });
+    }
+    setErrors({ fullName: "", email: "", phoneNumber: "" });
   };
 
   const handleSubmit = async () => {
     if (validateForm()) {
       try {
-        // Update profile in Firebase
         await updateProfile(auth.currentUser, {
           displayName: userInfo.fullName,
           photoURL: userInfo.profilePicture,
         });
 
-        // Update context
         setCurrentUser({
           ...currentUser,
           displayName: userInfo.fullName,
           photoURL: userInfo.profilePicture,
         });
 
-        // Save to localStorage for persistence
         const userData = JSON.parse(localStorage.getItem("authUser") || "{}");
         userData.displayName = userInfo.fullName;
         userData.photoURL = userInfo.profilePicture;
@@ -131,6 +143,7 @@ const Profile = () => {
 
         setSuccessMessage("Changes saved successfully!");
         setIsEditing(false);
+        setChangesMade(false);
       } catch (error) {
         console.error("Error updating profile:", error);
         setErrorMessage("Failed to save changes. Please try again.");
@@ -164,24 +177,20 @@ const Profile = () => {
     try {
       const newPhotoURL = newPicture || "../user.png";
 
-      // Update profile in Firebase
       await updateProfile(auth.currentUser, {
         photoURL: newPhotoURL,
       });
 
-      // Update local state
-      setUserInfo({
-        ...userInfo,
+      setUserInfo((prevInfo) => ({
+        ...prevInfo,
         profilePicture: newPhotoURL,
-      });
+      }));
 
-      // Update context
       setCurrentUser({
         ...currentUser,
         photoURL: newPhotoURL,
       });
 
-      // Update localStorage
       const userData = JSON.parse(localStorage.getItem("authUser") || "{}");
       userData.photoURL = newPhotoURL;
       localStorage.setItem("authUser", JSON.stringify(userData));
@@ -199,7 +208,7 @@ const Profile = () => {
     <div className="min-h-screen bg-gradient-to-br from-purple-50 to-indigo-100 flex items-center justify-center">
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-4xl mx-auto">
-          <div className="bg-white rounded-2xl shadow-xl p-8">
+          <div className="bg-white rounded-2xl shadow-xl p-8 relative">
             <h2
               className="text-3xl font-bold mb-8 text-center text-purple-700"
               data-aos="fade-down"
@@ -209,12 +218,12 @@ const Profile = () => {
             </h2>
             <button
               onClick={handleGetAdminAccess}
-              className="absolute top-4 right-4 px-4 py-2 text-sm md:text-base bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors duration-300 shadow-md"
+              className="absolute top-4 right-4 px-4 py-2 text-sm md:text-base bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors duration-300"
               data-aos="fade-left"
               data-aos-delay="400"
             >
-              <span className="hidden md:inline">Event Creator Access</span>
-              <span className="md:hidden">Creator Access</span>
+              <span className="hidden md:inline">Get Admin Access</span>
+              <span className="md:hidden">Admin Access</span>
             </button>
             <div
               className="flex flex-col items-center mb-8"
@@ -252,12 +261,29 @@ const Profile = () => {
                   )}
                 </h3>
                 <p className="text-gray-600 mt-1">{userInfo.email}</p>
-                <button
-                  onClick={handleEdit}
-                  className="mt-4 px-6 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors duration-300 shadow-md"
-                >
-                  Edit Profile
-                </button>
+                {!isEditing ? (
+                  <button
+                    onClick={handleEdit}
+                    className="mt-4 px-6 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors duration-300 shadow-md"
+                  >
+                    Edit Profile
+                  </button>
+                ) : (
+                  <div className="mt-4 space-x-4">
+                    <button
+                      onClick={handleSubmit}
+                      className="px-6 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors duration-300 shadow-md"
+                    >
+                      Save
+                    </button>
+                    <button
+                      onClick={handleCancel}
+                      className="px-6 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors duration-300 shadow-md"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
             <div
@@ -265,7 +291,6 @@ const Profile = () => {
               data-aos="fade-up"
               data-aos-delay="400"
             >
-              {/* Full Name */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   Full Name
@@ -273,9 +298,9 @@ const Profile = () => {
                 <input
                   type="text"
                   name="fullName"
-                  className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 bg-white text-purple-700 ${
-                    isEditing ? "cursor-text" : "cursor-not-allowed"
-                  }`}
+                  className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 ${
+                    isEditing ? "bg-white" : "bg-gray-100"
+                  } ${isEditing ? "cursor-text" : "cursor-not-allowed"}`}
                   value={userInfo.fullName}
                   onChange={handleChange}
                   disabled={!isEditing}
@@ -285,7 +310,6 @@ const Profile = () => {
                 )}
               </div>
 
-              {/* Email */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   Email
@@ -293,7 +317,7 @@ const Profile = () => {
                 <input
                   type="email"
                   name="email"
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 bg-white text-purple-700 cursor-not-allowed"
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 bg-gray-100 cursor-not-allowed"
                   value={userInfo.email}
                   disabled={true}
                 />
@@ -303,20 +327,6 @@ const Profile = () => {
               </div>
             </div>
 
-            {/* Save Changes Button */}
-            {isEditing && (
-              <button
-                onClick={handleSubmit}
-                className="mt-8 w-full px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors duration-300 shadow-md text-lg font-semibold"
-                disabled={Object.values(errors).some((error) => error)}
-                data-aos="fade-up"
-                data-aos-delay="500"
-              >
-                Save Changes
-              </button>
-            )}
-
-            {/* Success and Error Messages */}
             {successMessage && (
               <p className="mt-4 text-green-600 text-center">{successMessage}</p>
             )}
@@ -327,7 +337,6 @@ const Profile = () => {
         </div>
       </div>
 
-      {/* Popups */}
       {showPopup && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
           <div className="bg-white rounded-lg p-8 w-full max-w-md">
