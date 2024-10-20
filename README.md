@@ -86,6 +86,12 @@ To get a local copy up and running, follow these simple steps:
 3. Create a new database for EventUni:
    ```bash
    use EventDb
+4. Create the necessary collections for the database:
+   ```bash
+   db.createCollection("Event")
+   db.createCollection("Booking")
+   db.createCollection("AdminAccess")
+   
 #### Ballerina Setup
 
 1. Navigate to the backend directory in your project:
