@@ -298,7 +298,7 @@ const Profile = () => {
                 <input
                   type="text"
                   name="fullName"
-                  className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 ${
+                  className={`mt-1 block w-full rounded-md border-gray-300 text-black shadow-sm focus:border-purple-500 focus:ring-purple-500 ${
                     isEditing ? "bg-white" : "bg-gray-100"
                   } ${isEditing ? "cursor-text" : "cursor-not-allowed"}`}
                   value={userInfo.fullName}
@@ -317,7 +317,7 @@ const Profile = () => {
                 <input
                   type="email"
                   name="email"
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 bg-gray-100 cursor-not-allowed"
+                  className="mt-1 block w-full rounded-md border-gray-300 text-black shadow-sm focus:border-purple-500 focus:ring-purple-500 bg-gray-100 cursor-not-allowed"
                   value={userInfo.email}
                   disabled={true}
                 />
@@ -328,7 +328,9 @@ const Profile = () => {
             </div>
 
             {successMessage && (
-              <p className="mt-4 text-green-600 text-center">{successMessage}</p>
+              <p className="mt-4 text-green-600 text-center">
+                {successMessage}
+              </p>
             )}
             {errorMessage && (
               <p className="mt-4 text-red-600 text-center">{errorMessage}</p>
@@ -340,7 +342,9 @@ const Profile = () => {
       {showPopup && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
           <div className="bg-white rounded-lg p-8 w-full max-w-md">
-            <h3 className="text-2xl font-bold mb-6 text-purple-700">Change Profile Picture</h3>
+            <h3 className="text-2xl font-bold mb-6 text-purple-700">
+              Change Profile Picture
+            </h3>
             <button
               onClick={handleRemovePicture}
               className="text-red-500 hover:underline mb-4 block"
