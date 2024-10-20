@@ -1,17 +1,20 @@
-import React, { useState, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { EyeOff, Eye } from 'lucide-react';
-import { useAuth } from '../context/authContext';
-import './LoginPage.css';
-import { doSignInWithEmailAndPassword, doSignInWithGoogle } from '../firebase/auth';
-import Swal from 'sweetalert2';
+import React, { useState, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
+import { EyeOff, Eye } from "lucide-react";
+import { useAuth } from "../context/authContext";
+import "./LoginPage.css";
+import {
+  doSignInWithEmailAndPassword,
+  doSignInWithGoogle,
+} from "../firebase/auth";
+import Swal from "sweetalert2";
 
 const LoginPage = () => {
   const [showPassword, setShowPassword] = useState(false);
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { setCurrentUser, setUserLoggedIn } = useAuth();
@@ -19,37 +22,37 @@ const LoginPage = () => {
   const handleEmailSignIn = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setError('');
+    setError("");
 
     try {
       const result = await doSignInWithEmailAndPassword(email, password);
       setCurrentUser(result.user);
       setUserLoggedIn(true);
-      
+
       if (rememberMe) {
-        localStorage.setItem('emailForSignIn', email);
+        localStorage.setItem("emailForSignIn", email);
       } else {
-        localStorage.removeItem('emailForSignIn');
+        localStorage.removeItem("emailForSignIn");
       }
-      
-      navigate('/');
+
+      navigate("/");
     } catch (error) {
       console.error("Error signing in:", error);
       switch (error.code) {
-        case 'auth/user-not-found':
-          setError('No account found with this email');
+        case "auth/user-not-found":
+          setError("No account found with this email");
           break;
-        case 'auth/wrong-password':
-          setError('Invalid password');
+        case "auth/wrong-password":
+          setError("Invalid password");
           break;
-        case 'auth/user-disabled':
-          setError('This account has been disabled');
+        case "auth/user-disabled":
+          setError("This account has been disabled");
           break;
-        case 'auth/invalid-email':
-          setError('Invalid email address');
+        case "auth/invalid-email":
+          setError("Invalid email address");
           break;
         default:
-          setError('Failed to sign in');
+          setError("Failed to sign in");
       }
     } finally {
       setLoading(false);
@@ -58,16 +61,16 @@ const LoginPage = () => {
 
   const handleGoogleSignIn = async () => {
     setLoading(true);
-    setError('');
+    setError("");
 
     try {
       const result = await doSignInWithGoogle();
       setCurrentUser(result.user);
       setUserLoggedIn(true);
-      navigate('/');
+      navigate("/");
     } catch (error) {
       console.error("Google sign-in error:", error);
-      setError('Failed to sign in with Google');
+      setError("Failed to sign in with Google");
     } finally {
       setLoading(false);
     }
@@ -75,32 +78,32 @@ const LoginPage = () => {
 
   const handleAdminLogin = useCallback(() => {
     Swal.fire({
-      title: 'Admin Login',
+      title: "Admin Login",
       html:
         '<input id="swal-input1" class="swal2-input" placeholder="Admin Username">' +
         '<input id="swal-input2" class="swal2-input" type="password" placeholder="Admin Password">',
       focusConfirm: false,
       preConfirm: () => {
         return [
-          document.getElementById('swal-input1').value,
-          document.getElementById('swal-input2').value
-        ]
-      }
+          document.getElementById("swal-input1").value,
+          document.getElementById("swal-input2").value,
+        ];
+      },
     }).then((result) => {
       if (result.isConfirmed) {
         const [adminUsername, adminPassword] = result.value;
-        if (adminUsername === 'Nethmal' && adminPassword === '123654789') {
+        if (adminUsername === "Nethmal" && adminPassword === "123654789") {
           Swal.fire({
-            title: 'Logged in as Admin!',
-            icon: 'success',
+            title: "Logged in as Admin!",
+            icon: "success",
             timer: 1500,
-            showConfirmButton: false
+            showConfirmButton: false,
           }).then(() => {
-            console.log('Navigating to /eventdashboard');
-            navigate('/eventdashboard');
+            console.log("Navigating to /eventdashboard");
+            navigate("/eventdashboard");
           });
         } else {
-          Swal.fire('Invalid Credentials', 'Please try again', 'error');
+          Swal.fire("Invalid Credentials", "Please try again", "error");
         }
       }
     });
@@ -109,15 +112,19 @@ const LoginPage = () => {
   return (
     <div className="background-radial-gradient overflow-hidden min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full bg-glass rounded-lg shadow-md p-8">
-        <h2 className="text-3xl font-bold text-gray-900 text-center mb-2">Welcome Back</h2>
-        <p className="text-center text-gray-600 mb-8">Enter your credentials to continue</p>
-        
+        <h2 className="text-3xl font-bold text-gray-900 text-center mb-2">
+          Welcome Back
+        </h2>
+        <p className="text-center text-gray-600 mb-8">
+          Enter your credentials to continue
+        </p>
+
         {error && (
           <div className="mb-4 p-3 bg-red-50 border border-red-200 text-red-600 rounded-md text-center">
             {error}
           </div>
         )}
-        
+
         <form onSubmit={handleEmailSignIn} className="space-y-6">
           <div className="space-y-4">
             <input
@@ -163,11 +170,17 @@ const LoginPage = () => {
                 className="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded"
                 disabled={loading}
               />
-              <label htmlFor="remember-me" className="ml-2 text-sm  text-gray-900">
+              <label
+                htmlFor="remember-me"
+                className="ml-2 text-sm  text-gray-900"
+              >
                 Remember me
               </label>
             </div>
-            <a href="/forgotpassword" className="text-sm text-purple-600 hover:text-purple-500">
+            <a
+              href="/forgotpassword"
+              className="text-sm text-purple-600 hover:text-purple-500"
+            >
               Forgot Password?
             </a>
           </div>
@@ -176,10 +189,10 @@ const LoginPage = () => {
             type="submit"
             disabled={loading}
             className={`w-full py-2 px-4 bg-purple-600 text-white font-semibold rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 ${
-              loading ? 'opacity-70 cursor-not-allowed' : 'hover:bg-purple-700'
+              loading ? "opacity-70 cursor-not-allowed" : "hover:bg-purple-700"
             }`}
           >
-            {loading ? 'Signing in...' : 'Sign In'}
+            {loading ? "Signing in..." : "Sign In"}
           </button>
         </form>
 
@@ -197,7 +210,7 @@ const LoginPage = () => {
             onClick={handleGoogleSignIn}
             disabled={loading}
             className={`mt-4 w-full flex items-center justify-center px-4 py-2 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 ${
-              loading ? 'opacity-70 cursor-not-allowed' : 'hover:bg-gray-50'
+              loading ? "opacity-70 cursor-not-allowed" : "hover:bg-gray-50"
             }`}
           >
             <svg className="h-5 w-5 mr-2" viewBox="0 0 24 24">
@@ -225,13 +238,16 @@ const LoginPage = () => {
             onClick={handleAdminLogin}
             className="mt-4 w-full flex items-center justify-center px-4 py-2 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500"
           >
-            Login as Admin
+            Login as Event Creator
           </button>
         </div>
 
         <p className="mt-8 text-center text-sm text-gray-600">
-          Don't have an account?{' '}
-          <a href="/signup" className="font-medium text-purple-600 hover:text-purple-500">
+          Don't have an account?{" "}
+          <a
+            href="/signup"
+            className="font-medium text-purple-600 hover:text-purple-500"
+          >
             Sign up
           </a>
         </p>
