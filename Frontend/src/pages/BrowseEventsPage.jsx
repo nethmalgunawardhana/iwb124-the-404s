@@ -155,7 +155,7 @@ const BrowseEventsPage = () => {
             </p>
             <p className="text-gray-800 flex items-center mb-2">
               <MapPin className="mr-2" size={18} />
-              <strong>Location:</strong> <a href={event.locationLink} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">{event.locationLink}</a>
+              <strong>Location:</strong> <a href={event.locationLink} target="_blank" rel="noopener noreferrer" className="text-purple-800 hover:underline">{event.locationLink}</a>
             </p>
             <p className="text-gray-800"><strong>Time:</strong> {event.time}</p>
             <p className="text-gray-800"><strong>Payment:</strong> {event.payment}</p>
@@ -277,7 +277,7 @@ const BrowseEventsPage = () => {
                 </p>
                 <p className="text-gray-600 text-lg flex items-center mt-2">
                   <MapPin className="mr-2" size={18} />
-                  <a href={event.locationLink} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">Location</a>
+                  <a href={event.locationLink} target="_blank" rel="noopener noreferrer" className="text-purple-800 hover:underline">Location</a>
                 </p>
                 <p className="text-gray-600 text-lg">{event.institute}</p>
                 <p className="text-gray-600 text-lg font-medium mt-2">{event.payment}</p>
