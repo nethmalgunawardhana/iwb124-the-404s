@@ -1,6 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Calendar, MapPin } from 'react-feather';
+import {
+  Calendar,
+  MapPin,
+  Trash2,
+  Clock,
+  Tag,
+  CreditCard,
+  Users,
+  Edit,
+} from "react-feather";
 
 const BookedEventsPage = () => {
   const [bookedEvents, setBookedEvents] = useState([]);
@@ -66,13 +75,25 @@ const BookedEventsPage = () => {
                 <Calendar className="mr-2" size={18} />
                 {booking.eventDetails.date}
               </p>
+              
+              <div className="text-gray-600 flex items-start mt-2">
+                    <MapPin className="mr-2 flex-shrink-0 mt-1" size={16} />
+                    <span className="break-all overflow-hidden"><a href={booking.eventDetails.locationLink} target="_blank" rel="noopener noreferrer" className="text-purple-800 hover:underline">Location</a></span>
+                  </div>
               <p className="text-gray-600 text-lg flex items-center mt-2">
-                <MapPin className="mr-2" size={18} />
-                {booking.eventDetails.locationLink}
-              </p>
-              <p className="text-gray-600 text-lg">{booking.eventDetails.institute}</p>
-              <p className="text-gray-600 text-sm mt-2">Booking ID: {booking.id}</p>
-              <p className="text-gray-600 text-sm">Booking Date: {booking.bookingDate || 'Not specified'}</p>
+                <Users className="mr-2 flex-shrink-0" size={16} />
+                <span className="truncate">{booking.eventDetails.institute}
+                  </span>
+                  </p>
+                  <div className="mt-4 pt-4 border-t border-gray-200">
+
+                  <p className="text-sm text-gray-500 truncate">Booking ID: {booking.id}</p>
+                  <p className="text-sm text-gray-500 truncate">Booked on: {booking.bookingDate}</p>
+                  {booking.userId && (
+                    <p className="text-sm text-gray-500 truncate">User ID: {booking.userId}</p>
+
+                  )}
+              </div>
             </div>
           ))}
         </div>

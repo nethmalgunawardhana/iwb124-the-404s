@@ -207,10 +207,10 @@ const BookedEventsPage = () => {
                 </h3>
 
                 <div className="space-y-2">
-                  <p className="text-gray-600 flex items-center">
-                    <Calendar className="mr-2 flex-shrink-0" size={16} />
-                    <span className="truncate">{booking.eventDetails.date}</span>
-                  </p>
+                <p className="text-gray-600 text-lg flex items-center mt-2">
+                <Calendar className="mr-2" size={18} />
+                {booking.eventDetails.date}
+              </p>
 
                   <p className="text-gray-600 flex items-center">
                     <Clock className="mr-2 flex-shrink-0" size={16} />
@@ -219,7 +219,7 @@ const BookedEventsPage = () => {
 
                   <div className="text-gray-600 flex items-start">
                     <MapPin className="mr-2 flex-shrink-0 mt-1" size={16} />
-                    <span className="break-all overflow-hidden">{booking.eventDetails.locationLink}</span>
+                    <span className="break-all overflow-hidden"><a href={booking.eventDetails.locationLink} target="_blank" rel="noopener noreferrer" className="text-purple-800 hover:underline">Location</a></span>
                   </div>
 
                   <p className="text-gray-600 flex items-center">
