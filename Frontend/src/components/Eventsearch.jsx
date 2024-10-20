@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { IoIosSearch, IoIosClose } from "react-icons/io";
 import { motion, AnimatePresence } from 'framer-motion';
+import { toast } from 'react-hot-toast';
 
 const EventSearch = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -9,6 +10,8 @@ const EventSearch = () => {
   const [error, setError] = useState(null);
   const [initialEventsLoaded, setInitialEventsLoaded] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [selectedEvent, setSelectedEvent] = useState(null);
+  const [isBooking, setIsBooking] = useState(false);
 
   const springConfig = {
     type: "spring",
@@ -22,7 +25,6 @@ const EventSearch = () => {
         const response = await fetch('http://localhost:9091/events');
         if (!response.ok) throw new Error('Failed to fetch events');
         const data = await response.json();
-        // Sort by date and take first 4 events
         const sortedEvents = data
           .sort((a, b) => new Date(b.date) - new Date(a.date))
           .slice(0, 4);
@@ -52,7 +54,7 @@ const EventSearch = () => {
         const data = await response.json();
         const sortedEvents = data
           .sort((a, b) => new Date(b.date) - new Date(a.date))
-          .slice(0, 4); // Show 4 events when search is cleared
+          .slice(0, 4);
         
         setTimeout(() => {
           setEvents(sortedEvents);
@@ -69,7 +71,6 @@ const EventSearch = () => {
       const response = await fetch(`http://localhost:9091/events/search?query=${encodeURIComponent(query)}`);
       if (!response.ok) throw new Error('Search failed');
       const data = await response.json();
-      // Sort results and limit to 4 events for search results
       const sortedData = data
         .sort((a, b) => new Date(b.date) - new Date(a.date))
         .slice(0, 4);
@@ -97,11 +98,146 @@ const EventSearch = () => {
     setSearchQuery('');
   };
 
+  const handleBooking = async (eventId) => {
+    setIsBooking(true);
+    try {
+      const response = await fetch('http://localhost:9091/bookings', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          eventId,
+          userId: 'user123' // Replace with actual user ID from your auth system
+        }),
+      });
+
+      if (!response.ok) throw new Error('Booking failed');
+      const data = await response.json();
+      toast.success('Event booked successfully!');
+      setSelectedEvent(null);
+    } catch (err) {
+      toast.error('Failed to book event');
+      console.error(err);
+    } finally {
+      setIsBooking(false);
+    }
+  };
+
+  // Event Modal Component
+  const EventModal = ({ event, onClose }) => {
+    if (!event) return null;
+
+    return (
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4"
+        onClick={onClose}
+      >
+        <motion.div
+          initial={{ scale: 0.9, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          exit={{ scale: 0.9, opacity: 0 }}
+          className="bg-white rounded-lg max-w-3xl w-full max-h-[90vh] overflow-y-auto"
+          onClick={e => e.stopPropagation()}
+        >
+          <div className="relative">
+            {event.image && (
+              <div className="h-64 relative">
+                <img
+                  src={event.image}
+                  alt={event.name}
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
+              </div>
+            )}
+            <button
+              onClick={onClose}
+              className="absolute top-4 right-4 bg-white rounded-full p-2 shadow-lg hover:bg-gray-100 transition-colors"
+            >
+              <IoIosClose className="text-2xl" />
+            </button>
+          </div>
+
+          <div className="p-6">
+            <h2 className="text-2xl font-bold mb-4">{event.name}</h2>
+            <p className="text-gray-600 mb-4">{event.description}</p>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+              <div>
+                <h3 className="font-semibold text-gray-700 mb-2">Event Details</h3>
+                <div className="space-y-2">
+                  <p><span className="font-medium">Date:</span> {event.date}</p>
+                  <p><span className="font-medium">Time:</span> {event.time}</p>
+                  <p><span className="font-medium">Institute:</span> {event.institute}</p>
+                  <p><span className="font-medium">Payment:</span> {event.payment}</p>
+                </div>
+              </div>
+
+              <div>
+                <h3 className="font-semibold text-gray-700 mb-2">Organizer</h3>
+                <p>{event.organizingCommittee}</p>
+              </div>
+            </div>
+
+            <div className="mb-6">
+              <h3 className="font-semibold text-gray-700 mb-2">Tags</h3>
+              <div className="flex flex-wrap gap-2">
+                {event.tags.split(',').map((tag, index) => (
+                  <span
+                    key={index}
+                    className="px-3 py-1 bg-purple-100 text-purple-600 rounded-full text-sm"
+                  >
+                    {tag.trim()}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            <div className="flex gap-4">
+              <a
+                href={event.registrationLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex-1 bg-purple-600 text-white px-6 py-3 rounded-lg text-center font-medium hover:bg-purple-700 transition-colors"
+              >
+                Register Now
+              </a>
+              <button
+                onClick={() => handleBooking(event.id)}
+                disabled={isBooking}
+                className="flex-1 bg-green-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-green-700 transition-colors disabled:bg-gray-400"
+              >
+                {isBooking ? 'Booking...' : 'Book Now'}
+              </button>
+            </div>
+
+            {event.locationLink && (
+              <div className="mt-6">
+                <h3 className="font-semibold text-gray-700 mb-2">Location</h3>
+                <a
+                  href={event.locationLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-600 hover:underline"
+                >
+                  View on Google Maps
+                </a>
+              </div>
+            )}
+          </div>
+        </motion.div>
+      </motion.div>
+    );
+  };
+
   return (
     <div className="h-screen flex flex-col">
       {/* Fixed Search Section */}
       <div className="sticky top-0 bg-white z-10 px-4 pt-2 pb-2 shadow-md">
-        {/* Search Input */}
         <div className="relative mb-2 max-w-7xl mx-auto">
           <input
             type="search"
@@ -126,7 +262,6 @@ const EventSearch = () => {
           )}
         </div>
 
-        {/* Error Message */}
         <AnimatePresence>
           {error && (
             <motion.div
@@ -167,7 +302,8 @@ const EventSearch = () => {
                     exit={{ opacity: 0, scale: 0.9 }}
                     transition={springConfig}
                     whileHover={{ y: -5 }}
-                    className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-all duration-300"
+                    className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 cursor-pointer"
+                    onClick={() => setSelectedEvent(event)}
                   >
                     {event.image && (
                       <div className="relative h-40 overflow-hidden">
@@ -211,7 +347,6 @@ const EventSearch = () => {
             </AnimatePresence>
           </motion.div>
 
-          {/* No Results Message */}
           <AnimatePresence>
             {events.length === 0 && !isSearching && !isLoading && (
               <motion.div
@@ -229,6 +364,16 @@ const EventSearch = () => {
           </AnimatePresence>
         </div>
       </div>
+
+      {/* Event Modal */}
+      <AnimatePresence>
+        {selectedEvent && (
+          <EventModal
+            event={selectedEvent}
+            onClose={() => setSelectedEvent(null)}
+          />
+        )}
+      </AnimatePresence>
     </div>
   );
 };

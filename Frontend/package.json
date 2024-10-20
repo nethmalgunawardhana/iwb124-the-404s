@@ -24,6 +24,7 @@
     "react-chatbotify": "^2.0.0-beta.19",
     "react-dom": "^18.3.1",
     "react-feather": "^2.0.10",
+    "react-hot-toast": "^2.4.1",
     "react-icons": "^5.3.0",
     "react-router-dom": "^6.26.2",
     "react-slick": "^0.30.2",
