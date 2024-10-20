@@ -15,7 +15,7 @@ const handleSubmit = (e) => {
     return (
         <div className="min-h-full bg-white-100 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
             <div className="w-full max-w-md bg-white rounded-lg shadow-md p-8">
-                <h2 className="text-2xl font-semibold text-purple-800 mb-4">Fogot your password?</h2>
+                <h2 className="text-2xl font-semibold text-purple-800 mb-4">Forgot your password?</h2>
                 <p className="text-center text-gray-600 mb-8">Don’t worry, happens to all of us. Enter your email below to recover your password</p>
                 <form onSubmit={handleSubmit} className="space-y-6">
                     <div className="space-y-4">
