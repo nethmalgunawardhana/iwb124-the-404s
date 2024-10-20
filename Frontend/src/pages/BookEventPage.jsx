@@ -177,49 +177,49 @@ const BookedEventsPage = () => {
                   }}
                 />
 
-                <h3 className="text-xl font-semibold mb-3 text-gray-800">
+                <h3 className="text-xl font-semibold mb-3 text-gray-800 line-clamp-2">
                   {booking.eventDetails.name}
                 </h3>
 
                 <div className="space-y-2">
                   <p className="text-gray-600 flex items-center">
-                    <Calendar className="mr-2" size={16} />
-                    {booking.eventDetails.date}
+                    <Calendar className="mr-2 flex-shrink-0" size={16} />
+                    <span className="truncate">{booking.eventDetails.date}</span>
                   </p>
                   
                   <p className="text-gray-600 flex items-center">
-                    <Clock className="mr-2" size={16} />
-                    {booking.eventDetails.time}
+                    <Clock className="mr-2 flex-shrink-0" size={16} />
+                    <span className="truncate">{booking.eventDetails.time}</span>
+                  </p>
+
+                  <div className="text-gray-600 flex items-start">
+                    <MapPin className="mr-2 flex-shrink-0 mt-1" size={16} />
+                    <span className="break-all overflow-hidden">{booking.eventDetails.locationLink}</span>
+                  </div>
+
+                  <p className="text-gray-600 flex items-center">
+                    <Users className="mr-2 flex-shrink-0" size={16} />
+                    <span className="truncate">{booking.eventDetails.organizingCommittee}</span>
                   </p>
 
                   <p className="text-gray-600 flex items-center">
-                    <MapPin className="mr-2" size={16} />
-                    {booking.eventDetails.locationLink}
-                  </p>
-
-                  <p className="text-gray-600 flex items-center">
-                    <Users className="mr-2" size={16} />
-                    {booking.eventDetails.organizingCommittee}
-                  </p>
-
-                  <p className="text-gray-600 flex items-center">
-                    <CreditCard className="mr-2" size={16} />
-                    Payment: {booking.eventDetails.payment}
+                    <CreditCard className="mr-2 flex-shrink-0" size={16} />
+                    <span className="truncate">Payment: {booking.eventDetails.payment}</span>
                   </p>
 
                   {booking.eventDetails.tags && (
-                    <p className="text-gray-600 flex items-center">
-                      <Tag className="mr-2" size={16} />
-                      {booking.eventDetails.tags}
-                    </p>
+                    <div className="text-gray-600 flex items-start">
+                      <Tag className="mr-2 flex-shrink-0 mt-1" size={16} />
+                      <span className="break-words">{booking.eventDetails.tags}</span>
+                    </div>
                   )}
                 </div>
 
                 <div className="mt-4 pt-4 border-t border-gray-200">
-                  <p className="text-sm text-gray-500">Booking ID: {booking.id}</p>
-                  <p className="text-sm text-gray-500">Booked on: {booking.bookingDate}</p>
+                  <p className="text-sm text-gray-500 truncate">Booking ID: {booking.id}</p>
+                  <p className="text-sm text-gray-500 truncate">Booked on: {booking.bookingDate}</p>
                   {booking.userId && (
-                    <p className="text-sm text-gray-500">User ID: {booking.userId}</p>
+                    <p className="text-sm text-gray-500 truncate">User ID: {booking.userId}</p>
                   )}
                 </div>
               </div>
