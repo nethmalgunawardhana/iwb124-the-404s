@@ -90,7 +90,7 @@ To get a local copy up and running, follow these simple steps:
 
 1. Navigate to the backend directory in your project:
    ```bash
-   cd backend
+   cd Backend
 2. Run the Ballerina service:
    ```bash
    bal run
