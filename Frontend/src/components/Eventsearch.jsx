@@ -158,28 +158,28 @@ const EventSearch = () => {
               onClick={onClose}
               className="absolute top-4 right-4 bg-white rounded-full p-2 shadow-lg hover:bg-gray-100 transition-colors"
             >
-              <IoIosClose className="text-2xl" />
+              <IoIosClose className="text-2xl text-black" />
             </button>
           </div>
 
           <div className="p-6">
-            <h2 className="text-2xl font-bold mb-4">{event.name}</h2>
+            <h2 className="text-2xl  text-black font-bold mb-4">{event.name}</h2>
             <p className="text-gray-600 mb-4">{event.description}</p>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
               <div>
                 <h3 className="font-semibold text-gray-700 mb-2">Event Details</h3>
                 <div className="space-y-2">
-                  <p><span className="font-medium">Date:</span> {event.date}</p>
-                  <p><span className="font-medium">Time:</span> {event.time}</p>
-                  <p><span className="font-medium">Institute:</span> {event.institute}</p>
-                  <p><span className="font-medium">Payment:</span> {event.payment}</p>
+                  <p className='text-black'lass><span className="font-medium text-black">Date:</span> {event.date}</p>
+                  <p className='text-black'><span className="font-medium text-black">Time:</span> {event.time}</p>
+                  <p className='text-black'><span className="font-medium text-black">Institute:</span> {event.institute}</p>
+                  <p className='text-black'><span className="font-medium text-black">Payment:</span> {event.payment}</p>
                 </div>
               </div>
 
               <div>
                 <h3 className="font-semibold text-gray-700 mb-2">Organizer</h3>
-                <p>{event.organizingCommittee}</p>
+                <p className='text-black'>{event.organizingCommittee}</p>
               </div>
             </div>
 
