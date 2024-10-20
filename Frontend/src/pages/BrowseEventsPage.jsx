@@ -12,7 +12,14 @@ import volunteerIcon from '../assets/tag-volunteer.png'
 import religiousIcon from '../assets/tag-religious.png'
 import workshopIcon from '../assets/tag-workshop.png'
 import foodIcon from '../assets/tag-food.png'
-import { X, Calendar, MapPin } from 'react-feather';
+import { X,Calendar,
+  MapPin,
+  Trash2,
+  Clock,
+  Tag,
+  CreditCard,
+  Users,
+  Edit, } from 'react-feather';
 import Swal from 'sweetalert2';
 
 const BrowseEventsPage = () => {
@@ -114,10 +121,10 @@ const BrowseEventsPage = () => {
 
     if (result.isConfirmed) {
       try {
-        await axios.post('http://localhost:9091/bookings', { 
+        await axios.post('http://localhost:9091/bookings', {
           eventId
         });
-        
+
         Swal.fire(
           'Booked!',
           'The event has been successfully booked.',
@@ -191,10 +198,10 @@ const BrowseEventsPage = () => {
     <div className="min-h-screen bg-gray-50">
       <NavbarforHomepage />
       <header className="bg-purple-600 text-white py-20 mt-16">
-       <div className="max-w-6xl mx-auto text-center">
-       <h1 className="text-5xl font-bold">Browse Events</h1>
-       <p className="mt-4 text-lg">Find events by institutes, payment options, or tags!</p>
-       </div>
+        <div className="max-w-6xl mx-auto text-center">
+          <h1 className="text-5xl font-bold">Browse Events</h1>
+          <p className="mt-4 text-lg">Find events by institutes, payment options, or tags!</p>
+        </div>
       </header>
 
       <main className="max-w-6xl mx-auto p-6">
@@ -242,19 +249,18 @@ const BrowseEventsPage = () => {
           </div>
 
           <div className="mb-8">
-          <h3 className="text-xl font-semibold mb-4 text-purple-800">Select Tags</h3>
-          <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-11 gap-4">
+            <h3 className="text-xl font-semibold mb-4 text-purple-800">Select Tags</h3>
+            <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-11 gap-4">
               {tags.map((tag) => (
                 <div
-                key={tag.name}
-                className={`cursor-pointer p-2 rounded-lg border hover:shadow-md transition-shadow ${
-                  selectedTags.includes(tag.name) ? 'border-purple-700' : 'border-gray-300'
-                }`}
-                onClick={() => toggleTag(tag.name)}
-              >
-                <img src={tag.image} alt={tag.name} className="w-12 h-12 object-cover rounded-md mx-auto" />
-                <p className="mt-2 text-center text-gray-800 text-xs">{tag.name}</p>
-              </div>
+                  key={tag.name}
+                  className={`cursor-pointer p-2 rounded-lg border hover:shadow-md transition-shadow ${selectedTags.includes(tag.name) ? 'border-purple-700' : 'border-gray-300'
+                    }`}
+                  onClick={() => toggleTag(tag.name)}
+                >
+                  <img src={tag.image} alt={tag.name} className="w-12 h-12 object-cover rounded-md mx-auto" />
+                  <p className="mt-2 text-center text-gray-800 text-xs">{tag.name}</p>
+                </div>
               ))}
             </div>
           </div>
@@ -264,8 +270,8 @@ const BrowseEventsPage = () => {
           <h2 className="text-3xl font-semibold text-center mb-6 text-purple-800">Available Events</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {filteredEvents.slice(0, visibleEvents).map((event) => (
-              <div 
-                key={event.id} 
+              <div
+                key={event.id}
                 className="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 cursor-pointer"
                 onClick={() => openEventDetails(event)}
               >
@@ -275,13 +281,28 @@ const BrowseEventsPage = () => {
                   <Calendar className="mr-2" size={18} />
                   {event.date}
                 </p>
+
+
+                <div className="text-gray-600 flex items-start mt-2">
+                  <MapPin className="mr-2 flex-shrink-0 mt-1" size={16} />
+                  <span className="break-all overflow-hidden"><a href={event.locationLink} target="_blank" rel="noopener noreferrer" className="text-purple-800 hover:underline">Location</a></span>
+                </div>
+
                 <p className="text-gray-600 text-lg flex items-center mt-2">
-                  <MapPin className="mr-2" size={18} />
-                  <a href={event.locationLink} target="_blank" rel="noopener noreferrer" className="text-purple-800 hover:underline">Location</a>
+                <Users className="mr-2 flex-shrink-0" size={16} />
+                <span className="truncate">{event.institute}</span>
                 </p>
-                <p className="text-gray-600 text-lg">{event.institute}</p>
-                <p className="text-gray-600 text-lg font-medium mt-2">{event.payment}</p>
-                <p className="text-gray-600 text-sm mt-2">Tags: {event.tags}</p>
+
+                <p className="text-gray-600 flex items-center mt-2">
+                <CreditCard className="mr-2 flex-shrink-0" size={16} />
+                <span className="truncate">Payment: {event.payment} </span>
+                </p>
+               
+                <div className="text-gray-600 flex items-start mt-2"> 
+                <Tag className="mr-2 flex-shrink-0 mt-1" size={16} />
+                <span className="truncate">Tags: {event.tags}</span>
+                </div>
+                
               </div>
             ))}
           </div>
@@ -300,9 +321,9 @@ const BrowseEventsPage = () => {
       </main>
 
       <footer className="bg-purple-800 mt-12 p-6 shadow">
-       <div className="max-w-6xl mx-auto text-center">
-       <p className="text-white">2024 EventUni. All rights reserved.</p>
-       </div>
+        <div className="max-w-6xl mx-auto text-center">
+          <p className="text-white">2024 EventUni. All rights reserved.</p>
+        </div>
       </footer>
 
       <EventDetailPopup event={selectedEvent} onClose={closeEventDetails} />

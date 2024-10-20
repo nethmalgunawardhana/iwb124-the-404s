@@ -78,7 +78,7 @@ const LoginPage = () => {
 
   const handleAdminLogin = useCallback(() => {
     Swal.fire({
-      title: "Admin Login",
+      title: "Creator Login",
       html:
         '<input id="swal-input1" class="swal2-input" placeholder="Admin Username">' +
         '<input id="swal-input2" class="swal2-input" type="password" placeholder="Admin Password">',
@@ -94,7 +94,7 @@ const LoginPage = () => {
         const [adminUsername, adminPassword] = result.value;
         if (adminUsername === "Nethmal" && adminPassword === "123654789") {
           Swal.fire({
-            title: "Logged in as Admin!",
+            title: "Logged in as Creator!",
             icon: "success",
             timer: 1500,
             showConfirmButton: false,
