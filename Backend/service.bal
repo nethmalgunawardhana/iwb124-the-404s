@@ -128,7 +128,7 @@ service / on new http:Listener(9091) {
     resource function get events/search(string query) returns Event[]|error {
     mongodb:Collection events = check self.eventDb->getCollection("Event");
     
-    // Create a search filter using regex for case-insensitive search across multiple fields
+    // search filter using regex for case-insensitive search across multiple fields
     map<json> searchFilter = {
         "$or": [
             {"name": {"$regex": query, "$options": "i"}},
@@ -150,7 +150,7 @@ service / on new http:Listener(9091) {
 }
     resource function put events/[string id](@http:Payload EventUpdate update) returns Event|error {
         mongodb:Collection events = check self.eventDb->getCollection("Event");
-        // Create a map<json> to hold the fields to update.
+        //  map<json> to hold the fields to update.
         map<json> updateFields = {};
         if update.name is string {
             updateFields["name"] = update.name;

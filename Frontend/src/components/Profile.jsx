@@ -222,8 +222,8 @@ const Profile = () => {
               data-aos="fade-left"
               data-aos-delay="400"
             >
-              <span className="hidden md:inline">Get Admin Access</span>
-              <span className="md:hidden">Admin Access</span>
+              <span className="hidden md:inline">Get Creator Access</span>
+              <span className="md:hidden">Creator Access</span>
             </button>
             <div
               className="flex flex-col items-center mb-8"
